@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>f413d304-3b87-4db8-90d1-84694155eca5</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Zebble.Plugin</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Billing.cs" />    
+    <None Include="$(MSBuildThisFileDirectory)Icon.png" />
+    <None Include="$(MSBuildThisFileDirectory)MOVE-CONTENT-TO-ROOT\.gitignore" />
+    <None Include="$(MSBuildThisFileDirectory)MOVE-CONTENT-TO-ROOT\README.md" />
+    <None Include="$(MSBuildThisFileDirectory)NuGet\NuGet.nuspec" />
+    <None Include="$(MSBuildThisFileDirectory)NuGet\CreatePackage.bat" />
+  </ItemGroup>  
+</Project>
