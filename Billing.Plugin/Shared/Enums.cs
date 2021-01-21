@@ -1,6 +1,6 @@
 ﻿namespace Zebble.Billing
 {
-    public enum SubscriptionPlatform { AppStore, PlayStore, CafeBazaar, Voucher }
+    public enum SubscriptionPlatform { AppStore, GooglePlay, CafeBazaar, Voucher }
 
     public enum SubscriptionType { Standard, Pro }
 

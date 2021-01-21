@@ -48,7 +48,7 @@
     <DefineConstants>IOS</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" $(TargetFramework.StartsWith('netcoreapp')) ">
-    <DefineConstants>DotNetCore</DefineConstants>
+    <DefineConstants>DOTNETCORE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Shared\**\*.cs" />
@@ -83,6 +83,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Android\" />
+    <Folder Include="iOS\" />
     <Folder Include="UWP\" />
+    <Folder Include="NetCore\" />
   </ItemGroup>
 </Project>

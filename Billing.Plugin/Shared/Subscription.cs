@@ -8,7 +8,7 @@
         public string ProductId { get; set; }
         public string UserId { get; set; }
 
-        public SubscriptionStatus Platform { get; set; }
+        public SubscriptionPlatform Platform { get; set; }
         [JsonIgnore]
         public string Token { get; set; }
 

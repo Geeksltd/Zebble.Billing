@@ -20,6 +20,8 @@
             return SubscriptionStatus.None;
         }
 
+        public static bool IsNotSubscribedAndPricesAreOutOfDate() => !IsSubscribed() && !ProductsCache.ArePricesUpToDate();
+
         public static bool IsExpired() => GetStatus() == SubscriptionStatus.Expired;
 
         public static bool IsSubscribed(bool free = true)
@@ -33,7 +35,7 @@
 
         public static bool HasPro()
         {
-            return IsSubscribed() && (User.SubscriptionType?.HasFlag(SubscriptionType.Pro) ?? true);
+            return IsSubscribed() && (User?.SubscriptionType?.HasFlag(SubscriptionType.Pro) ?? true);
         }
 
         public static async Task<string> Subscribe(Product product)

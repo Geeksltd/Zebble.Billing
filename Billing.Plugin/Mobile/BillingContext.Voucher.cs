@@ -1,7 +1,6 @@
 ﻿namespace Zebble.Billing
 {
     using System;
-    using System.Linq;
     using System.Threading.Tasks;
     using Zebble;
     using Olive;
@@ -38,7 +37,7 @@
             if (await ValidateVoucher(code) != null)
                 await RestoreSubscriptions(userRequest: true);
 
-            return User.SubscriptionExpiry;
+            return User?.SubscriptionExpiry;
         }
     }
 }

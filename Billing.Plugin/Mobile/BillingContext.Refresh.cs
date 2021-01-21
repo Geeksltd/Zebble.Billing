@@ -28,24 +28,23 @@
 
         static async Task DoRefresh()
         {
-            var user = User;
-            if (user == null) return;
+            if (User == null) return;
 
-            var args = new { user.Ticket, user.UserId, Tokens = user.SubscriptionTokens };
+            var args = new { User.Ticket, User.UserId, Tokens = User.SubscriptionTokens };
             var result = await BaseApi.Post<Subscription[]>(BaseUrl + "refresh", args, errorAction: OnError.Ignore);
             var current = result?.FirstOrDefault();
             if (current == null) return;
 
             var product = current.ProductId.GetProduct();
 
-            if (user.SubscriptionExpiry != current.ExpiryDate || user.SubscriptionType != product.SubscriptionType)
+            if (User.SubscriptionExpiry == current.ExpiryDate && User.SubscriptionType == product.SubscriptionType)
+                return;
+
+            await Restored.Raise(new SubscriptionRestoredEventArgs
             {
-                await Restored.Raise(new SubscriptionRestoredEventArgs
-                {
-                    Product = product,
-                    SubscriptionExpiry = current.ExpiryDate
-                });
-            }
+                Product = product,
+                SubscriptionExpiry = current.ExpiryDate
+            });
         }
     }
 }

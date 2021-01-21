@@ -11,17 +11,15 @@
 
         public static AsyncEvent<PurchaseRecognizedEventArgs> PurchaseRecognized = new();
 
-        public static void Initialize(string baseUrl, IBillingUser user, params Product[] products)
+        public static void Initialize(string baseUrl, params Product[] products)
         {
             BaseUrl = baseUrl.OrNullIfEmpty() ?? throw new ArgumentNullException(nameof(baseUrl));
-
-            User = user ?? throw new ArgumentNullException(nameof(user));
 
             if (products.None()) throw new ArgumentException("At least one product should be specified.", nameof(products));
 
             products.Do(ProductsCache.RegisteredProducts.Add);
         }
 
-        public static bool ArePricesUpToDate() => ProductsCache.ArePricesUpToDate();
+        public static void SetUser(IBillingUser user) => User = user;
     }
 }
