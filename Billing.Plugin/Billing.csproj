@@ -1,8 +1,7 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.23">
   <PropertyGroup>
-    <TargetFrameworks></TargetFrameworks>
-    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netcoreapp3.1;Xamarin.iOS10;MonoAndroid90;uap10.0.18362</TargetFrameworks>
-    <TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netcoreapp3.1;Xamarin.iOS10;MonoAndroid90</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1;Xamarin.iOS10;MonoAndroid90</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">$(TargetFrameworks);uap10.0.18362</TargetFrameworks>
     <AssemblyName>Zebble.Billing</AssemblyName>
     <RootNamespace>Zebble</RootNamespace>
     <PackageId>Zebble.Billing</PackageId>
@@ -28,28 +27,34 @@
     <Authors>Geeks Ltd</Authors>
     <Copyright>Geeks Ltd 2021, All rights reserved.</Copyright>
     <DisableExtraReferences>true</DisableExtraReferences>
+    <Configurations>Debug;Release;DebugCafeBazaar;ReleaseCafeBazaar</Configurations>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
+  <PropertyGroup Condition=" $(Configuration.StartsWith('Debug')) ">
     <DebugSymbols>true</DebugSymbols>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)'=='Release' ">
+  <PropertyGroup Condition=" $(Configuration.StartsWith('Release')) ">
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
+  <PropertyGroup Condition=" $(Configuration.EndsWith('CafeBazaar')) ">
+    <DefineConstants>$(DefineConstants);CAFEBAZAAR</DefineConstants>
+	<PackageId>Zebble.Billing.CafeBazaar</PackageId>
+    <PackageProjectUrl>https://nuget.org/packages/Zebble.Billing.CafeBazaar/</PackageProjectUrl>
+	<Title>Zebble.Billing.CafeBazaar</Title>
+  </PropertyGroup>
   <PropertyGroup Condition=" $(TargetFramework.StartsWith('uap10.0')) ">
-    <DefineConstants>UWP</DefineConstants>
+    <DefineConstants>$(DefineConstants);UWP</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
-    <DefineConstants>ANDROID</DefineConstants>
-    <DefineConstants Condition=" $(Configuration.Contains('Cafe Bazaar')) ">CAFEBAZAAR</DefineConstants>
+    <DefineConstants>$(DefineConstants);ANDROID</DefineConstants>
     <AndroidUseIntermediateDesignerFile>false</AndroidUseIntermediateDesignerFile>
   </PropertyGroup>
   <PropertyGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
-    <DefineConstants>IOS</DefineConstants>
+    <DefineConstants>$(DefineConstants);IOS</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" $(TargetFramework.StartsWith('netcoreapp')) ">
-    <DefineConstants>DOTNETCORE</DefineConstants>
+    <DefineConstants>$(DefineConstants);DOTNETCORE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Shared\**\*.cs" />
@@ -73,7 +78,7 @@
     <Reference Include="Plugin.InAppBilling.VendingLibrary">
       <HintPath>CafeBazaar\Plugin.InAppBilling.VendingLibrary.dll</HintPath>
     </Reference>
-    <PackageReference Include="Plugin.CurrentActivity">
+    <PackageReference Include="Plugin.CurrentActivity" Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
       <Version>2.1.0.4</Version>
     </PackageReference>
   </ItemGroup>

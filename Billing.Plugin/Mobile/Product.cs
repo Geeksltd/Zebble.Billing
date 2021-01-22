@@ -1,7 +1,11 @@
 ﻿namespace Zebble.Billing
 {
     using Olive;
+#if CAFEBAZAAR
+    using Plugin.InAppBilling.Abstractions;
+#else
     using Plugin.InAppBilling;
+#endif
     using System;
     using System.IO;
     using System.Linq;

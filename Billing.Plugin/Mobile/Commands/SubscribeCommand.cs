@@ -2,7 +2,11 @@
 {
     using System;
     using System.Threading.Tasks;
+#if CAFEBAZAAR
+    using Plugin.InAppBilling.Abstractions;
+#else
     using Plugin.InAppBilling;
+#endif
     using Olive;
 
     class SubscribeCommand : SubscriptionCommand<string>
@@ -20,7 +24,12 @@
         {
             try
             {
+#if CAFEBAZAAR
+                var purchase = await Billing.PurchaseAsync(Product.Id, Product.Type, BillingContext.User.UserId);
+#else
                 var purchase = await Billing.PurchaseAsync(Product.Id, Product.Type);
+#endif
+
                 if (purchase == null) return NOT_COMPLETED;
 
                 await BillingContext.PurchaseRecognized.Raise(purchase.ToEventArgs());

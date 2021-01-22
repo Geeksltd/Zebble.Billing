@@ -8,13 +8,19 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		DebugCafeBazaar|Any CPU = DebugCafeBazaar|Any CPU
 		Release|Any CPU = Release|Any CPU
+		ReleaseCafeBazaar|Any CPU = ReleaseCafeBazaar|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{83F3A04D-1D45-4C29-B877-ED89C4F05AE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{83F3A04D-1D45-4C29-B877-ED89C4F05AE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83F3A04D-1D45-4C29-B877-ED89C4F05AE5}.DebugCafeBazaar|Any CPU.ActiveCfg = DebugCafeBazaar|Any CPU
+		{83F3A04D-1D45-4C29-B877-ED89C4F05AE5}.DebugCafeBazaar|Any CPU.Build.0 = DebugCafeBazaar|Any CPU
 		{83F3A04D-1D45-4C29-B877-ED89C4F05AE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{83F3A04D-1D45-4C29-B877-ED89C4F05AE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83F3A04D-1D45-4C29-B877-ED89C4F05AE5}.ReleaseCafeBazaar|Any CPU.ActiveCfg = ReleaseCafeBazaar|Any CPU
+		{83F3A04D-1D45-4C29-B877-ED89C4F05AE5}.ReleaseCafeBazaar|Any CPU.Build.0 = ReleaseCafeBazaar|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

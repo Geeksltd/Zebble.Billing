@@ -2,6 +2,9 @@
 {
     using System;
     using System.Threading.Tasks;
+#if CAFEBAZAAR
+    using Plugin.InAppBilling.Abstractions;
+#endif
     using Plugin.InAppBilling;
     using Olive;
     using System.Linq;
