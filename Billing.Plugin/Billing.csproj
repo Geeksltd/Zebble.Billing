@@ -6,7 +6,7 @@
     <RootNamespace>Zebble</RootNamespace>
     <PackageId>Zebble.Billing</PackageId>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
-    <Version>1.0.2.0</Version>
+    <Version>1.0.3.0</Version>
     <PackOnBuild>true</PackOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
     <LangVersion>default</LangVersion>
@@ -39,9 +39,9 @@
   </PropertyGroup>
   <PropertyGroup Condition=" $(Configuration.EndsWith('CafeBazaar')) ">
     <DefineConstants>$(DefineConstants);CAFEBAZAAR</DefineConstants>
-	<PackageId>Zebble.Billing.CafeBazaar</PackageId>
+    <PackageId>Zebble.Billing.CafeBazaar</PackageId>
     <PackageProjectUrl>https://nuget.org/packages/Zebble.Billing.CafeBazaar/</PackageProjectUrl>
-	<Title>Zebble.Billing.CafeBazaar</Title>
+    <Title>Zebble.Billing.CafeBazaar</Title>
   </PropertyGroup>
   <PropertyGroup Condition=" $(TargetFramework.StartsWith('uap10.0')) ">
     <DefineConstants>$(DefineConstants);UWP</DefineConstants>
