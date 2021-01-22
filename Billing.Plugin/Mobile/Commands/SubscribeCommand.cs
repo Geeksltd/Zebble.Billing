@@ -25,9 +25,9 @@
             try
             {
 #if CAFEBAZAAR
-                var purchase = await Billing.PurchaseAsync(Product.Id, Product.Type, BillingContext.User.UserId);
+                var purchase = await Billing.PurchaseAsync(Product.Id, Product.ItemType, BillingContext.User.UserId);
 #else
-                var purchase = await Billing.PurchaseAsync(Product.Id, Product.Type);
+                var purchase = await Billing.PurchaseAsync(Product.Id, Product.ItemType);
 #endif
 
                 if (purchase == null) return NOT_COMPLETED;

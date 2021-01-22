@@ -13,7 +13,8 @@
 
     public abstract class Product
     {
-        public abstract ItemType Type { get; }
+        public abstract ProductType Type { get; }
+        internal ItemType ItemType => Type.ToItemType();
         public abstract string Id { get; }
         public abstract string Title { get; }
         public abstract int Months { get; }

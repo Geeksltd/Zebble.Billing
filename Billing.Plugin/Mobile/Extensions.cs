@@ -11,6 +11,16 @@
 
     public static class Extensions
     {
+        public static ItemType ToItemType(this ProductType type)
+        {
+            return type switch
+            {
+                ProductType.Subscription => ItemType.Subscription,
+                ProductType.InAppPurchase => ItemType.InAppPurchase,
+                _ => throw new ArgumentOutOfRangeException(nameof(type)),
+            };
+        }
+
         public static PurchaseRecognizedEventArgs ToEventArgs(this InAppBillingPurchase purchase)
         {
             return new PurchaseRecognizedEventArgs

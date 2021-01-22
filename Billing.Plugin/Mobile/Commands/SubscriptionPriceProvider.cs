@@ -15,14 +15,14 @@
         {
             try
             {
-                var productGroups = ProductsCache.RegisteredProducts.GroupBy(x => x.Type)
-                    .Select(x => new { Type = x.Key, ProductIds = x.Select(p => p.Id).ToArray() });
+                var productGroups = ProductsCache.RegisteredProducts.GroupBy(x => x.ItemType)
+                    .Select(x => new { ItemType = x.Key, ProductIds = x.Select(p => p.Id).ToArray() });
 
                 foreach (var group in productGroups)
                 {
-                    var items = await Billing.GetProductInfoAsync(group.Type, group.ProductIds);
+                    var items = await Billing.GetProductInfoAsync(group.ItemType, group.ProductIds);
                     if (items == null)
-                        throw new Exception($"No product info was retrieved for {group.ProductIds.ToString(", ")} ({group.Type})");
+                        throw new Exception($"No product info was retrieved for {group.ProductIds.ToString(", ")} ({group.ItemType})");
 
                     foreach (var item in items)
                         item.GetProduct()?.UpdatePrice(item.MicrosPrice / 1000000m);
