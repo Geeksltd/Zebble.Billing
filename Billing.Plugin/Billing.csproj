@@ -38,7 +38,6 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" $(Configuration.EndsWith('CafeBazaar')) ">
-    <TargetFrameworks>MonoAndroid90</TargetFrameworks>
     <DefineConstants>$(DefineConstants);CAFEBAZAAR</DefineConstants>
     <PackageId>Zebble.Billing.CafeBazaar</PackageId>
     <PackageProjectUrl>https://nuget.org/packages/Zebble.Billing.CafeBazaar/</PackageProjectUrl>
