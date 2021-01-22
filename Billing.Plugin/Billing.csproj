@@ -42,6 +42,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
     <DefineConstants>ANDROID</DefineConstants>
+    <DefineConstants Condition=" $(Configuration.Contains('Cafe Bazaar')) ">CAFEBAZAAR</DefineConstants>
     <AndroidUseIntermediateDesignerFile>false</AndroidUseIntermediateDesignerFile>
   </PropertyGroup>
   <PropertyGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
@@ -62,6 +63,20 @@
   <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
     <Compile Include="Android\**\*.cs" />
   </ItemGroup>
+  <ItemGroup Condition=" $(DefineConstants.Contains('CAFEBAZAAR')) ">
+    <Reference Include="Plugin.InAppBilling">
+      <HintPath>CafeBazaar\Plugin.InAppBilling.dll</HintPath>
+    </Reference>
+    <Reference Include="Plugin.InAppBilling.Abstractions">
+      <HintPath>CafeBazaar\Plugin.InAppBilling.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Plugin.InAppBilling.VendingLibrary">
+      <HintPath>CafeBazaar\Plugin.InAppBilling.VendingLibrary.dll</HintPath>
+    </Reference>
+    <PackageReference Include="Plugin.CurrentActivity">
+      <Version>2.1.0.4</Version>
+    </PackageReference>
+  </ItemGroup>
   <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
     <Compile Include="iOS\**\*.cs" />
   </ItemGroup>
@@ -76,15 +91,19 @@
     <None Remove="README.md" />
     <None Remove="Zebble-LicenseAgreement.txt" />
   </ItemGroup>
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('netcoreapp'))!=true ">
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('netcoreapp'))==false ">
     <PackageReference Include="Zebble" Version="4.5.451" />
     <PackageReference Include="Zebble.WebApi" Version="4.5.390" />
-    <PackageReference Include="Plugin.InAppBilling" Version="4.0.2" />
+    <PackageReference Include="Plugin.InAppBilling" Version="4.0.2" Condition=" $(DefineConstants.Contains('CAFEBAZAAR'))==false " />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Android\" />
     <Folder Include="iOS\" />
     <Folder Include="UWP\" />
     <Folder Include="NetCore\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="CafeBazaar\**" />
+    <None Remove="CafeBazaar\**" />
   </ItemGroup>
 </Project>
