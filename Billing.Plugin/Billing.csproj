@@ -38,6 +38,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" $(Configuration.EndsWith('CafeBazaar')) ">
+    <TargetFrameworks>MonoAndroid90</TargetFrameworks>
     <DefineConstants>$(DefineConstants);CAFEBAZAAR</DefineConstants>
     <PackageId>Zebble.Billing.CafeBazaar</PackageId>
     <PackageProjectUrl>https://nuget.org/packages/Zebble.Billing.CafeBazaar/</PackageProjectUrl>
@@ -59,13 +60,13 @@
   <ItemGroup>
     <Compile Include="Shared\**\*.cs" />
   </ItemGroup>
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('netcoreapp'))!=true ">
+  <ItemGroup Condition=" $(DefineConstants.Contains('DOTNETCORE'))!=true ">
     <Compile Include="Mobile\**\*.cs" />
   </ItemGroup>
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('uap10.0')) ">
+  <ItemGroup Condition=" $(DefineConstants.Contains('UWP')) ">
     <Compile Include="UWP\**\*.cs" />
   </ItemGroup>
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
+  <ItemGroup Condition=" $(DefineConstants.Contains('ANDROID')) ">
     <Compile Include="Android\**\*.cs" />
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1-preview2" Condition=" $(DefineConstants.Contains('CAFEBAZAAR'))==false " />
   </ItemGroup>
@@ -79,14 +80,14 @@
     <Reference Include="Plugin.InAppBilling.VendingLibrary">
       <HintPath>CafeBazaar\Plugin.InAppBilling.VendingLibrary.dll</HintPath>
     </Reference>
-    <PackageReference Include="Plugin.CurrentActivity" Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
+    <PackageReference Include="Plugin.CurrentActivity" Condition=" $(DefineConstants.Contains('ANDROID')) ">
       <Version>2.1.0.4</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
+  <ItemGroup Condition=" $(DefineConstants.Contains('IOS')) ">
     <Compile Include="iOS\**\*.cs" />
   </ItemGroup>
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('netcoreapp')) ">
+  <ItemGroup Condition=" $(DefineConstants.Contains('DOTNETCORE')) ">
     <Compile Include="NetCore\**\*.cs" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.5.4.18" />
@@ -97,7 +98,7 @@
     <None Remove="README.md" />
     <None Remove="Zebble-LicenseAgreement.txt" />
   </ItemGroup>
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('netcoreapp'))==false ">
+  <ItemGroup Condition=" $(DefineConstants.Contains('DOTNETCORE'))==false ">
     <PackageReference Include="Zebble" Version="4.5.451" />
     <PackageReference Include="Zebble.WebApi" Version="4.5.390" />
     <PackageReference Include="Plugin.InAppBilling" Version="4.0.2" Condition=" $(DefineConstants.Contains('CAFEBAZAAR'))==false " />
