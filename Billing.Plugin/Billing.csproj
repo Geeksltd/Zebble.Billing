@@ -103,6 +103,9 @@
     <PackageReference Include="Plugin.InAppBilling" Version="4.0.2" Condition=" $(DefineConstants.Contains('CAFEBAZAAR'))==false " />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Olive" Version="2.1.210" />
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="Android\" />
     <Folder Include="iOS\" />
     <Folder Include="UWP\" />

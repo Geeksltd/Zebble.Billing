@@ -2,6 +2,7 @@
 {
     using System;
     using Newtonsoft.Json;
+    using Olive;
 
     public partial class Subscription
     {
@@ -19,5 +20,31 @@
 
         public bool AutoRenews { get; set; }
         public bool IsCanceled { get; set; }
+
+        public bool IsExpired => ExpiryDate < LocalTime.UtcToday;
+
+        // TODO: remove
+        [Obsolete]
+        public string System
+        {
+            get { return Platform.ToString(); }
+            set { Platform = value.To<SubscriptionPlatform>(); }
+        }
+
+        // TODO: remove
+        [Obsolete]
+        public DateTime PurchasedUtc
+        {
+            get { return DateSubscribed; }
+            set { DateSubscribed = value; }
+        }
+
+        // TODO: remove
+        [Obsolete]
+        public DateTime ExpiryUtc
+        {
+            get { return ExpiryDate; }
+            set { ExpiryDate = value; }
+        }
     }
 }
