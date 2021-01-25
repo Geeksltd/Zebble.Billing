@@ -69,6 +69,16 @@
     <Compile Include="Android\**\*.cs" />
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1-preview2" Condition=" $(DefineConstants.Contains('CAFEBAZAAR'))==false " />
   </ItemGroup>
+  <PropertyGroup Condition=" $(DefineConstants.Contains('ANDROID')) AND $(DefineConstants.Contains('CAFEBAZAAR')) ">
+	<TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);IncludeReferencedCafeBazaarDllsInPackage</TargetsForTfmSpecificContentInPackage>
+  </PropertyGroup>
+  <Target Name="IncludeReferencedCafeBazaarDllsInPackage" Condition="'$(IncludeBuildOutput)' != 'false'">
+    <ItemGroup>
+      <TfmSpecificPackageFile Include="$(OutputPath)\Plugin.InAppBilling.Abstractions.dll" PackagePath="lib/$(TargetFramework)" />
+      <TfmSpecificPackageFile Include="$(OutputPath)\Plugin.InAppBilling.dll" PackagePath="lib/$(TargetFramework)" />
+      <TfmSpecificPackageFile Include="$(OutputPath)\Plugin.InAppBilling.VendingLibrary.dll" PackagePath="lib/$(TargetFramework)" />
+    </ItemGroup>
+  </Target>
   <ItemGroup Condition=" $(DefineConstants.Contains('CAFEBAZAAR')) ">
     <Reference Include="Plugin.InAppBilling">
       <HintPath>CafeBazaar\Plugin.InAppBilling.dll</HintPath>
