@@ -1,6 +1,7 @@
 ﻿namespace Zebble.Billing
 {
     using Android.App;
+    using Android.Content;
     using Android.OS;
 
     public static partial class BillingContext
@@ -22,5 +23,12 @@
             Xamarin.Essentials.Platform.Init(activity, bundle);
 #endif
         }
+
+#if CAFEBAZAAR
+        public static void OnActivityResult(int requestCode, Result resultCode, Intent data)
+        {
+            Plugin.InAppBilling.InAppBillingImplementation.HandleActivityResult(requestCode, resultCode, data);
+        }
+#endif
     }
 }
