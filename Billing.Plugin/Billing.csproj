@@ -6,7 +6,7 @@
     <RootNamespace>Zebble</RootNamespace>
     <PackageId>Zebble.Billing</PackageId>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
-    <Version>1.0.8.0</Version>
+    <Version>1.0.9.0</Version>
     <PackOnBuild>true</PackOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
     <LangVersion>default</LangVersion>
@@ -70,7 +70,7 @@
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1-preview2" Condition=" $(DefineConstants.Contains('CAFEBAZAAR'))==false " />
   </ItemGroup>
   <PropertyGroup Condition=" $(DefineConstants.Contains('ANDROID')) AND $(DefineConstants.Contains('CAFEBAZAAR')) ">
-	<TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);IncludeReferencedCafeBazaarDllsInPackage</TargetsForTfmSpecificContentInPackage>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);IncludeReferencedCafeBazaarDllsInPackage</TargetsForTfmSpecificContentInPackage>
   </PropertyGroup>
   <Target Name="IncludeReferencedCafeBazaarDllsInPackage" Condition="'$(IncludeBuildOutput)' != 'false'">
     <ItemGroup>
