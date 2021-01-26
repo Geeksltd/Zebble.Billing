@@ -23,24 +23,21 @@
 
         public bool IsExpired => ExpiryDate < LocalTime.UtcToday;
 
-        // TODO: remove
-        [Obsolete]
+        [Obsolete("Use Platform")]
         public string System
         {
             get { return Platform.ToString(); }
             set { Platform = value.To<SubscriptionPlatform>(); }
         }
 
-        // TODO: remove
-        [Obsolete]
+        [Obsolete("Use DateSubscribed")]
         public DateTime PurchasedUtc
         {
             get { return DateSubscribed; }
             set { DateSubscribed = value; }
         }
 
-        // TODO: remove
-        [Obsolete]
+        [Obsolete("Use ExpiryDate")]
         public DateTime ExpiryUtc
         {
             get { return ExpiryDate; }
