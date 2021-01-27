@@ -1,23 +1,40 @@
 ﻿namespace Zebble.Billing
 {
+    using Olive;
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
 
     public class SubscriptionManager : ISubscriptionManager
     {
-        public Task<Subscription[]> Refresh(string userId, string[] tokens)
+        private readonly ISubscriptionRepository _subscriptionRepository;
+
+        public SubscriptionManager(ISubscriptionRepository subscriptionRepository)
         {
-            return Task.FromResult(new Subscription[0]);
+            _subscriptionRepository = subscriptionRepository;
         }
 
-        public Task<long?> GetExpiry(string token)
+        public async Task InitiatePurchase(string productId, string userId, SubscriptionPlatform platform, string purchaseToken)
         {
-            return Task.FromResult<long?>(null);
+            var subscription = await _subscriptionRepository.GetByPurchaseToken(purchaseToken);
+
+            if (subscription != null && subscription.UserId != userId)
+                throw new Exception("Provided purchase token is associated with another user!");
+
+            await _subscriptionRepository.Add(new Subscription
+            {
+                SubscriptionId = Guid.NewGuid(),
+                ProductId = productId,
+                UserId = userId,
+                Platform = platform,
+                PurchaseToken = purchaseToken,
+                LastUpdated = LocalTime.Now
+            });
         }
 
-        public Task SavePurchase(string packageName, string json)
+        public Task<Subscription[]> RefreshSubscriptions(string userId, string[] purchaseTokens)
         {
-            return Task.CompletedTask;
+            throw new System.NotImplementedException();
         }
     }
 }

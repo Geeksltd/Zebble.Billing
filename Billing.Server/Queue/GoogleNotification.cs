@@ -7,7 +7,7 @@
     {
         public DateTime EventTime { get; set; }
         public string PurchaseToken { get; set; }
-        public string SubscriptionId { get; set; }
+        public string ProductId { get; set; }
         public string OriginalData { get; set; }
         public SubscriptionState State { get; set; }
 
@@ -84,7 +84,7 @@
             public GoogleNotification ToNotification(string originalData) => new GoogleNotification
             {
                 PurchaseToken = Subscription.PurchaseToken,
-                SubscriptionId = Subscription.SubscriptionId,
+                ProductId = Subscription.SubscriptionId,
                 EventTime = EventTimeMillis.ToDateTime(),
                 OriginalData = originalData
             };

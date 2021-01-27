@@ -12,12 +12,12 @@
 
         public string PurchaseToken { get; set; }
 
-        public DateTime DateSubscribed { get; set; }
-        public DateTime ExpiryDate { get; set; }
+        public DateTime? DateSubscribed { get; set; }
+        public DateTime? ExpiryDate { get; set; }
         public DateTime? CancellationDate { get; set; }
-        public DateTime LastUpdated { get; set; }
+        public DateTime? LastUpdated { get; set; }
 
-        public bool AutoRenews { get; set; }
+        public bool? AutoRenews { get; set; }
 
         [Obsolete("Use Platform")]
         public string System
@@ -29,14 +29,14 @@
         [Obsolete("Use DateSubscribed")]
         public DateTime PurchasedUtc
         {
-            get { return DateSubscribed; }
+            get { return DateSubscribed ?? DateTime.MinValue; }
             set { DateSubscribed = value; }
         }
 
         [Obsolete("Use ExpiryDate")]
         public DateTime ExpiryUtc
         {
-            get { return ExpiryDate; }
+            get { return ExpiryDate ?? DateTime.MinValue; }
             set { ExpiryDate = value; }
         }
     }

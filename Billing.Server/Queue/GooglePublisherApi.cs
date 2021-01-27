@@ -22,25 +22,25 @@
             _publisherOptions = publisherOptions.Value;
         }
 
-        public async Task<Subscription> GetSubscription(string subscriptionId, string purchaseToken)
+        public async Task<Subscription> GetSubscription(string productId, string purchaseToken)
         {
             var publisher = GetPublisherService();
 
-            var result = await publisher.Purchases.Subscriptions.Get(_playOptions.PackageName, subscriptionId, purchaseToken).ExecuteAsync();
+            var result = await publisher.Purchases.Subscriptions.Get(_playOptions.PackageName, productId, purchaseToken).ExecuteAsync();
 
             if (result == null)
                 return null;
 
-            return CreateSubscription(purchaseToken, subscriptionId, result);
+            return CreateSubscription(purchaseToken, productId, result);
         }
 
-        static Subscription CreateSubscription(string purchaseToken, string subscriptionId, SubscriptionPurchase purchase)
+        static Subscription CreateSubscription(string purchaseToken, string productId, SubscriptionPurchase purchase)
         {
             return new Subscription
             {
                 SubscriptionId = Guid.NewGuid(),
-                ProductId = subscriptionId,
-                UserId = null, // TODO
+                ProductId = productId,
+                UserId = purchase.EmailAddress,
                 Platform = SubscriptionPlatform.GooglePlay,
                 PurchaseToken = purchaseToken,
                 DateSubscribed = purchase.StartTimeMillis.ToDateTime() ?? LocalTime.Now,

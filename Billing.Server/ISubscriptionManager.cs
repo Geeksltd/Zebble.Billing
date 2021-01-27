@@ -4,8 +4,7 @@
 
     public interface ISubscriptionManager
     {
-        Task<Subscription[]> Refresh(string userId, string[] tokens);
-        Task<long?> GetExpiry(string token);
-        Task SavePurchase(string packageName, string json);
+        Task InitiatePurchase(string productId, string userId, SubscriptionPlatform platform, string purchaseToken);
+        Task<Subscription[]> RefreshSubscriptions(string userId, string[] purchaseTokens);
     }
 }

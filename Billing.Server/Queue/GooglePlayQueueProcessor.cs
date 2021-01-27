@@ -64,7 +64,7 @@
 
             if (subscription == null)
             {
-                subscription = await _publisherApi.GetSubscription(notification.PurchaseToken, notification.SubscriptionId);
+                subscription = await _publisherApi.GetSubscription(notification.PurchaseToken, notification.ProductId);
 
                 if (subscription == null)
                     return false;
