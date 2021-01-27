@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>Zebble.Billing.Server</AssemblyName>
+    <RootNamespace>Zebble</RootNamespace>
+    <PackageId>Zebble.Billing.Server</PackageId>
+    <Product>$(AssemblyName) ($(TargetFramework))</Product>
+    <Version>1.0.0.0</Version>
+    <PackOnBuild>true</PackOnBuild>
+    <NeutralLanguage>en</NeutralLanguage>
+    <LangVersion>default</LangVersion>
+    <DefineConstants>$(DefineConstants)</DefineConstants>
+    <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
+    <LangVersion>latest</LangVersion>
+    <DebugType>portable</DebugType>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/Geeksltd/Zebble.Billing/master/Zebble-LicenseAgreement.txt</PackageLicenseUrl>
+    <PackageProjectUrl>https://nuget.org/packages/Zebble.Billing/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Geeksltd/Zebble.Billing/</RepositoryUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/Geeksltd/Zebble.Billing/master/icon.png</PackageIconUrl>
+    <PackageTags>xamarin, windows, ios, android, zebble</PackageTags>
+    <Title>Zebble.Billing.Server</Title>
+    <Description>Zebble IAP plugin for App Store and Google Play.</Description>
+    <PackageReleaseNotes>Minor fixes</PackageReleaseNotes>
+    <Owners>Geeks Ltd</Owners>
+    <Authors>Geeks Ltd</Authors>
+    <Copyright>Geeks Ltd 2021, All rights reserved.</Copyright>
+    <DisableExtraReferences>true</DisableExtraReferences>
+  </PropertyGroup>
+  <PropertyGroup Condition=" $(Configuration.StartsWith('Debug')) ">
+    <DebugSymbols>true</DebugSymbols>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" $(Configuration.StartsWith('Release')) ">
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove=".gitignore" />
+    <None Remove="icon.png" />
+    <None Remove="README.md" />
+    <PackageReference Include="Google.Apis.AndroidPublisher.v3" Version="1.49.0.2197" />
+    <PackageReference Include="Google.Cloud.PubSub.V1" Version="2.3.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Olive" Version="2.1.210" />
+  </ItemGroup>
+  <Import Project="..\Billing.Shared\Billing.Shared.projitems" Label="Shared" />
+</Project>

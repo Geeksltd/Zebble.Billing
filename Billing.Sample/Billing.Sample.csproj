@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Olive.Aws.EventBus" Version="2.1.137" />
+    <PackageReference Include="Olive.Email" Version="3.1.103" />
+    <PackageReference Include="Olive.Mvc" Version="3.1.114" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Billing.Server\Billing.Server.csproj" />
+    <ProjectReference Include="..\Zebble.Billing.CafeBazaar\Billing.Server.CafeBazaar.csproj" />
+  </ItemGroup>
+</Project>
