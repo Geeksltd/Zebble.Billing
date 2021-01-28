@@ -43,7 +43,7 @@
             await Restored.Raise(new SubscriptionRestoredEventArgs
             {
                 Product = product,
-                SubscriptionExpiry = current.ExpiryDate
+                SubscriptionExpiry = current.ExpiryDate.Value
             });
         }
     }

@@ -1,7 +1,10 @@
 ﻿namespace Zebble.Billing
 {
+    using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.EntityFrameworkCore;
+    using Olive;
 
     public class SubscriptionRepository : ISubscriptionRepository
     {
@@ -12,6 +15,16 @@
         public Task<Subscription> GetByPurchaseToken(string purchaseToken)
         {
             return _context.Subscriptions.SingleOrDefaultAsync(x => x.PurchaseToken == purchaseToken);
+        }
+
+        public Task<Subscription> GetMostUpdatedByUserId(string userId)
+        {
+            return _context.Subscriptions.Where(x => x.UserId == userId)
+                                         .Where(x => x.DateSubscribed >= LocalTime.Now)
+                                         .Where(x => x.ExpiryDate >= LocalTime.Now)
+                                         .Where(x => x.CancellationDate == null || x.CancellationDate < LocalTime.Now)
+                                         .OrderBy(x => x.ExpiryDate)
+                                         .FirstOrDefaultAsync();
         }
 
         public async Task<Subscription> Add(Subscription subscription)

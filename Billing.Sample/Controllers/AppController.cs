@@ -23,7 +23,7 @@
         [HttpPost("refresh-subscriptions")]
         public Task<Subscription[]> RefreshSubscriptions([FromBody] AppRefreshSubscriptionsModel model)
         {
-            return _subscriptionManager.RefreshSubscriptions(model.UserId, model.PurchaseTokens);
+            return _subscriptionManager.RefreshSubscriptions(model.UserId);
         }
     }
 }

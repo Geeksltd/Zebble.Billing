@@ -2,7 +2,6 @@
 {
     using Olive;
     using System;
-    using System.Linq;
     using System.Threading.Tasks;
 
     public class SubscriptionManager : ISubscriptionManager
@@ -18,8 +17,13 @@
         {
             var subscription = await _subscriptionRepository.GetByPurchaseToken(purchaseToken);
 
-            if (subscription != null && subscription.UserId != userId)
-                throw new Exception("Provided purchase token is associated with another user!");
+            if (subscription != null)
+            {
+                if (subscription.UserId != userId)
+                    throw new Exception("Provided purchase token is associated with another user!");
+
+                return;
+            }
 
             await _subscriptionRepository.Add(new Subscription
             {
@@ -32,9 +36,9 @@
             });
         }
 
-        public Task<Subscription[]> RefreshSubscriptions(string userId, string[] purchaseTokens)
+        public Task<Subscription> GetSubscriptionInfo(string userId)
         {
-            throw new System.NotImplementedException();
+            return _subscriptionRepository.GetMostUpdatedByUserId(userId);
         }
     }
 }

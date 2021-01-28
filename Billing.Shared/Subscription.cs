@@ -39,5 +39,12 @@
             get { return ExpiryDate ?? DateTime.MinValue; }
             set { ExpiryDate = value; }
         }
+
+        [Obsolete("Use PurchaseToken")]
+        public string Token
+        {
+            get { return PurchaseToken; }
+            set { PurchaseToken = value; }
+        }
     }
 }

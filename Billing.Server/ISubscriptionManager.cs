@@ -5,6 +5,6 @@
     public interface ISubscriptionManager
     {
         Task InitiatePurchase(string productId, string userId, SubscriptionPlatform platform, string purchaseToken);
-        Task<Subscription[]> RefreshSubscriptions(string userId, string[] purchaseTokens);
+        Task<Subscription> GetSubscriptionInfo(string userId);
     }
 }
