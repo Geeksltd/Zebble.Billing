@@ -21,9 +21,9 @@
         }
 
         [HttpPost("refresh-subscriptions")]
-        public Task<Subscription[]> RefreshSubscriptions([FromBody] AppRefreshSubscriptionsModel model)
+        public Task<Subscription> RefreshSubscriptions([FromBody] AppRefreshSubscriptionsModel model)
         {
-            return _subscriptionManager.RefreshSubscriptions(model.UserId);
+            return _subscriptionManager.GetSubscriptionInfo(model.UserId);
         }
     }
 }

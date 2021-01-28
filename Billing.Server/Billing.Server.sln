@@ -9,7 +9,7 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Billing.Shared", "..\Billin
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Billing.Sample", "..\Billing.Sample\Billing.Sample.csproj", "{CF616A9D-DF39-477B-B6E3-0FEC75E551E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Billing.Server.CafeBazaar", "..\Zebble.Billing.CafeBazaar\Billing.Server.CafeBazaar.csproj", "{8906FC42-801C-44FE-8B5D-2C0AB3784F5E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Billing.Server.CafeBazaar", "..\Billing.Server.CafeBazaar\Billing.Server.CafeBazaar.csproj", "{8906FC42-801C-44FE-8B5D-2C0AB3784F5E}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
