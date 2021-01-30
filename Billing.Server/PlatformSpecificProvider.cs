@@ -5,7 +5,7 @@
     using System.Linq;
     using Microsoft.Extensions.DependencyInjection;
 
-    public class PlatformSpecificProvider<TType> : IPlatformSpecificProvider<TType> where TType : IPlatformAware
+    class PlatformSpecificProvider<TType> : IPlatformSpecificProvider<TType> where TType : IPlatformAware
     {
         private readonly IServiceProvider _serviceProvider;
 
