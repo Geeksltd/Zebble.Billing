@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    public interface IPlatformSpecificProvider<TType> : IEnumerable<TType> where TType : IPlatformAware
+    public interface IPlatformProvider<TType> : IEnumerable<TType> where TType : IPlatformAware
     {
         TType this[SubscriptionPlatform platform] { get; }
     }

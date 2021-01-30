@@ -25,7 +25,7 @@
             services.AddScoped<IQueueProcessor, GooglePlayQueueProcessor>();
             services.AddScoped<ILiveSubscriptionQuery, GooglePlayLiveSubscriptionQuery>();
 
-            services.AddScoped(typeof(IPlatformSpecificProvider<>), typeof(PlatformSpecificProvider<>));
+            services.AddScoped(typeof(IPlatformProvider<>), typeof(PlatformProvider<>));
 
             services.AddScoped<IRootQueueProcessor, RootQueueProcessor>();
 

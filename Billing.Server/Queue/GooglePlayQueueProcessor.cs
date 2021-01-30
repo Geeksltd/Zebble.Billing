@@ -19,7 +19,7 @@
             IOptionsSnapshot<GooglePubSubOptions> options,
             ISubscriptionRepository subscriptionRepository,
             ITransactionRepository transactionRepository,
-           IPlatformSpecificProvider<ILiveSubscriptionQuery> liveSubscriptionQueryProvider
+           IPlatformProvider<ILiveSubscriptionQuery> liveSubscriptionQueryProvider
         )
         {
             _options = options.Value;
