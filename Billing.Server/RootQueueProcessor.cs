@@ -1,30 +1,29 @@
 ﻿namespace Zebble.Billing
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Olive;
 
     class RootQueueProcessor : IRootQueueProcessor
     {
-        readonly IDictionary<SubscriptionPlatform, IQueueProcessor> _queueProcessors;
+        readonly IPlatformSpecificProvider<IQueueProcessor> _queueProcessorProvider;
 
-        public RootQueueProcessor(IEnumerable<IQueueProcessor> queueProcessors)
+        public RootQueueProcessor(IPlatformSpecificProvider<IQueueProcessor> queueProcessorProvider)
         {
-            _queueProcessors = queueProcessors.ToDictionary(x => x.Platform, x => x);
+            _queueProcessorProvider = queueProcessorProvider;
         }
 
         public Task<int> ProcessAll()
         {
-            var processes = _queueProcessors.Values.Select(x => x.Process());
+            var processes = _queueProcessorProvider.Select(x => x.Process());
 
             return Task.WhenAll(processes).ContinueWith(x => x.GetAlreadyCompletedResult().Sum());
         }
 
         public Task<int> Process(SubscriptionPlatform platform)
         {
-            return _queueProcessors[platform]?.Process() ?? throw new NotSupportedException($"Queue processing isn't supported by {platform}.");
+            return _queueProcessorProvider[platform]?.Process() ?? throw new NotSupportedException($"Queue processing isn't supported by {platform}.");
         }
     }
 }

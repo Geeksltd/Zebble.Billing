@@ -10,19 +10,21 @@
     using Google.Apis.AndroidPublisher.v3.Data;
     using Olive;
 
-    class GooglePublisherApi
+    class AppStoreLiveSubscriptionQuery : ILiveSubscriptionQuery
     {
         readonly GooglePlayOptions _playOptions;
         readonly GooglePublisherOptions _publisherOptions;
         AndroidPublisherService _instance;
 
-        public GooglePublisherApi(IOptionsSnapshot<GooglePlayOptions> playOptions, IOptionsSnapshot<GooglePublisherOptions> publisherOptions)
+        public SubscriptionPlatform Platform => SubscriptionPlatform.AppStore;
+
+        public AppStoreLiveSubscriptionQuery(IOptionsSnapshot<GooglePlayOptions> playOptions, IOptionsSnapshot<GooglePublisherOptions> publisherOptions)
         {
             _playOptions = playOptions.Value;
             _publisherOptions = publisherOptions.Value;
         }
 
-        public async Task<Subscription> GetSubscription(string productId, string purchaseToken)
+        public async Task<Subscription> GetUpToDateInfo(string productId, string purchaseToken)
         {
             var publisher = GetPublisherService();
 
@@ -34,14 +36,14 @@
             return CreateSubscription(purchaseToken, productId, result);
         }
 
-        static Subscription CreateSubscription(string purchaseToken, string productId, SubscriptionPurchase purchase)
+        Subscription CreateSubscription(string purchaseToken, string productId, SubscriptionPurchase purchase)
         {
             return new Subscription
             {
                 SubscriptionId = Guid.NewGuid(),
                 ProductId = productId,
                 UserId = purchase.EmailAddress,
-                Platform = SubscriptionPlatform.GooglePlay,
+                Platform = Platform,
                 PurchaseToken = purchaseToken,
                 DateSubscribed = purchase.StartTimeMillis.ToDateTime() ?? LocalTime.Now,
                 ExpiryDate = purchase.ExpiryTimeMillis.ToDateTime() ?? LocalTime.Now,

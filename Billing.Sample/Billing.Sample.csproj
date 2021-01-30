@@ -5,7 +5,7 @@
   <ItemGroup>
     <PackageReference Include="Olive.Aws.EventBus" Version="2.1.137" />
     <PackageReference Include="Olive.Email" Version="3.1.103" />
-    <PackageReference Include="Olive.Mvc" Version="3.1.114" />
+    <PackageReference Include="Olive.Mvc" Version="3.1.115" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Billing.Server.CafeBazaar\Billing.Server.CafeBazaar.csproj" />

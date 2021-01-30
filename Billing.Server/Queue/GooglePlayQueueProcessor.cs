@@ -13,7 +13,7 @@
         readonly GooglePubSubOptions _options;
         readonly ISubscriptionRepository _subscriptionRepository;
         readonly ITransactionRepository _transactionRepository;
-        readonly GooglePublisherApi _publisherApi;
+        readonly ILiveSubscriptionQuery _liveSubscriptionQuery;
 
         public SubscriptionPlatform Platform => SubscriptionPlatform.GooglePlay;
 
@@ -21,13 +21,13 @@
             IOptionsSnapshot<GooglePubSubOptions> options,
             ISubscriptionRepository subscriptionRepository,
             ITransactionRepository transactionRepository,
-            GooglePublisherApi publisherApi
+           IPlatformSpecificProvider<ILiveSubscriptionQuery> liveSubscriptionQueryProvider
         )
         {
             _options = options.Value;
             _subscriptionRepository = subscriptionRepository;
             _transactionRepository = transactionRepository;
-            _publisherApi = publisherApi;
+            _liveSubscriptionQuery = liveSubscriptionQueryProvider[Platform];
         }
 
         public async Task<int> Process()
@@ -64,7 +64,7 @@
 
             if (subscription == null)
             {
-                subscription = await _publisherApi.GetSubscription(notification.PurchaseToken, notification.ProductId);
+                subscription = await _liveSubscriptionQuery.GetUpToDateInfo(notification.PurchaseToken, notification.ProductId);
 
                 if (subscription == null)
                     return false;
