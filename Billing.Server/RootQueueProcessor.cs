@@ -1,8 +1,10 @@
 ﻿namespace Zebble.Billing
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Olive;
 
     class RootQueueProcessor : IRootQueueProcessor
     {
@@ -17,12 +19,12 @@
         {
             var processes = _queueProcessors.Values.Select(x => x.Process());
 
-            return Task.WhenAll(processes).ContinueWith(x => x.Result.Sum());
+            return Task.WhenAll(processes).ContinueWith(x => x.GetAlreadyCompletedResult().Sum());
         }
 
         public Task<int> Process(SubscriptionPlatform platform)
         {
-            return _queueProcessors[platform].Process();
+            return _queueProcessors[platform]?.Process() ?? throw new NotSupportedException($"Queue processing isn't supported by {platform}.");
         }
     }
 }
