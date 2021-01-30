@@ -23,7 +23,7 @@
                                          .Where(x => x.ExpiryDate >= LocalTime.Now)
                                          .Where(x => x.CancellationDate == null || x.CancellationDate >= LocalTime.Now)
                                          .OrderBy(x => x.ExpiryDate)
-                                         .FirstOrDefaultAsync();
+                                         .LastOrDefaultAsync();
         }
 
         public async Task<Subscription> Add(Subscription subscription)
