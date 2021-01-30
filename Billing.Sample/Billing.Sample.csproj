@@ -8,7 +8,7 @@
     <PackageReference Include="Olive.Mvc" Version="3.1.114" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Billing.Server.CafeBazaar\Billing.Server.CafeBazaar.csproj" />
     <ProjectReference Include="..\Billing.Server\Billing.Server.csproj" />
-    <ProjectReference Include="..\Zebble.Billing.CafeBazaar\Billing.Server.CafeBazaar.csproj" />
   </ItemGroup>
 </Project>
