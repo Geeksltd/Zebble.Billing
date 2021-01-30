@@ -3,7 +3,7 @@
     using Olive;
     using System;
 
-    public class GoogleNotification
+    class GoogleNotification
     {
         public DateTime EventTime { get; set; }
         public string PurchaseToken { get; set; }

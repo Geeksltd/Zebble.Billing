@@ -5,11 +5,11 @@
     using Microsoft.EntityFrameworkCore;
     using Olive;
 
-    public class SubscriptionRepository : ISubscriptionRepository
+    class SubscriptionRepository : ISubscriptionRepository
     {
-        readonly BillingContext _context;
+        readonly BillingDbContext _context;
 
-        public SubscriptionRepository(BillingContext context) => _context = context;
+        public SubscriptionRepository(BillingDbContext context) => _context = context;
 
         public Task<Subscription> GetByPurchaseToken(string purchaseToken)
         {

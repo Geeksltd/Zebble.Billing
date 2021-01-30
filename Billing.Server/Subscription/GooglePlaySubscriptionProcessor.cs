@@ -3,7 +3,7 @@
     using System.Threading.Tasks;
     using Microsoft.Extensions.Options;
 
-    public class GooglePlaySubscriptionProcessor : ISubscriptionProcessor
+    class GooglePlaySubscriptionProcessor : ISubscriptionProcessor
     {
         readonly GooglePlayOptions _options;
 

@@ -3,7 +3,7 @@
     using Microsoft.Extensions.Options;
     using System.Threading.Tasks;
 
-    public class CafeBazaarQueueProcessor : IQueueProcessor
+    class CafeBazaarQueueProcessor : IQueueProcessor
     {
         readonly CafeBazaarOptions _options;
 

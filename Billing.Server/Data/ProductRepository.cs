@@ -5,7 +5,7 @@
     using Microsoft.Extensions.Options;
     using Olive;
 
-    public class ProductRepository : IProductRepository
+    class ProductRepository : IProductRepository
     {
         readonly CatalogOptions _options;
 

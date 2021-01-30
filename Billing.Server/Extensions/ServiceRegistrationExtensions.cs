@@ -11,7 +11,7 @@
             services.AddScoped<IProductRepository, ProductRepository>();
 
             services.Configure<DbContextOptions>(opts => config.GetSection("DbContext")?.Bind(opts));
-            services.AddDbContext<BillingContext>();
+            services.AddDbContext<BillingDbContext>();
 
             services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
             services.AddScoped<ITransactionRepository, TransactionRepository>();

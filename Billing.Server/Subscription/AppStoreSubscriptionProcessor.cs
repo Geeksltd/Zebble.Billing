@@ -2,7 +2,7 @@
 {
     using System.Threading.Tasks;
 
-    public class AppStoreSubscriptionProcessor : ISubscriptionProcessor
+    class AppStoreSubscriptionProcessor : ISubscriptionProcessor
     {
         public SubscriptionPlatform Platform => SubscriptionPlatform.AppStore;
 

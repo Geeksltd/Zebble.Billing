@@ -4,7 +4,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    public class RootQueueProcessor : IRootQueueProcessor
+    class RootQueueProcessor : IRootQueueProcessor
     {
         readonly IDictionary<SubscriptionPlatform, IQueueProcessor> _queueProcessors;
 

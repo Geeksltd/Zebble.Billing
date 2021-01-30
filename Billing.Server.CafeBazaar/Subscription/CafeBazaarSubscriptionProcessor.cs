@@ -2,7 +2,7 @@
 {
     using System.Threading.Tasks;
 
-    public class CafeBazaarSubscriptionProcessor : ISubscriptionProcessor
+    class CafeBazaarSubscriptionProcessor : ISubscriptionProcessor
     {
         public SubscriptionPlatform Platform => SubscriptionPlatform.CafeBazaar;
 

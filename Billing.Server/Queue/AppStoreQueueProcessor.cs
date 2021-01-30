@@ -3,7 +3,7 @@
     using Microsoft.Extensions.Options;
     using System.Threading.Tasks;
 
-    public class AppStoreQueueProcessor : IQueueProcessor
+    class AppStoreQueueProcessor : IQueueProcessor
     {
         readonly AppStoreOptions _options;
 

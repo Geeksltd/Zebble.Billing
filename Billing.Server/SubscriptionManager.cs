@@ -4,7 +4,7 @@
     using System;
     using System.Threading.Tasks;
 
-    public class SubscriptionManager : ISubscriptionManager
+    class SubscriptionManager : ISubscriptionManager
     {
         readonly ISubscriptionRepository _subscriptionRepository;
 

@@ -10,7 +10,7 @@
     using Google.Apis.AndroidPublisher.v3.Data;
     using Olive;
 
-    public class GooglePublisherApi
+    class GooglePublisherApi
     {
         readonly GooglePlayOptions _playOptions;
         readonly GooglePublisherOptions _publisherOptions;

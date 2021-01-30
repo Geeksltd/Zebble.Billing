@@ -2,11 +2,11 @@
 {
     using System.Threading.Tasks;
 
-    public class TransactionRepository : ITransactionRepository
+    class TransactionRepository : ITransactionRepository
     {
-        readonly BillingContext _context;
+        readonly BillingDbContext _context;
 
-        public TransactionRepository(BillingContext context) => _context = context;
+        public TransactionRepository(BillingDbContext context) => _context = context;
 
         public async Task<Transaction> Save(Transaction transaction)
         {

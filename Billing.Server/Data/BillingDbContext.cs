@@ -3,14 +3,14 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Options;
 
-    public class BillingContext : DbContext
+    class BillingDbContext : DbContext
     {
         readonly DbContextOptions _options;
 
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
 
-        public BillingContext(IOptionsSnapshot<DbContextOptions> options)
+        public BillingDbContext(IOptionsSnapshot<DbContextOptions> options)
         {
             _options = options.Value;
         }
