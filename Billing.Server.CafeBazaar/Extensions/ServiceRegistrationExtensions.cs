@@ -11,7 +11,6 @@
             services.AddCafeBazaarDeveloperApi(config, "CafeBazaarDeveloperApi");
 
             services.Configure<CafeBazaarOptions>(opts => config.GetSection("CafeBazaar")?.Bind(opts));
-            services.AddScoped<IQueueProcessor, CafeBazaarQueueProcessor>();
             services.AddScoped<ILiveSubscriptionQuery, CafeBazaarLiveSubscriptionQuery>();
 
             return services;

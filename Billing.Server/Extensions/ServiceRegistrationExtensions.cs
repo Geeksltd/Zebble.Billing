@@ -17,14 +17,13 @@
             services.AddScoped<ITransactionRepository, TransactionRepository>();
 
             services.Configure<AppStoreOptions>(opts => config.GetSection("AppStore")?.Bind(opts));
-            services.AddScoped<IQueueProcessor, AppStoreQueueProcessor>();
             services.AddScoped<ILiveSubscriptionQuery, AppStoreLiveSubscriptionQuery>();
 
             services.Configure<GooglePlayOptions>(opts => config.GetSection("GooglePlay")?.Bind(opts));
             services.Configure<GooglePubSubOptions>(opts => config.GetSection("GooglePubSub")?.Bind(opts));
             services.Configure<GooglePublisherOptions>(opts => config.GetSection("GooglePublisher")?.Bind(opts));
             services.AddScoped<IQueueProcessor, GooglePlayQueueProcessor>();
-            services.AddScoped<ILiveSubscriptionQuery, GooglePublisherLiveSubscriptionQuery>();
+            services.AddScoped<ILiveSubscriptionQuery, GooglePlayLiveSubscriptionQuery>();
 
             services.AddScoped(typeof(IPlatformSpecificProvider<>), typeof(PlatformSpecificProvider<>));
 
