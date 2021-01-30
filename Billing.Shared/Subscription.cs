@@ -11,6 +11,7 @@
         public SubscriptionPlatform Platform { get; set; }
 
         public string PurchaseToken { get; set; }
+        public string OriginalTransactionId { get; set; }
 
         public DateTime? DateSubscribed { get; set; }
         public DateTime? ExpiryDate { get; set; }
