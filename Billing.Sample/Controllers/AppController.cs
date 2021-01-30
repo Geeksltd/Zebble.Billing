@@ -20,10 +20,10 @@
             return _subscriptionManager.InitiatePurchase(model.ProductId, model.UserId, model.Platform, model.PurchaseToken);
         }
 
-        [HttpPost("refresh-subscriptions")]
-        public Task<Subscription> RefreshSubscriptions([FromBody] AppRefreshSubscriptionsModel model)
+        [HttpGet("subscription-status")]
+        public Task<Subscription> SubscriptionStatus([FromBody] AppRefreshSubscriptionsModel model)
         {
-            return _subscriptionManager.GetSubscriptionInfo(model.UserId);
+            return _subscriptionManager.GetSubscriptionStatus(model.UserId);
         }
     }
 }

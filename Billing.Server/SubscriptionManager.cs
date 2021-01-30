@@ -42,7 +42,7 @@
             });
         }
 
-        public Task<Subscription> GetSubscriptionInfo(string userId)
+        public Task<Subscription> GetSubscriptionStatus(string userId)
         {
             return _subscriptionRepository.GetMostUpdatedByUserId(userId);
         }

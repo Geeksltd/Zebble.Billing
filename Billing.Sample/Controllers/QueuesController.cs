@@ -25,7 +25,7 @@
             return $"{processedMessages} messages are processed.";
         }
 
-        [HttpGet("process")]
+        [HttpGet("process/{platform}")]
         public async Task<string> Process(SubscriptionPlatform platform)
         {
             var processedMessages = await _rootQueueProcessor.Process(platform);

@@ -13,6 +13,7 @@
             services.Configure<DbContextOptions>(opts => config.GetSection("DbContext")?.Bind(opts));
             services.AddDbContext<BillingDbContext>();
 
+            services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
             services.AddScoped<ITransactionRepository, TransactionRepository>();
 
