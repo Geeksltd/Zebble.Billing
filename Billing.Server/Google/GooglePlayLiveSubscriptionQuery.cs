@@ -10,13 +10,11 @@
     using Google.Apis.AndroidPublisher.v3.Data;
     using Olive;
 
-    class GooglePlayLiveSubscriptionQuery : ILiveSubscriptionQuery
+    class GooglePlayLiveSubscriptionQuery : GooglePlayPlatform, ILiveSubscriptionQuery
     {
         readonly GooglePlayOptions _playOptions;
         readonly GooglePublisherOptions _publisherOptions;
         AndroidPublisherService _instance;
-
-        public SubscriptionPlatform Platform => SubscriptionPlatform.GooglePlay;
 
         public GooglePlayLiveSubscriptionQuery(IOptionsSnapshot<GooglePlayOptions> playOptions, IOptionsSnapshot<GooglePublisherOptions> publisherOptions)
         {

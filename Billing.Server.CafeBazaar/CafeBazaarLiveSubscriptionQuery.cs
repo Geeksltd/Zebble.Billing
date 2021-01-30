@@ -6,12 +6,10 @@
     using Olive;
     using CafeBazaar.DeveloperApi;
 
-    class CafeBazaarLiveSubscriptionQuery : ILiveSubscriptionQuery
+    class CafeBazaarLiveSubscriptionQuery : CafeBazaarPlatform, ILiveSubscriptionQuery
     {
         readonly CafeBazaarOptions _options;
         readonly CafeBazaarDeveloperService _developerService;
-
-        public SubscriptionPlatform Platform => SubscriptionPlatform.GooglePlay;
 
         public CafeBazaarLiveSubscriptionQuery(IOptionsSnapshot<CafeBazaarOptions> options, CafeBazaarDeveloperService developerService)
         {

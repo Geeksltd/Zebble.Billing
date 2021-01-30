@@ -8,14 +8,12 @@
     using Grpc.Auth;
     using Olive;
 
-    class GooglePlayQueueProcessor : IQueueProcessor
+    class GooglePlayQueueProcessor : GooglePlayPlatform, IQueueProcessor
     {
         readonly GooglePubSubOptions _options;
         readonly ISubscriptionRepository _subscriptionRepository;
         readonly ITransactionRepository _transactionRepository;
         readonly ILiveSubscriptionQuery _liveSubscriptionQuery;
-
-        public SubscriptionPlatform Platform => SubscriptionPlatform.GooglePlay;
 
         public GooglePlayQueueProcessor(
             IOptionsSnapshot<GooglePubSubOptions> options,
@@ -85,7 +83,7 @@
             {
                 TransactionId = Guid.NewGuid(),
                 SubscriptionId = subscription.SubscriptionId,
-                Platform = SubscriptionPlatform.GooglePlay,
+                Platform = Platform,
                 Date = notification.EventTime,
                 Details = notification.OriginalData
             });

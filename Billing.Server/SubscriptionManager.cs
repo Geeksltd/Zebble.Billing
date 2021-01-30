@@ -19,8 +19,14 @@
 
             if (subscription != null)
             {
+                if (subscription.ProductId != productId)
+                    throw new Exception("Provided purchase token is associated with another product!");
+
                 if (subscription.UserId != userId)
                     throw new Exception("Provided purchase token is associated with another user!");
+
+                if (subscription.Platform != platform)
+                    throw new Exception("Provided purchase token is associated with another platform!");
 
                 return;
             }
