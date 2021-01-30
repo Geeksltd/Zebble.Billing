@@ -18,7 +18,7 @@
         public SubscriptionPlatform Platform => SubscriptionPlatform.GooglePlay;
 
         public GooglePlayQueueProcessor(
-            IOptions<GooglePubSubOptions> options,
+            IOptionsSnapshot<GooglePubSubOptions> options,
             ISubscriptionRepository subscriptionRepository,
             ITransactionRepository transactionRepository,
             GooglePublisherApi publisherApi

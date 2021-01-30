@@ -1,5 +1,6 @@
 namespace Zebble.Billing.Sample
 {
+    using CafeBazaar.DeveloperApi;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
@@ -31,6 +32,8 @@ namespace Zebble.Billing.Sample
             app.UseAuthorization();
 
             app.UseEndpoints(builder => builder.MapControllers());
+
+            app.UseCafeBazaarDeveloperApi();
         }
     }
 }

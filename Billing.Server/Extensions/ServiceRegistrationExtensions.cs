@@ -1,6 +1,5 @@
 ﻿namespace Zebble.Billing
 {
-    using System;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
@@ -8,6 +7,9 @@
     {
         public static IServiceCollection AddZebbleBilling(this IServiceCollection services, IConfiguration config)
         {
+            services.Configure<CatalogOptions>(opts => config.GetSection("Catalog")?.Bind(opts));
+            services.AddScoped<IProductRepository, ProductRepository>();
+
             services.Configure<DbContextOptions>(opts => config.GetSection("DbContext")?.Bind(opts));
             services.AddDbContext<BillingContext>();
 

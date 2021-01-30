@@ -6,7 +6,7 @@
 
     public class RootQueueProcessor : IRootQueueProcessor
     {
-        private readonly IDictionary<SubscriptionPlatform, IQueueProcessor> _queueProcessors;
+        readonly IDictionary<SubscriptionPlatform, IQueueProcessor> _queueProcessors;
 
         public RootQueueProcessor(IEnumerable<IQueueProcessor> queueProcessors)
         {

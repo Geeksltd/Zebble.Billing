@@ -16,7 +16,7 @@
         readonly GooglePublisherOptions _publisherOptions;
         AndroidPublisherService _instance;
 
-        public GooglePublisherApi(IOptions<GooglePlayOptions> playOptions, IOptions<GooglePublisherOptions> publisherOptions)
+        public GooglePublisherApi(IOptionsSnapshot<GooglePlayOptions> playOptions, IOptionsSnapshot<GooglePublisherOptions> publisherOptions)
         {
             _playOptions = playOptions.Value;
             _publisherOptions = publisherOptions.Value;

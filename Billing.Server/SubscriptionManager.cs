@@ -6,7 +6,7 @@
 
     public class SubscriptionManager : ISubscriptionManager
     {
-        private readonly ISubscriptionRepository _subscriptionRepository;
+        readonly ISubscriptionRepository _subscriptionRepository;
 
         public SubscriptionManager(ISubscriptionRepository subscriptionRepository)
         {

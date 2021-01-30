@@ -39,6 +39,9 @@
     <None Remove="icon.png" />
     <None Remove="README.md" />
     <!--<PackageReference Include="Zebble.Billing.Server" Version="1.0.0" />-->
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CafeBazaar.DeveloperApi" Version="1.0.7" />
   </ItemGroup>	
   <ItemGroup>
     <ProjectReference Include="..\Billing.Server\Billing.Server.csproj" />

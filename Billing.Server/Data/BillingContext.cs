@@ -10,7 +10,7 @@
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
 
-        public BillingContext(IOptions<DbContextOptions> options)
+        public BillingContext(IOptionsSnapshot<DbContextOptions> options)
         {
             _options = options.Value;
         }

@@ -9,7 +9,7 @@
 
         public SubscriptionPlatform Platform => SubscriptionPlatform.AppStore;
 
-        public AppStoreQueueProcessor(IOptions<AppStoreOptions> options)
+        public AppStoreQueueProcessor(IOptionsSnapshot<AppStoreOptions> options)
         {
             _options = options.Value;
         }

@@ -1,6 +1,4 @@
 ﻿namespace Zebble.Billing
 {
-    public class AppStoreOptions : StoreOptionsBase
-    {
-    }
+    public class AppStoreOptions : StoreOptionsBase { }
 }

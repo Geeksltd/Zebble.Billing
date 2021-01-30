@@ -9,7 +9,7 @@
 
         public SubscriptionPlatform Platform => SubscriptionPlatform.CafeBazaar;
 
-        public CafeBazaarQueueProcessor(IOptions<CafeBazaarOptions> options)
+        public CafeBazaarQueueProcessor(IOptionsSnapshot<CafeBazaarOptions> options)
         {
             _options = options.Value;
         }

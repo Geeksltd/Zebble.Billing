@@ -1,6 +1,4 @@
 ﻿namespace Zebble.Billing
 {
-    public class GooglePlayOptions : StoreOptionsBase
-    {
-    }
+    public class GooglePlayOptions : StoreOptionsBase { }
 }

@@ -9,7 +9,7 @@
 
         public SubscriptionPlatform Platform => SubscriptionPlatform.GooglePlay;
 
-        public GooglePlaySubscriptionProcessor(IOptions<GooglePlayOptions> options)
+        public GooglePlaySubscriptionProcessor(IOptionsSnapshot<GooglePlayOptions> options)
         {
             _options = options.Value;
         }
