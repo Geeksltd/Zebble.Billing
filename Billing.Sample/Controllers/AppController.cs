@@ -21,9 +21,9 @@
         }
 
         [HttpGet("subscription-status")]
-        public Task<Subscription> SubscriptionStatus([FromBody] AppRefreshSubscriptionsModel model)
+        public Task<Subscription> SubscriptionStatus(string userId)
         {
-            return _subscriptionManager.GetSubscriptionStatus(model.UserId);
+            return _subscriptionManager.GetSubscriptionStatus(userId);
         }
     }
 }
