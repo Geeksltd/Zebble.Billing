@@ -3,7 +3,6 @@
     using System;
     using System.ComponentModel.DataAnnotations.Schema;
 
-    [Table("Transactions")]
     public class Transaction
     {
         public Guid TransactionId { get; set; }
