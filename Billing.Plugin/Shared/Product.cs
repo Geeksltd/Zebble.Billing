@@ -11,20 +11,22 @@
     using System.Linq;
     using Zebble.Device;
 
-    public abstract class Product
+    public partial class Product
     {
-        public abstract ProductType Type { get; }
         internal ItemType ItemType => Type.ToItemType();
-        public abstract string Id { get; }
-        public abstract string Title { get; }
-        public abstract int Months { get; }
-        public abstract string Promo { get; }
-        public abstract int FreeDays { get; }
-        public abstract SubscriptionType SubscriptionType { get; }
-        public abstract bool IsLifetime { get; }
 
-        public decimal Price { get; protected set; }
-        public virtual string LocalPrice => $"${Price}";
+        public decimal Price { get; set; }
+        public string LocalPrice
+        {
+            get
+            {
+#if CAFEBAZAAR
+                return $"{Price / 1000} هزار تومان";
+#else
+                return $"${Price}";
+#endif
+            }
+        }
 
         internal void Reload(string data)
         {
@@ -39,12 +41,22 @@
             Price = price;
         }
 
-        protected virtual string PaymentAuthority => OS.Platform switch
+        protected virtual string PaymentAuthority
         {
-            DevicePlatform.IOS => "iTunes",
-            DevicePlatform.Android => "Google Play",
-            _ => "Windows Store",
-        };
+            get
+            {
+#if CAFEBAZAAR
+                return "Cafe Bazaar";
+#else
+                return OS.Platform switch
+                {
+                    DevicePlatform.IOS => "iTunes",
+                    DevicePlatform.Android => "Google Play",
+                    _ => "Windows Store",
+                };
+#endif
+            }
+        }
 
         public override string ToString() => Title;
     }

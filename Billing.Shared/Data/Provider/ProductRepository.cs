@@ -16,7 +16,7 @@
 
         public Task<Product> GetById(string productId)
         {
-            return Task.FromResult(_options.Products.FirstOrDefault(x => x.Id == productId));
+            return GetProducts().FirstOrDefault(x => x.Id == productId);
         }
 
         public Task<Product[]> GetProducts()

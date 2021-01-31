@@ -11,6 +11,5 @@
         public int FreeDays { get; set; }
         public SubscriptionType SubscriptionType { get; set; }
         public bool IsLifetime { get; set; }
-        public decimal Price { get; set; }
     }
 }
