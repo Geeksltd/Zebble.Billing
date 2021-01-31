@@ -1,6 +1,6 @@
 ﻿namespace Zebble.Billing
 {
-    public class Product
+    public partial class Product
     {
         public string Id { get; set; }
         public SubscriptionPlatform? Platform { get; set; }
