@@ -6,7 +6,7 @@
 
     public static partial class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddZebbleBilling(this IServiceCollection services, IConfiguration config, Action<IZebbleBillingBuilder> builder = null)
+        public static IServiceCollection AddZebbleBilling(this IServiceCollection services, IConfiguration config, Action<ZebbleBillingServicesBuilder> builder = null)
         {
             var zebbleBillingConfig = config.GetSection("ZebbleBilling");
 
@@ -14,7 +14,7 @@
 
             services.AddScoped<SubscriptionManager>();
 
-            builder?.Invoke(new ZebbleBillingBuilder(services, zebbleBillingConfig));
+            builder?.Invoke(new ZebbleBillingServicesBuilder(services, zebbleBillingConfig));
 
             return services;
         }

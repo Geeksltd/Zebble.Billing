@@ -3,12 +3,12 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
-    public static partial class ZebbleBillingBuilderExtensions
+    public static partial class ZebbleBillingServicesBuilderExtensions
     {
-        public static IZebbleBillingBuilder AddAppStore(this IZebbleBillingBuilder builder)
+        public static ZebbleBillingServicesBuilder AddAppStore(this ZebbleBillingServicesBuilder builder)
         {
             builder.Services.Configure<AppStoreOptions>(opts => builder.Configuration.GetSection("AppStore")?.Bind(opts));
-            builder.Services.AddScoped<IHookInterceptor, AppStoreHookInterceptor>();
+            builder.Services.AddScoped<AppStoreHookInterceptor>();
 
             return builder;
         }

@@ -3,11 +3,11 @@
     using System;
     using Microsoft.AspNetCore.Builder;
 
-    class ZebbleBillingConfigurator : IZebbleBillingConfigurator
+    public class ZebbleBillingAppBuilder
     {
         public IApplicationBuilder App { get; private set; }
 
-        public ZebbleBillingConfigurator(IApplicationBuilder app)
+        public ZebbleBillingAppBuilder(IApplicationBuilder app)
         {
             App = app ?? throw new ArgumentNullException(nameof(app));
         }

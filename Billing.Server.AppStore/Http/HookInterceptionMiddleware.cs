@@ -3,22 +3,21 @@
     using System;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.Extensions.Options;
     using Olive;
 
     class HookInterceptionMiddleware
     {
         readonly RequestDelegate next;
-        readonly IHookInterceptor hookInterceptor;
 
-        public HookInterceptionMiddleware(RequestDelegate next, IHookInterceptor hookInterceptor)
+        public HookInterceptionMiddleware(RequestDelegate next)
         {
             this.next = next ?? throw new ArgumentNullException(nameof(next));
-            this.hookInterceptor = hookInterceptor ?? throw new ArgumentNullException(nameof(hookInterceptor));
         }
 
-        public async Task InvokeAsync(HttpContext context)
+        public async Task InvokeAsync(HttpContext context, IOptionsSnapshot<AppStoreOptions> options, AppStoreHookInterceptor hookInterceptor)
         {
-            var pathMatched = context.Request.Path.StartsWithSegments(hookInterceptor.RelativeUri.AbsolutePath);
+            var pathMatched = context.Request.Path.StartsWithSegments(options.Value.HookInterceptorUri.AbsolutePath);
             var isPost = context.Request.Method.Equals("POST", caseSensitive: false);
 
             if (pathMatched && isPost)

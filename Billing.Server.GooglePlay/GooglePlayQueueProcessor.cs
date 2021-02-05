@@ -12,17 +12,13 @@
     {
         readonly GooglePubSubOptions options;
         readonly ISubscriptionRepository repository;
-        readonly GooglePlayPlatformProvider liveSubscriptionQuery;
+        readonly GooglePlayPlatformProvider platformProvider;
 
-        public GooglePlayQueueProcessor(
-            IOptionsSnapshot<GooglePubSubOptions> options,
-            ISubscriptionRepository repository,
-            GooglePlayPlatformProvider liveSubscriptionQuery
-        )
+        public GooglePlayQueueProcessor(IOptionsSnapshot<GooglePubSubOptions> options, ISubscriptionRepository repository, GooglePlayPlatformProvider platformProvider)
         {
             this.options = options.Value;
             this.repository = repository;
-            this.liveSubscriptionQuery = liveSubscriptionQuery;
+            this.platformProvider = platformProvider;
         }
 
         public async Task<int> Process()
@@ -59,7 +55,7 @@
 
             if (subscription == null)
             {
-                subscription = await liveSubscriptionQuery.GetUpToDateInfo(notification.ProductId, notification.PurchaseToken);
+                subscription = await platformProvider.GetUpToDateInfo(notification.ProductId, notification.PurchaseToken);
 
                 if (subscription == null)
                     return false;

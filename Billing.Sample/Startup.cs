@@ -31,7 +31,7 @@ namespace Zebble.Billing.Sample
 
             app.UseEndpoints(builder => builder.MapControllers());
 
-            app.UseZebbleBilling(builder => builder.UseGooglePlay().UseCafeBazaar());
+            app.UseZebbleBilling(builder => builder.UseAppStore().UseGooglePlay().UseCafeBazaar());
         }
     }
 }

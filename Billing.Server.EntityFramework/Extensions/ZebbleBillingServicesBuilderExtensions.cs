@@ -3,9 +3,9 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
-    public static partial class ServiceCollectionExtensions
+    public static partial class ZebbleBillingServicesBuilderExtensions
     {
-        public static IZebbleBillingBuilder AddEntityFramework(this IZebbleBillingBuilder builder)
+        public static ZebbleBillingServicesBuilder AddEntityFramework(this ZebbleBillingServicesBuilder builder)
         {
             builder.Services.Configure<DbContextOptions>(opts => builder.Configuration.GetSection("DbContext")?.Bind(opts));
             builder.Services.AddDbContext<BillingDbContext>();
