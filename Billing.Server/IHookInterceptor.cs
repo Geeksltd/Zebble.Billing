@@ -4,6 +4,6 @@
 
     public interface IHookInterceptor : IPlatformAware
     {
-        Task Intercept();
+        Task Intercept(string body);
     }
 }

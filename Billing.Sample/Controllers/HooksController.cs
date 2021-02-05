@@ -15,9 +15,9 @@
         }
 
         [HttpPost("intercept/{platform}")]
-        public async Task<string> Intercept([FromRoute] SubscriptionPlatform platform)
+        public async Task<string> Intercept([FromRoute] SubscriptionPlatform platform, [FromBody] string body)
         {
-            await _rootHookInterceptor.Intercept(platform);
+            await _rootHookInterceptor.Intercept(platform, body);
 
             return $"Trigerred hook intercepted. ({platform})";
         }

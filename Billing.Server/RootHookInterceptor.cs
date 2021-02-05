@@ -11,9 +11,9 @@
             _hookInterceptorProvider = hookInterceptorProvider;
         }
 
-        public Task Intercept(SubscriptionPlatform platform)
+        public Task Intercept(SubscriptionPlatform platform, string body)
         {
-            return _hookInterceptorProvider[platform].Intercept();
+            return _hookInterceptorProvider[platform].Intercept(body);
         }
     }
 }

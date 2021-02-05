@@ -23,8 +23,9 @@
             _liveSubscriptionQuery = liveSubscriptionQueryProvider[Platform];
         }
 
-        public async Task Intercept()
+        public async Task Intercept(string body)
         {
+            var notification = body.FromJson<AppStoreServerNotification>();
         }
     }
 }
