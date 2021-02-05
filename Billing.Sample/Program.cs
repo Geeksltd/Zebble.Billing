@@ -4,7 +4,6 @@ namespace Zebble.Billing.Sample
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.FileProviders;
-    using System.Reflection;
 
     public class Program
     {
@@ -15,8 +14,8 @@ namespace Zebble.Billing.Sample
             return WebHost.CreateDefaultBuilder<Startup>(args)
                    .ConfigureAppConfiguration(builder =>
                    {
-                       var fileProvider = new EmbeddedFileProvider(Assembly.GetExecutingAssembly());
-                       builder.AddJsonFile(fileProvider, "Catalog.json", false, true);
+                       var fileProvider = new EmbeddedFileProvider(typeof(IQueueProcessor).Assembly);
+                       builder.AddJsonFile(fileProvider, "Zebble.Catalog.json", false, true);
                    })
                    .Build();
         }
