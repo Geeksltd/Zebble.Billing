@@ -7,9 +7,7 @@
       "Title": "Annual Essential",
       "Months": 12,
       "Promo": "7 days free trial",
-      "FreeDays": 7,
-      "SubscriptionType": "Standard",
-      "IsLifetime": false
+      "FreeDays": 7
     },
     {
       "Id": "annual_pro",
@@ -18,9 +16,7 @@
       "Title": "Annual Pro",
       "Months": 12,
       "Promo": "30 days free trial",
-      "FreeDays": 30,
-      "SubscriptionType": "Pro",
-      "IsLifetime": false
+      "FreeDays": 30
     },
     {
       "Id": "essential_life",
@@ -29,9 +25,7 @@
       "Title": "Lifetime Essential",
       "Months": 120,
       "Promo": "Learn forever",
-      "FreeDays": 7,
-      "SubscriptionType": "Standard",
-      "IsLifetime": true
+      "FreeDays": 7
     },
     {
       "Id": "wordup_life",
@@ -40,9 +34,7 @@
       "Title": "Lifetime Pro",
       "Months": 120,
       "Promo": "Learn forever",
-      "FreeDays": 7,
-      "SubscriptionType": "Pro",
-      "IsLifetime": true
+      "FreeDays": 7
     }
   ]
 }
