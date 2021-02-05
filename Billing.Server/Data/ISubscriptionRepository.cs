@@ -6,7 +6,8 @@
     {
         Task<Subscription> GetByPurchaseToken(string purchaseToken);
         Task<Subscription> GetMostUpdatedByUserId(string userId);
-        Task<Subscription> Add(Subscription subscription);
-        Task Update(Subscription subscription);
+        Task<Subscription> AddSubscription(Subscription subscription);
+        Task UpdateSubscription(Subscription subscription);
+        Task<Transaction> AddTransaction(Transaction transaction);
     }
 }

@@ -26,7 +26,7 @@
                                          .LastOrDefaultAsync();
         }
 
-        public async Task<Subscription> Add(Subscription subscription)
+        public async Task<Subscription> AddSubscription(Subscription subscription)
         {
             await context.Subscriptions.AddAsync(subscription);
             await context.SaveChangesAsync();
@@ -34,10 +34,18 @@
             return subscription;
         }
 
-        public async Task Update(Subscription subscription)
+        public async Task UpdateSubscription(Subscription subscription)
         {
             context.Subscriptions.Update(subscription);
             await context.SaveChangesAsync();
+        }
+
+        public async Task<Transaction> AddTransaction(Transaction transaction)
+        {
+            await context.Transactions.AddAsync(transaction);
+            await context.SaveChangesAsync();
+
+            return transaction;
         }
     }
 }

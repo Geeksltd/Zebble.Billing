@@ -3,13 +3,12 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Olive.Aws.EventBus" Version="2.1.137" />
-    <PackageReference Include="Olive.Email" Version="3.1.103" />
     <PackageReference Include="Olive.Mvc" Version="3.1.115" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Billing.Server.AppStore\Billing.Server.AppStore.csproj" />
     <ProjectReference Include="..\Billing.Server.CafeBazaar\Billing.Server.CafeBazaar.csproj" />
+    <ProjectReference Include="..\Billing.Server.EntityFramework\Billing.Server.EntityFramework.csproj" />
     <ProjectReference Include="..\Billing.Server.GooglePlay\Billing.Server.GooglePlay.csproj" />
     <ProjectReference Include="..\Billing.Server\Billing.Server.csproj" />
   </ItemGroup>

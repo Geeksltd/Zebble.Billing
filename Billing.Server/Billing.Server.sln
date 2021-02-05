@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Billing.Server.AppStore", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Billing.Server.GooglePlay", "..\Billing.Server.GooglePlay\Billing.Server.GooglePlay.csproj", "{0F9C0555-9220-4ACB-8B95-947DEDF2F031}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Billing.Server.EntityFramework", "..\Billing.Server.EntityFramework\Billing.Server.EntityFramework.csproj", "{37093A55-913E-4780-A8EE-672EA5D5C2D7}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		..\Billing.Shared\Billing.Shared.projitems*{83f3a04d-1d45-4c29-b877-ed89c4f05ae5}*SharedItemsImports = 5
@@ -67,6 +69,14 @@ Global
 		{0F9C0555-9220-4ACB-8B95-947DEDF2F031}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0F9C0555-9220-4ACB-8B95-947DEDF2F031}.ReleaseCafeBazaar|Any CPU.ActiveCfg = Release|Any CPU
 		{0F9C0555-9220-4ACB-8B95-947DEDF2F031}.ReleaseCafeBazaar|Any CPU.Build.0 = Release|Any CPU
+		{37093A55-913E-4780-A8EE-672EA5D5C2D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37093A55-913E-4780-A8EE-672EA5D5C2D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37093A55-913E-4780-A8EE-672EA5D5C2D7}.DebugCafeBazaar|Any CPU.ActiveCfg = Debug|Any CPU
+		{37093A55-913E-4780-A8EE-672EA5D5C2D7}.DebugCafeBazaar|Any CPU.Build.0 = Debug|Any CPU
+		{37093A55-913E-4780-A8EE-672EA5D5C2D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37093A55-913E-4780-A8EE-672EA5D5C2D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37093A55-913E-4780-A8EE-672EA5D5C2D7}.ReleaseCafeBazaar|Any CPU.ActiveCfg = Release|Any CPU
+		{37093A55-913E-4780-A8EE-672EA5D5C2D7}.ReleaseCafeBazaar|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

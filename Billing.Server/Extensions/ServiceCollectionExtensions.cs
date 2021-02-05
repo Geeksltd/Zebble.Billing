@@ -12,12 +12,6 @@
 
             services.AddZebbleProductsCache(zebbleBillingConfig);
 
-            services.Configure<DbContextOptions>(opts => zebbleBillingConfig.GetSection("DbContext")?.Bind(opts));
-            services.AddDbContext<BillingDbContext>();
-
-            services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
-            services.AddScoped<ITransactionRepository, TransactionRepository>();
-
             services.AddScoped(typeof(IPlatformProvider<>), typeof(PlatformProvider<>));
 
             services.AddScoped<ISubscriptionManager, SubscriptionManager>();

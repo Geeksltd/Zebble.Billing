@@ -16,7 +16,7 @@ namespace Zebble.Billing.Sample
 
             services.AddControllers();
 
-            services.AddZebbleBilling(Configuration, builder => builder.AddAppStore().AddGooglePlay().AddCafeBazaar());
+            services.AddZebbleBilling(Configuration, builder => builder.AddEntityFramework().AddAppStore().AddGooglePlay().AddCafeBazaar());
         }
 
         public override void Configure(IApplicationBuilder app)

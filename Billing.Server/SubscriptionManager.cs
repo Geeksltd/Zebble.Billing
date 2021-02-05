@@ -33,7 +33,7 @@
                 return;
             }
 
-            await repository.Add(new Subscription
+            await repository.AddSubscription(new Subscription
             {
                 SubscriptionId = Guid.NewGuid().ToString(),
                 ProductId = productId,
@@ -66,7 +66,7 @@
             subscription.CancellationDate = updatedSubscription.CancellationDate;
             subscription.AutoRenews = updatedSubscription.AutoRenews;
 
-            await repository.Update(subscription);
+            await repository.UpdateSubscription(subscription);
         }
     }
 }

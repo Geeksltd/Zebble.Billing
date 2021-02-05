@@ -11,20 +11,17 @@
     class GooglePlayQueueProcessor : IQueueProcessor
     {
         readonly GooglePubSubOptions options;
-        readonly ISubscriptionRepository subscriptionRepository;
-        readonly ITransactionRepository transactionRepository;
+        readonly ISubscriptionRepository repository;
         readonly ILiveSubscriptionQuery liveSubscriptionQuery;
 
         public GooglePlayQueueProcessor(
             IOptionsSnapshot<GooglePubSubOptions> options,
-            ISubscriptionRepository subscriptionRepository,
-            ITransactionRepository transactionRepository,
+            ISubscriptionRepository repository,
             GooglePlayLiveSubscriptionQuery liveSubscriptionQuery
         )
         {
             this.options = options.Value;
-            this.subscriptionRepository = subscriptionRepository;
-            this.transactionRepository = transactionRepository;
+            this.repository = repository;
             this.liveSubscriptionQuery = liveSubscriptionQuery;
         }
 
@@ -58,7 +55,7 @@
 
         async Task<bool> ProccessNotification(GoogleNotification notification)
         {
-            var subscription = await subscriptionRepository.GetByPurchaseToken(notification.PurchaseToken);
+            var subscription = await repository.GetByPurchaseToken(notification.PurchaseToken);
 
             if (subscription == null)
             {
@@ -67,7 +64,7 @@
                 if (subscription == null)
                     return false;
 
-                subscription = await subscriptionRepository.Add(subscription);
+                subscription = await repository.AddSubscription(subscription);
             }
             else
             {
@@ -76,10 +73,10 @@
                 else if (notification.State == GoogleNotification.SubscriptionState.Expired)
                     subscription.ExpiryDate = notification.EventTime;
 
-                await subscriptionRepository.Update(subscription);
+                await repository.UpdateSubscription(subscription);
             }
 
-            await transactionRepository.Save(new Transaction
+            await repository.AddTransaction(new Transaction
             {
                 TransactionId = Guid.NewGuid().ToString(),
                 SubscriptionId = subscription.SubscriptionId,
