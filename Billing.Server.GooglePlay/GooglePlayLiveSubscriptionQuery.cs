@@ -12,21 +12,21 @@
 
     class GooglePlayLiveSubscriptionQuery : GooglePlayPlatform, ILiveSubscriptionQuery
     {
-        readonly GooglePlayOptions _playOptions;
-        readonly GooglePublisherOptions _publisherOptions;
-        AndroidPublisherService _instance;
+        readonly GooglePlayOptions playOptions;
+        readonly GooglePublisherOptions publisherOptions;
+        AndroidPublisherService instance;
 
         public GooglePlayLiveSubscriptionQuery(IOptionsSnapshot<GooglePlayOptions> playOptions, IOptionsSnapshot<GooglePublisherOptions> publisherOptions)
         {
-            _playOptions = playOptions.Value;
-            _publisherOptions = publisherOptions.Value;
+            this.playOptions = playOptions.Value;
+            this.publisherOptions = publisherOptions.Value;
         }
 
         public async Task<Subscription> GetUpToDateInfo(string productId, string purchaseToken)
         {
             var publisher = GetPublisherService();
 
-            var result = await publisher.Purchases.Subscriptions.Get(_playOptions.PackageName, productId, purchaseToken).ExecuteAsync();
+            var result = await publisher.Purchases.Subscriptions.Get(playOptions.PackageName, productId, purchaseToken).ExecuteAsync();
 
             if (result == null)
                 return null;
@@ -38,7 +38,7 @@
         {
             return new Subscription
             {
-                SubscriptionId = Guid.NewGuid(),
+                SubscriptionId = Guid.NewGuid().ToString(),
                 ProductId = productId,
                 UserId = purchase.EmailAddress,
                 Platform = Platform,
@@ -54,23 +54,23 @@
 
         AndroidPublisherService GetPublisherService()
         {
-            if (_instance != null) return _instance;
+            if (instance != null) return instance;
 
             var initializer = new BaseClientService.Initializer
             {
                 HttpClientInitializer = CreateClientInitializer()
             };
 
-            return _instance = new AndroidPublisherService(initializer);
+            return instance = new AndroidPublisherService(initializer);
         }
 
         IConfigurableHttpClientInitializer CreateClientInitializer()
         {
-            return new ServiceAccountCredential(new ServiceAccountCredential.Initializer(_publisherOptions.ClientEmail)
+            return new ServiceAccountCredential(new ServiceAccountCredential.Initializer(publisherOptions.ClientEmail)
             {
-                ProjectId = _publisherOptions.ProjectId,
+                ProjectId = publisherOptions.ProjectId,
                 Scopes = new[] { AndroidPublisherService.ScopeConstants.Androidpublisher }
-            }.FromPrivateKey(_publisherOptions.PrivateKey));
+            }.FromPrivateKey(publisherOptions.PrivateKey));
         }
     }
 }

@@ -2,7 +2,7 @@
 {
     using System;
 
-    static class DateTimeExtensions
+    public static class DateTimeExtensions
     {
         public static DateTime? ToDateTime(this long? @this)
         {

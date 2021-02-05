@@ -10,10 +10,10 @@
 
     class GooglePlayQueueProcessor : GooglePlayPlatform, IQueueProcessor
     {
-        readonly GooglePubSubOptions _options;
-        readonly ISubscriptionRepository _subscriptionRepository;
-        readonly ITransactionRepository _transactionRepository;
-        readonly ILiveSubscriptionQuery _liveSubscriptionQuery;
+        readonly GooglePubSubOptions options;
+        readonly ISubscriptionRepository subscriptionRepository;
+        readonly ITransactionRepository transactionRepository;
+        readonly ILiveSubscriptionQuery liveSubscriptionQuery;
 
         public GooglePlayQueueProcessor(
             IOptionsSnapshot<GooglePubSubOptions> options,
@@ -22,17 +22,17 @@
            IPlatformProvider<ILiveSubscriptionQuery> liveSubscriptionQueryProvider
         )
         {
-            _options = options.Value;
-            _subscriptionRepository = subscriptionRepository;
-            _transactionRepository = transactionRepository;
-            _liveSubscriptionQuery = liveSubscriptionQueryProvider[Platform];
+            this.options = options.Value;
+            this.subscriptionRepository = subscriptionRepository;
+            this.transactionRepository = transactionRepository;
+            liveSubscriptionQuery = liveSubscriptionQueryProvider[Platform];
         }
 
         public async Task<int> Process()
         {
             var handled = 0;
 
-            var name = new SubscriptionName(_options.ProjectId, _options.SubscriptionId);
+            var name = new SubscriptionName(options.ProjectId, options.SubscriptionId);
             var client = await SubscriberClient.CreateAsync(name, GetSettings());
 
             var startTask = client.StartAsync(async (message, _) =>
@@ -58,16 +58,16 @@
 
         async Task<bool> ProccessNotification(GoogleNotification notification)
         {
-            var subscription = await _subscriptionRepository.GetByPurchaseToken(notification.PurchaseToken);
+            var subscription = await subscriptionRepository.GetByPurchaseToken(notification.PurchaseToken);
 
             if (subscription == null)
             {
-                subscription = await _liveSubscriptionQuery.GetUpToDateInfo(notification.ProductId, notification.PurchaseToken);
+                subscription = await liveSubscriptionQuery.GetUpToDateInfo(notification.ProductId, notification.PurchaseToken);
 
                 if (subscription == null)
                     return false;
 
-                subscription = await _subscriptionRepository.Add(subscription);
+                subscription = await subscriptionRepository.Add(subscription);
             }
             else
             {
@@ -76,12 +76,12 @@
                 else if (notification.State == GoogleNotification.SubscriptionState.Expired)
                     subscription.ExpiryDate = notification.EventTime;
 
-                await _subscriptionRepository.Update(subscription);
+                await subscriptionRepository.Update(subscription);
             }
 
-            await _transactionRepository.Save(new Transaction
+            await transactionRepository.Save(new Transaction
             {
-                TransactionId = Guid.NewGuid(),
+                TransactionId = Guid.NewGuid().ToString(),
                 SubscriptionId = subscription.SubscriptionId,
                 Platform = Platform,
                 Date = notification.EventTime,
@@ -96,11 +96,11 @@
             var json = new JsonCredentialParameters
             {
                 Type = "service_account",
-                ProjectId = _options.ProjectId,
-                PrivateKeyId = _options.PrivateKeyId,
-                PrivateKey = _options.PrivateKey,
-                ClientEmail = _options.ClientEmail,
-                ClientId = _options.ClientId
+                ProjectId = options.ProjectId,
+                PrivateKeyId = options.PrivateKeyId,
+                PrivateKey = options.PrivateKey,
+                ClientEmail = options.ClientEmail,
+                ClientId = options.ClientId
             }.ToJson();
 
             return new SubscriberClient.ClientCreationSettings(

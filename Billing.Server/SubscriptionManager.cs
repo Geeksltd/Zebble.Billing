@@ -6,18 +6,18 @@
 
     class SubscriptionManager : ISubscriptionManager
     {
-        readonly ISubscriptionRepository _subscriptionRepository;
-        readonly IPlatformProvider<ILiveSubscriptionQuery> _liveSubscriptionQueryProvider;
+        readonly ISubscriptionRepository repository;
+        readonly IPlatformProvider<ILiveSubscriptionQuery> liveSubscriptionQueryProvider;
 
-        public SubscriptionManager(ISubscriptionRepository subscriptionRepository, IPlatformProvider<ILiveSubscriptionQuery> liveSubscriptionQueryProvider)
+        public SubscriptionManager(ISubscriptionRepository repository, IPlatformProvider<ILiveSubscriptionQuery> liveSubscriptionQueryProvider)
         {
-            _subscriptionRepository = subscriptionRepository;
-            _liveSubscriptionQueryProvider = liveSubscriptionQueryProvider;
+            this.repository = repository;
+            this.liveSubscriptionQueryProvider = liveSubscriptionQueryProvider;
         }
 
-        public async Task InitiatePurchase(string productId, string userId, SubscriptionPlatform platform, string purchaseToken)
+        public async Task InitiatePurchase(string productId, string userId, string platform, string purchaseToken)
         {
-            var subscription = await _subscriptionRepository.GetByPurchaseToken(purchaseToken);
+            var subscription = await repository.GetByPurchaseToken(purchaseToken);
 
             if (subscription != null)
             {
@@ -33,9 +33,9 @@
                 return;
             }
 
-            await _subscriptionRepository.Add(new Subscription
+            await repository.Add(new Subscription
             {
-                SubscriptionId = Guid.NewGuid(),
+                SubscriptionId = Guid.NewGuid().ToString(),
                 ProductId = productId,
                 UserId = userId,
                 Platform = platform,
@@ -46,7 +46,7 @@
 
         public async Task<Subscription> GetSubscriptionStatus(string userId)
         {
-            var subscription = await _subscriptionRepository.GetMostUpdatedByUserId(userId);
+            var subscription = await repository.GetMostUpdatedByUserId(userId);
 
             await TryUpdateSubscription(subscription);
 
@@ -55,9 +55,9 @@
 
         async Task TryUpdateSubscription(Subscription subscription)
         {
-            if (!_liveSubscriptionQueryProvider.IsSupported(subscription.Platform)) return;
+            if (!liveSubscriptionQueryProvider.IsSupported(subscription.Platform)) return;
 
-            var liveSubscriptionQuery = _liveSubscriptionQueryProvider[subscription.Platform];
+            var liveSubscriptionQuery = liveSubscriptionQueryProvider[subscription.Platform];
             var updatedSubscription = await liveSubscriptionQuery.GetUpToDateInfo(subscription.ProductId, subscription.PurchaseToken);
 
             if (updatedSubscription == null) return;
@@ -66,7 +66,7 @@
             subscription.CancellationDate = updatedSubscription.CancellationDate;
             subscription.AutoRenews = updatedSubscription.AutoRenews;
 
-            await _subscriptionRepository.Update(subscription);
+            await repository.Update(subscription);
         }
     }
 }

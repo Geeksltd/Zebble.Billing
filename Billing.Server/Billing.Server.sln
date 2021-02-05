@@ -9,7 +9,11 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Billing.Shared", "..\Billin
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Billing.Sample", "..\Billing.Sample\Billing.Sample.csproj", "{CF616A9D-DF39-477B-B6E3-0FEC75E551E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Billing.Server.CafeBazaar", "..\Billing.Server.CafeBazaar\Billing.Server.CafeBazaar.csproj", "{8906FC42-801C-44FE-8B5D-2C0AB3784F5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Billing.Server.CafeBazaar", "..\Billing.Server.CafeBazaar\Billing.Server.CafeBazaar.csproj", "{8906FC42-801C-44FE-8B5D-2C0AB3784F5E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Billing.Server.AppStore", "..\Billing.Server.AppStore\Billing.Server.AppStore.csproj", "{C491D334-CECA-4765-9E85-035DCFA6CD2E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Billing.Server.GooglePlay", "..\Billing.Server.GooglePlay\Billing.Server.GooglePlay.csproj", "{0F9C0555-9220-4ACB-8B95-947DEDF2F031}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -47,6 +51,22 @@ Global
 		{8906FC42-801C-44FE-8B5D-2C0AB3784F5E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8906FC42-801C-44FE-8B5D-2C0AB3784F5E}.ReleaseCafeBazaar|Any CPU.ActiveCfg = Release|Any CPU
 		{8906FC42-801C-44FE-8B5D-2C0AB3784F5E}.ReleaseCafeBazaar|Any CPU.Build.0 = Release|Any CPU
+		{C491D334-CECA-4765-9E85-035DCFA6CD2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C491D334-CECA-4765-9E85-035DCFA6CD2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C491D334-CECA-4765-9E85-035DCFA6CD2E}.DebugCafeBazaar|Any CPU.ActiveCfg = Debug|Any CPU
+		{C491D334-CECA-4765-9E85-035DCFA6CD2E}.DebugCafeBazaar|Any CPU.Build.0 = Debug|Any CPU
+		{C491D334-CECA-4765-9E85-035DCFA6CD2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C491D334-CECA-4765-9E85-035DCFA6CD2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C491D334-CECA-4765-9E85-035DCFA6CD2E}.ReleaseCafeBazaar|Any CPU.ActiveCfg = Release|Any CPU
+		{C491D334-CECA-4765-9E85-035DCFA6CD2E}.ReleaseCafeBazaar|Any CPU.Build.0 = Release|Any CPU
+		{0F9C0555-9220-4ACB-8B95-947DEDF2F031}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F9C0555-9220-4ACB-8B95-947DEDF2F031}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F9C0555-9220-4ACB-8B95-947DEDF2F031}.DebugCafeBazaar|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F9C0555-9220-4ACB-8B95-947DEDF2F031}.DebugCafeBazaar|Any CPU.Build.0 = Debug|Any CPU
+		{0F9C0555-9220-4ACB-8B95-947DEDF2F031}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F9C0555-9220-4ACB-8B95-947DEDF2F031}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F9C0555-9220-4ACB-8B95-947DEDF2F031}.ReleaseCafeBazaar|Any CPU.ActiveCfg = Release|Any CPU
+		{0F9C0555-9220-4ACB-8B95-947DEDF2F031}.ReleaseCafeBazaar|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

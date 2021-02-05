@@ -6,23 +6,23 @@
 
     class RootQueueProcessor : IRootQueueProcessor
     {
-        readonly IPlatformProvider<IQueueProcessor> _queueProcessorProvider;
+        readonly IPlatformProvider<IQueueProcessor> queueProcessorProvider;
 
         public RootQueueProcessor(IPlatformProvider<IQueueProcessor> queueProcessorProvider)
         {
-            _queueProcessorProvider = queueProcessorProvider;
+            this.queueProcessorProvider = queueProcessorProvider;
         }
 
         public Task<int> ProcessAll()
         {
-            var processes = _queueProcessorProvider.Select(x => x.Process());
+            var processes = queueProcessorProvider.Select(x => x.Process());
 
             return Task.WhenAll(processes).ContinueWith(x => x.GetAlreadyCompletedResult().Sum());
         }
 
-        public Task<int> Process(SubscriptionPlatform platform)
+        public Task<int> Process(string platform)
         {
-            return _queueProcessorProvider[platform].Process();
+            return queueProcessorProvider[platform].Process();
         }
     }
 }

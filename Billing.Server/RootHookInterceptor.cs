@@ -4,16 +4,16 @@
 
     class RootHookInterceptor : IRootHookInterceptor
     {
-        readonly IPlatformProvider<IHookInterceptor> _hookInterceptorProvider;
+        readonly IPlatformProvider<IHookInterceptor> hookInterceptorProvider;
 
         public RootHookInterceptor(IPlatformProvider<IHookInterceptor> hookInterceptorProvider)
         {
-            _hookInterceptorProvider = hookInterceptorProvider;
+            this.hookInterceptorProvider = hookInterceptorProvider;
         }
 
-        public Task Intercept(SubscriptionPlatform platform, string body)
+        public Task Intercept(string platform, string body)
         {
-            return _hookInterceptorProvider[platform].Intercept(body);
+            return hookInterceptorProvider[platform].Intercept(body);
         }
     }
 }

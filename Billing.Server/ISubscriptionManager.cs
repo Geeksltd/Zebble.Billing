@@ -4,7 +4,7 @@
 
     public interface ISubscriptionManager
     {
-        Task InitiatePurchase(string productId, string userId, SubscriptionPlatform platform, string purchaseToken);
+        Task InitiatePurchase(string productId, string userId, string platform, string purchaseToken);
         Task<Subscription> GetSubscriptionStatus(string userId);
     }
 }

@@ -7,11 +7,11 @@
 
     class ProductRepository : IProductRepository
     {
-        readonly CatalogOptions _options;
+        readonly CatalogOptions options;
 
         public ProductRepository(IOptionsSnapshot<CatalogOptions> options)
         {
-            _options = options.Value;
+            this.options = options.Value;
         }
 
         public Task<Product> GetById(string productId)
@@ -21,7 +21,7 @@
 
         public Task<Product[]> GetProducts()
         {
-            return Task.FromResult(_options.Products.ToArray());
+            return Task.FromResult(options.Products.ToArray());
         }
     }
 }

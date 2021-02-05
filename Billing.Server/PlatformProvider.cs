@@ -7,18 +7,18 @@
 
     class PlatformProvider<TType> : IPlatformProvider<TType> where TType : IPlatformAware
     {
-        readonly IServiceProvider _serviceProvider;
+        readonly IServiceProvider serviceProvider;
 
         public PlatformProvider(IServiceProvider serviceProvider)
         {
-            _serviceProvider = serviceProvider;
+            this.serviceProvider = serviceProvider;
         }
 
-        IEnumerable<TType> All => _serviceProvider.GetService<IEnumerable<TType>>();
+        IEnumerable<TType> All => serviceProvider.GetService<IEnumerable<TType>>();
 
-        public bool IsSupported(SubscriptionPlatform platform) => All.Any(x => x.Platform == platform);
+        public bool IsSupported(string platform) => All.Any(x => x.Platform == platform);
 
-        public TType this[SubscriptionPlatform platform] => All.FirstOrDefault(x => x.Platform == platform) ?? throw new NotSupportedException($"{typeof(TType).Name} isn't supported in {platform}.");
+        public TType this[string platform] => All.FirstOrDefault(x => x.Platform == platform) ?? throw new NotSupportedException($"{typeof(TType).Name} isn't supported in {platform}.");
 
         public IEnumerator<TType> GetEnumerator() => All.GetEnumerator();
 

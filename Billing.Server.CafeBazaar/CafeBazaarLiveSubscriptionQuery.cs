@@ -8,20 +8,20 @@
 
     class CafeBazaarLiveSubscriptionQuery : CafeBazaarPlatform, ILiveSubscriptionQuery
     {
-        readonly CafeBazaarOptions _options;
-        readonly CafeBazaarDeveloperService _developerService;
+        readonly CafeBazaarOptions options;
+        readonly CafeBazaarDeveloperService developerService;
 
         public CafeBazaarLiveSubscriptionQuery(IOptionsSnapshot<CafeBazaarOptions> options, CafeBazaarDeveloperService developerService)
         {
-            _options = options.Value;
-            _developerService = developerService;
+            this.options = options.Value;
+            this.developerService = developerService;
         }
 
         public async Task<Subscription> GetUpToDateInfo(string productId, string purchaseToken)
         {
-            var purchaseResult = await _developerService.ValidatePurchase(new CafeBazaarValidatePurchaseRequest
+            var purchaseResult = await developerService.ValidatePurchase(new CafeBazaarValidatePurchaseRequest
             {
-                PackageName = _options.PackageName,
+                PackageName = options.PackageName,
                 ProductId = productId,
                 PurchaseToken = purchaseToken
             });
@@ -29,9 +29,9 @@
             if (purchaseResult == null)
                 return null;
 
-            var subscriptionResult = await _developerService.ValidateSubscription(new CafeBazaarValidateSubscriptionRequest
+            var subscriptionResult = await developerService.ValidateSubscription(new CafeBazaarValidateSubscriptionRequest
             {
-                PackageName = _options.PackageName,
+                PackageName = options.PackageName,
                 SubscriptionId = productId,
                 PurchaseToken = purchaseToken
             });
@@ -43,7 +43,7 @@
         {
             return new Subscription
             {
-                SubscriptionId = Guid.NewGuid(),
+                SubscriptionId = Guid.NewGuid().ToString(),
                 ProductId = productId,
                 UserId = purchase.DeveloperPayload,
                 Platform = Platform,

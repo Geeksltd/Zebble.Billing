@@ -4,14 +4,14 @@
 
     class TransactionRepository : ITransactionRepository
     {
-        readonly BillingDbContext _context;
+        readonly BillingDbContext context;
 
-        public TransactionRepository(BillingDbContext context) => _context = context;
+        public TransactionRepository(BillingDbContext context) => this.context = context;
 
         public async Task<Transaction> Save(Transaction transaction)
         {
-            await _context.Transactions.AddAsync(transaction);
-            await _context.SaveChangesAsync();
+            await context.Transactions.AddAsync(transaction);
+            await context.SaveChangesAsync();
 
             return transaction;
         }

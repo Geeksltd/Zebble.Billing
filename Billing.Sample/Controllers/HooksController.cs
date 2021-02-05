@@ -7,17 +7,17 @@
     [Route("hooks")]
     public class HooksController : ControllerBase
     {
-        readonly IRootHookInterceptor _rootHookInterceptor;
+        readonly IRootHookInterceptor rootHookInterceptor;
 
         public HooksController(IRootHookInterceptor rootHookInterceptor)
         {
-            _rootHookInterceptor = rootHookInterceptor;
+            this.rootHookInterceptor = rootHookInterceptor;
         }
 
         [HttpPost("intercept/{platform}")]
-        public async Task<string> Intercept([FromRoute] SubscriptionPlatform platform, [FromBody] string body)
+        public async Task<string> Intercept([FromRoute] string platform, [FromBody] string body)
         {
-            await _rootHookInterceptor.Intercept(platform, body);
+            await rootHookInterceptor.Intercept(platform, body);
 
             return $"Trigerred hook intercepted. ({platform})";
         }

@@ -2,11 +2,6 @@
 {
     using System.Text.Json.Serialization;
 
-    abstract class AppStorePlatform : IPlatformAware
-    {
-        public SubscriptionPlatform Platform => SubscriptionPlatform.AppStore;
-    }
-
     class AppStoreServerNotification
     {
         /// <summary>
@@ -26,14 +21,5 @@
         /// </summary>
         [JsonPropertyName("environment")]
         public AppStoreServerEnvironment Environment { get; set; }
-    }
-
-    enum AppStoreServerEnvironment
-    {
-        [JsonPropertyName("Sandbox")]
-        SandBox,
-
-        [JsonPropertyName("PROD")]
-        Production
     }
 }

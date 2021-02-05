@@ -2,6 +2,6 @@
 {
     public interface IPlatformAware
     {
-        SubscriptionPlatform Platform { get; }
+        string Platform { get; }
     }
 }

@@ -2,6 +2,6 @@
 {
     abstract class CafeBazaarPlatform : IPlatformAware
     {
-        public SubscriptionPlatform Platform => SubscriptionPlatform.CafeBazaar;
+        public string Platform => "CafeBazaar";
     }
 }

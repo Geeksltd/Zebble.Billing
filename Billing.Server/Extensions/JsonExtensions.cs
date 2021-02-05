@@ -1,30 +1,17 @@
 ﻿namespace Zebble.Billing
 {
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Serialization;
+    using System.Text.Json;
 
-    static class JsonExtensions
+    public static class JsonExtensions
     {
         public static string ToJson(this object value)
         {
-            return JsonConvert.SerializeObject(value, CreateDefaultSettings());
+            return JsonSerializer.Serialize(value);
         }
 
         public static T FromJson<T>(this string value)
         {
-            return JsonConvert.DeserializeObject<T>(value, CreateDefaultSettings());
-        }
-
-        static JsonSerializerSettings CreateDefaultSettings()
-        {
-            return new JsonSerializerSettings
-            {
-                ContractResolver = new DefaultContractResolver
-                {
-                    NamingStrategy = new SnakeCaseNamingStrategy()
-                },
-                Formatting = Formatting.Indented
-            };
+            return JsonSerializer.Deserialize<T>(value);
         }
     }
 }

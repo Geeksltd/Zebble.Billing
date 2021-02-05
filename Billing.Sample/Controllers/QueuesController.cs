@@ -7,17 +7,17 @@
     [Route("queues")]
     public class QueuesController : ControllerBase
     {
-        readonly IRootQueueProcessor _rootQueueProcessor;
+        readonly IRootQueueProcessor rootQueueProcessor;
 
         public QueuesController(IRootQueueProcessor rootQueueProcessor)
         {
-            _rootQueueProcessor = rootQueueProcessor;
+            this.rootQueueProcessor = rootQueueProcessor;
         }
 
         [HttpGet("process-all")]
         public async Task<string> ProcessAll()
         {
-            var processedMessages = await _rootQueueProcessor.ProcessAll();
+            var processedMessages = await rootQueueProcessor.ProcessAll();
 
             if (processedMessages == 0)
                 return "No message found to process.";
@@ -26,9 +26,9 @@
         }
 
         [HttpGet("process/{platform}")]
-        public async Task<string> Process(SubscriptionPlatform platform)
+        public async Task<string> Process(string platform)
         {
-            var processedMessages = await _rootQueueProcessor.Process(platform);
+            var processedMessages = await rootQueueProcessor.Process(platform);
 
             if (processedMessages == 0)
                 return $"No message found to process. ({platform})";

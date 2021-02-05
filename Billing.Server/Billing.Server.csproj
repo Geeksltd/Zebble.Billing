@@ -19,7 +19,7 @@
     <PackageIconUrl>https://raw.githubusercontent.com/Geeksltd/Zebble.Billing/master/icon.png</PackageIconUrl>
     <PackageTags>xamarin, windows, ios, android, zebble</PackageTags>
     <Title>Zebble.Billing.Server</Title>
-    <Description>Zebble IAP plugin for App Store and Google Play.</Description>
+    <Description>Zebble IAP server abstractions.</Description>
     <PackageReleaseNotes>Minor fixes</PackageReleaseNotes>
     <Owners>Geeks Ltd</Owners>
     <Authors>Geeks Ltd</Authors>
@@ -38,11 +38,8 @@
     <None Remove=".gitignore" />
     <None Remove="icon.png" />
     <None Remove="README.md" />
-    <PackageReference Include="Google.Apis.AndroidPublisher.v3" Version="1.49.0.2197" />
-    <PackageReference Include="Google.Cloud.PubSub.V1" Version="2.3.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.2" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Olive" Version="2.1.212" />
+    <PackageReference Include="Olive" Version="2.1.213" />
   </ItemGroup>
   <Import Project="..\Billing.Shared\Billing.Shared.projitems" Label="Shared" />
 </Project>

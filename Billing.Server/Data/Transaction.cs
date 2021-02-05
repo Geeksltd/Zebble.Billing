@@ -4,10 +4,10 @@
 
     public class Transaction
     {
-        public Guid TransactionId { get; set; }
-        public Guid SubscriptionId { get; set; }
+        public string TransactionId { get; set; }
+        public string SubscriptionId { get; set; }
 
-        public SubscriptionPlatform Platform { get; set; }
+        public string Platform { get; set; }
 
         public DateTime Date { get; set; }
 

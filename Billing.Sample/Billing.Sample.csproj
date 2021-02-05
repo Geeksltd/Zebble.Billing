@@ -8,7 +8,9 @@
     <PackageReference Include="Olive.Mvc" Version="3.1.115" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Billing.Server.AppStore\Billing.Server.AppStore.csproj" />
     <ProjectReference Include="..\Billing.Server.CafeBazaar\Billing.Server.CafeBazaar.csproj" />
+    <ProjectReference Include="..\Billing.Server.GooglePlay\Billing.Server.GooglePlay.csproj" />
     <ProjectReference Include="..\Billing.Server\Billing.Server.csproj" />
   </ItemGroup>
 </Project>

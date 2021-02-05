@@ -4,7 +4,7 @@
 
     public interface IPlatformProvider<TType> : IEnumerable<TType> where TType : IPlatformAware
     {
-        bool IsSupported(SubscriptionPlatform platform);
-        TType this[SubscriptionPlatform platform] { get; }
+        bool IsSupported(string platform);
+        TType this[string platform] { get; }
     }
 }

@@ -4,6 +4,6 @@
 
     public interface IRootHookInterceptor
     {
-        Task Intercept(SubscriptionPlatform platform, string body);
+        Task Intercept(string platform, string body);
     }
 }
