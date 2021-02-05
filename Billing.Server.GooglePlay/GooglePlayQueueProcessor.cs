@@ -19,13 +19,13 @@
             IOptionsSnapshot<GooglePubSubOptions> options,
             ISubscriptionRepository subscriptionRepository,
             ITransactionRepository transactionRepository,
-           IPlatformProvider<ILiveSubscriptionQuery> liveSubscriptionQueryProvider
+            GooglePlayLiveSubscriptionQuery liveSubscriptionQuery
         )
         {
             this.options = options.Value;
             this.subscriptionRepository = subscriptionRepository;
             this.transactionRepository = transactionRepository;
-            liveSubscriptionQuery = liveSubscriptionQueryProvider[Platform];
+            this.liveSubscriptionQuery = liveSubscriptionQuery;
         }
 
         public async Task<int> Process()
