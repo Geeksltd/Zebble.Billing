@@ -14,10 +14,10 @@
             this.subscriptionManager = subscriptionManager;
         }
 
-        [HttpPost("initiate-purchase")]
-        public Task InitiatePurchase([FromBody] AppInitiatePurchaseModel model)
+        [HttpPost("purchase-attempt")]
+        public Task PurchaseAttempt([FromBody] AppPurchaseAttemptModel model)
         {
-            return subscriptionManager.InitiatePurchase(model.ProductId, model.UserId, model.Platform, model.PurchaseToken);
+            return subscriptionManager.PurchaseAttempt(model.ProductId, model.UserId, model.Platform, model.PurchaseToken);
         }
 
         [HttpGet("subscription-status")]

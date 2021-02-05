@@ -1,6 +1,6 @@
 ﻿namespace Zebble.Billing.Sample
 {
-    public class AppInitiatePurchaseModel
+    public class AppPurchaseAttemptModel
     {
         public string ProductId { get; set; }
         public string UserId { get; set; }

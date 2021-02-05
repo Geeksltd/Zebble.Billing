@@ -15,7 +15,7 @@
             this.platformProvider = platformProvider;
         }
 
-        public async Task InitiatePurchase(string productId, string userId, string platform, string purchaseToken)
+        public async Task PurchaseAttempt(string productId, string userId, string platform, string purchaseToken)
         {
             var subscription = await repository.GetByPurchaseToken(purchaseToken);
 
