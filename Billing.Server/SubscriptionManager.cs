@@ -7,10 +7,12 @@
     class SubscriptionManager : ISubscriptionManager
     {
         readonly ISubscriptionRepository _subscriptionRepository;
+        readonly IPlatformProvider<ILiveSubscriptionQuery> _liveSubscriptionQueryProvider;
 
-        public SubscriptionManager(ISubscriptionRepository subscriptionRepository)
+        public SubscriptionManager(ISubscriptionRepository subscriptionRepository, IPlatformProvider<ILiveSubscriptionQuery> liveSubscriptionQueryProvider)
         {
             _subscriptionRepository = subscriptionRepository;
+            _liveSubscriptionQueryProvider = liveSubscriptionQueryProvider;
         }
 
         public async Task InitiatePurchase(string productId, string userId, SubscriptionPlatform platform, string purchaseToken)
@@ -42,9 +44,29 @@
             });
         }
 
-        public Task<Subscription> GetSubscriptionStatus(string userId)
+        public async Task<Subscription> GetSubscriptionStatus(string userId)
         {
-            return _subscriptionRepository.GetMostUpdatedByUserId(userId);
+            var subscription = await _subscriptionRepository.GetMostUpdatedByUserId(userId);
+
+            await TryUpdateSubscription(subscription);
+
+            return subscription;
+        }
+
+        async Task TryUpdateSubscription(Subscription subscription)
+        {
+            if (!_liveSubscriptionQueryProvider.IsSupported(subscription.Platform)) return;
+
+            var liveSubscriptionQuery = _liveSubscriptionQueryProvider[subscription.Platform];
+            var updatedSubscription = await liveSubscriptionQuery.GetUpToDateInfo(subscription.ProductId, subscription.PurchaseToken);
+
+            if (updatedSubscription == null) return;
+
+            subscription.ExpiryDate = updatedSubscription.ExpiryDate;
+            subscription.CancellationDate = updatedSubscription.CancellationDate;
+            subscription.AutoRenews = updatedSubscription.AutoRenews;
+
+            await _subscriptionRepository.Update(subscription);
         }
     }
 }

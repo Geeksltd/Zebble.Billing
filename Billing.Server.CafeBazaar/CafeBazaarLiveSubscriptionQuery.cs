@@ -36,10 +36,10 @@
                 PurchaseToken = purchaseToken
             });
 
-            return CreateSubscription(purchaseToken, productId, purchaseResult, subscriptionResult);
+            return CreateSubscription(productId, purchaseToken, purchaseResult, subscriptionResult);
         }
 
-        Subscription CreateSubscription(string purchaseToken, string productId, CafeBazaarValidatePurchaseResult purchase, CafeBazaarValidateSubscriptionResult subscription)
+        Subscription CreateSubscription(string productId, string purchaseToken, CafeBazaarValidatePurchaseResult purchase, CafeBazaarValidateSubscriptionResult subscription)
         {
             return new Subscription
             {

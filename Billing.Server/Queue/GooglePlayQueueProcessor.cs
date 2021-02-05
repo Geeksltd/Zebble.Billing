@@ -62,7 +62,7 @@
 
             if (subscription == null)
             {
-                subscription = await _liveSubscriptionQuery.GetUpToDateInfo(notification.PurchaseToken, notification.ProductId);
+                subscription = await _liveSubscriptionQuery.GetUpToDateInfo(notification.ProductId, notification.PurchaseToken);
 
                 if (subscription == null)
                     return false;

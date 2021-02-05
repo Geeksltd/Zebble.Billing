@@ -31,10 +31,10 @@
             if (result == null)
                 return null;
 
-            return CreateSubscription(purchaseToken, productId, result);
+            return CreateSubscription(productId, purchaseToken, result);
         }
 
-        Subscription CreateSubscription(string purchaseToken, string productId, SubscriptionPurchase purchase)
+        Subscription CreateSubscription(string productId, string purchaseToken, SubscriptionPurchase purchase)
         {
             return new Subscription
             {
