@@ -1,10 +1,10 @@
 ﻿namespace Zebble.Billing
 {
-    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
-    public interface IPlatformProvider<TType> : IEnumerable<TType> where TType : IPlatformAware
+    public interface IPlatformProvider
     {
-        bool IsSupported(string platform);
-        TType this[string platform] { get; }
+        public string Platform { get; }
+        Task<Subscription> GetUpToDateInfo(string productId, string purchaseToken);
     }
 }

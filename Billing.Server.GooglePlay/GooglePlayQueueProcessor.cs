@@ -8,16 +8,16 @@
     using Grpc.Auth;
     using Olive;
 
-    class GooglePlayQueueProcessor : IQueueProcessor
+    class GooglePlayQueueProcessor
     {
         readonly GooglePubSubOptions options;
         readonly ISubscriptionRepository repository;
-        readonly ILiveSubscriptionQuery liveSubscriptionQuery;
+        readonly GooglePlayPlatformProvider liveSubscriptionQuery;
 
         public GooglePlayQueueProcessor(
             IOptionsSnapshot<GooglePubSubOptions> options,
             ISubscriptionRepository repository,
-            GooglePlayLiveSubscriptionQuery liveSubscriptionQuery
+            GooglePlayPlatformProvider liveSubscriptionQuery
         )
         {
             this.options = options.Value;

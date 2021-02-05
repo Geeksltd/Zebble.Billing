@@ -7,9 +7,9 @@
     [Route("app")]
     public class AppController : ControllerBase
     {
-        readonly ISubscriptionManager subscriptionManager;
+        readonly SubscriptionManager subscriptionManager;
 
-        public AppController(ISubscriptionManager subscriptionManager)
+        public AppController(SubscriptionManager subscriptionManager)
         {
             this.subscriptionManager = subscriptionManager;
         }

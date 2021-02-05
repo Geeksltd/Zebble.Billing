@@ -6,14 +6,14 @@
     using Olive;
     using CafeBazaar.DeveloperApi;
 
-    class CafeBazaarLiveSubscriptionQuery : ILiveSubscriptionQuery
+    class CafeBazaarPlatformProvider : IPlatformProvider
     {
         readonly CafeBazaarOptions options;
         readonly CafeBazaarDeveloperService developerService;
 
         public string Platform => "CafeBazaar";
 
-        public CafeBazaarLiveSubscriptionQuery(IOptionsSnapshot<CafeBazaarOptions> options, CafeBazaarDeveloperService developerService)
+        public CafeBazaarPlatformProvider(IOptionsSnapshot<CafeBazaarOptions> options, CafeBazaarDeveloperService developerService)
         {
             this.options = options.Value;
             this.developerService = developerService;

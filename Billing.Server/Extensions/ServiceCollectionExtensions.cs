@@ -12,9 +12,7 @@
 
             services.AddZebbleProductsCache(zebbleBillingConfig);
 
-            services.AddScoped(typeof(IPlatformProvider<>), typeof(PlatformProvider<>));
-
-            services.AddScoped<ISubscriptionManager, SubscriptionManager>();
+            services.AddScoped<SubscriptionManager>();
 
             builder?.Invoke(new ZebbleBillingBuilder(services, zebbleBillingConfig));
 

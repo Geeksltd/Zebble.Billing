@@ -1,18 +1,18 @@
 ﻿namespace Zebble.Billing
 {
-    using Olive;
     using System;
     using System.Threading.Tasks;
+    using Olive;
 
-    class SubscriptionManager : ISubscriptionManager
+    public class SubscriptionManager
     {
         readonly ISubscriptionRepository repository;
-        readonly IPlatformProvider<ILiveSubscriptionQuery> liveSubscriptionQueryProvider;
+        readonly IPlatformProvider platformProvider;
 
-        public SubscriptionManager(ISubscriptionRepository repository, IPlatformProvider<ILiveSubscriptionQuery> liveSubscriptionQueryProvider)
+        public SubscriptionManager(ISubscriptionRepository repository, IPlatformProvider platformProvider)
         {
             this.repository = repository;
-            this.liveSubscriptionQueryProvider = liveSubscriptionQueryProvider;
+            this.platformProvider = platformProvider;
         }
 
         public async Task InitiatePurchase(string productId, string userId, string platform, string purchaseToken)
@@ -55,10 +55,7 @@
 
         async Task TryUpdateSubscription(Subscription subscription)
         {
-            if (!liveSubscriptionQueryProvider.IsSupported(subscription.Platform)) return;
-
-            var liveSubscriptionQuery = liveSubscriptionQueryProvider[subscription.Platform];
-            var updatedSubscription = await liveSubscriptionQuery.GetUpToDateInfo(subscription.ProductId, subscription.PurchaseToken);
+            var updatedSubscription = await platformProvider.GetUpToDateInfo(subscription.ProductId, subscription.PurchaseToken);
 
             if (updatedSubscription == null) return;
 
