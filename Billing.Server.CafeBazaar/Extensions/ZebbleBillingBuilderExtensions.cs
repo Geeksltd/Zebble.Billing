@@ -4,9 +4,9 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
-    public static class ZebbleBillingOptionsBuilderExtensions
+    public static class ZebbleBillingBuilderExtensions
     {
-        public static ZebbleBillingOptionsBuilder AddCafeBazaar(this ZebbleBillingOptionsBuilder builder)
+        public static IZebbleBillingBuilder AddCafeBazaar(this IZebbleBillingBuilder builder)
         {
             builder.Services.AddCafeBazaarDeveloperApi(builder.Configuration, "CafeBazaar:DeveloperApi");
 

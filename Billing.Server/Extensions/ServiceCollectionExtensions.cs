@@ -1,16 +1,18 @@
 ﻿namespace Zebble.Billing
 {
+    using System;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using System;
 
-    public static partial class ServiceRegistrationExtensions
+    public static partial class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddZebbleBilling(this IServiceCollection services, IConfiguration config, Action<ZebbleBillingOptionsBuilder> builder = null)
+        public static IServiceCollection AddZebbleBilling(this IServiceCollection services, IConfiguration config, Action<IZebbleBillingBuilder> builder = null)
         {
-            services.AddZebbleProductsCache(config);
+            var zebbleBillingConfig = config.GetSection("ZebbleBilling");
 
-            services.Configure<DbContextOptions>(opts => config.GetSection("ZebbleBilling:DbContext")?.Bind(opts));
+            services.AddZebbleProductsCache(zebbleBillingConfig);
+
+            services.Configure<DbContextOptions>(opts => zebbleBillingConfig.GetSection("DbContext")?.Bind(opts));
             services.AddDbContext<BillingDbContext>();
 
             services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
@@ -20,9 +22,8 @@
 
             services.AddScoped<ISubscriptionManager, SubscriptionManager>();
             services.AddScoped<IRootQueueProcessor, RootQueueProcessor>();
-            services.AddScoped<IRootHookInterceptor, RootHookInterceptor>();
 
-            builder?.Invoke(new ZebbleBillingOptionsBuilder(services, config));
+            builder?.Invoke(new ZebbleBillingBuilder(services, zebbleBillingConfig));
 
             return services;
         }

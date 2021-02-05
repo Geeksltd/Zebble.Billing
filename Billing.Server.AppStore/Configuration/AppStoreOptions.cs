@@ -1,4 +1,9 @@
 ﻿namespace Zebble.Billing
 {
-    public class AppStoreOptions : StoreOptionsBase { }
+    using System;
+
+    public class AppStoreOptions : StoreOptionsBase
+    {
+        public Uri HookInterceptorUri { get; set; }
+    }
 }

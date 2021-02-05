@@ -1,23 +1,19 @@
 ﻿namespace Zebble.Billing
 {
+    using Microsoft.Extensions.Options;
+    using System;
     using System.Threading.Tasks;
 
     class AppStoreHookInterceptor : AppStorePlatform, IHookInterceptor
     {
-        readonly ISubscriptionRepository subscriptionRepository;
-        readonly ITransactionRepository transactionRepository;
-        readonly ILiveSubscriptionQuery liveSubscriptionQuery;
+        readonly AppStoreOptions options;
 
-        public AppStoreHookInterceptor(
-            ISubscriptionRepository subscriptionRepository,
-            ITransactionRepository transactionRepository,
-           IPlatformProvider<ILiveSubscriptionQuery> liveSubscriptionQueryProvider
-        )
+        public AppStoreHookInterceptor(IOptionsSnapshot<AppStoreOptions> options)
         {
-            this.subscriptionRepository = subscriptionRepository;
-            this.transactionRepository = transactionRepository;
-            this.liveSubscriptionQuery = liveSubscriptionQueryProvider[Platform];
+            this.options = options.Value;
         }
+
+        public Uri RelativeUri => options.HookInterceptorUri;
 
         public async Task Intercept(string body)
         {

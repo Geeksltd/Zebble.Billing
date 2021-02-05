@@ -14,7 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Provider\ProductRepository.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enums.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\EntityExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ServiceRegistrationExtensions.cs" />
+    <Compile Include="..\Billing.Shared\Extensions\ServiceCollectionExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Product.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Subscription.cs" />
   </ItemGroup>

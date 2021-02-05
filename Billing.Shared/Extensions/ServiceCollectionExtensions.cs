@@ -3,7 +3,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
-    static partial class ServiceRegistrationExtensions
+    static partial class ServiceCollectionExtensions
     {
         static IServiceCollection AddZebbleProductsCache(this IServiceCollection services, IConfiguration config)
         {

@@ -3,9 +3,9 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
-    public static partial class ZebbleBillingOptionsBuilderExtensions
+    public static partial class ZebbleBillingBuilderExtensions
     {
-        public static ZebbleBillingOptionsBuilder AddGooglePlay(this ZebbleBillingOptionsBuilder builder)
+        public static IZebbleBillingBuilder AddGooglePlay(this IZebbleBillingBuilder builder)
         {
             builder.Services.Configure<GooglePlayOptions>(opts => builder.Configuration.GetSection("GooglePlay")?.Bind(opts));
             builder.Services.Configure<GooglePubSubOptions>(opts => builder.Configuration.GetSection("GooglePlay:PubSub")?.Bind(opts));
