@@ -4,7 +4,7 @@
     using System;
     using System.Threading.Tasks;
 
-    class AppStoreHookInterceptor : AppStorePlatform, IHookInterceptor
+    class AppStoreHookInterceptor : IHookInterceptor
     {
         readonly AppStoreOptions options;
 

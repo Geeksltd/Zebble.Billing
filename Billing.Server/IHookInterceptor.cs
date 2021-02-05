@@ -3,7 +3,7 @@
     using System;
     using System.Threading.Tasks;
 
-    public interface IHookInterceptor : IPlatformAware
+    public interface IHookInterceptor
     {
         Uri RelativeUri { get; }
         Task Intercept(string body);
