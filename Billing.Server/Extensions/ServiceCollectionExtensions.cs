@@ -21,7 +21,6 @@
             services.AddScoped(typeof(IPlatformProvider<>), typeof(PlatformProvider<>));
 
             services.AddScoped<ISubscriptionManager, SubscriptionManager>();
-            services.AddScoped<IRootQueueProcessor, RootQueueProcessor>();
 
             builder?.Invoke(new ZebbleBillingBuilder(services, zebbleBillingConfig));
 

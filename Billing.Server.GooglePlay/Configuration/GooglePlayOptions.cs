@@ -1,4 +1,9 @@
 ﻿namespace Zebble.Billing
 {
-    public class GooglePlayOptions : StoreOptionsBase { }
+    using System;
+
+    public class GooglePlayOptions : StoreOptionsBase
+    {
+        public Uri QueueProcessorUri { get; set; }
+    }
 }

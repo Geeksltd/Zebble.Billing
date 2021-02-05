@@ -6,10 +6,12 @@
     using Olive;
     using CafeBazaar.DeveloperApi;
 
-    class CafeBazaarLiveSubscriptionQuery : CafeBazaarPlatform, ILiveSubscriptionQuery
+    class CafeBazaarLiveSubscriptionQuery : ILiveSubscriptionQuery
     {
         readonly CafeBazaarOptions options;
         readonly CafeBazaarDeveloperService developerService;
+
+        public string Platform => "CafeBazaar";
 
         public CafeBazaarLiveSubscriptionQuery(IOptionsSnapshot<CafeBazaarOptions> options, CafeBazaarDeveloperService developerService)
         {
@@ -46,7 +48,7 @@
                 SubscriptionId = Guid.NewGuid().ToString(),
                 ProductId = productId,
                 UserId = purchase.DeveloperPayload,
-                Platform = Platform,
+                Platform = "CafeBazaar",
                 PurchaseToken = purchaseToken,
                 DateSubscribed = subscription.InitiationTime.DateTime,
                 ExpiryDate = subscription.ValidUntil.DateTime,

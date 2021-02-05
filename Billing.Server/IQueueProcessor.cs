@@ -2,7 +2,7 @@
 {
     using System.Threading.Tasks;
 
-    public interface IQueueProcessor : IPlatformAware
+    public interface IQueueProcessor
     {
         Task<int> Process();
     }

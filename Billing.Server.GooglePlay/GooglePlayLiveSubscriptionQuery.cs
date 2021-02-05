@@ -10,11 +10,13 @@
     using Google.Apis.AndroidPublisher.v3.Data;
     using Olive;
 
-    class GooglePlayLiveSubscriptionQuery : GooglePlayPlatform, ILiveSubscriptionQuery
+    class GooglePlayLiveSubscriptionQuery : ILiveSubscriptionQuery
     {
         readonly GooglePlayOptions playOptions;
         readonly GooglePublisherOptions publisherOptions;
         AndroidPublisherService instance;
+
+        public string Platform => "GooglePlay";
 
         public GooglePlayLiveSubscriptionQuery(IOptionsSnapshot<GooglePlayOptions> playOptions, IOptionsSnapshot<GooglePublisherOptions> publisherOptions)
         {
@@ -41,7 +43,7 @@
                 SubscriptionId = Guid.NewGuid().ToString(),
                 ProductId = productId,
                 UserId = purchase.EmailAddress,
-                Platform = Platform,
+                Platform = "GooglePlay",
                 PurchaseToken = purchaseToken,
                 OriginalTransactionId = purchase.OrderId,
                 DateSubscribed = purchase.StartTimeMillis.ToDateTime() ?? LocalTime.Now,

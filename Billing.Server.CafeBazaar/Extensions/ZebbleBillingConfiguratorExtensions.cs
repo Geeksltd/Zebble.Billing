@@ -2,7 +2,7 @@
 {
     using CafeBazaar.DeveloperApi;
 
-    public static class ApplicationBuilderExtensions
+    public static class ZebbleBillingConfiguratorExtensions
     {
         public static IZebbleBillingConfigurator UseCafeBazaar(this IZebbleBillingConfigurator configurator)
         {
