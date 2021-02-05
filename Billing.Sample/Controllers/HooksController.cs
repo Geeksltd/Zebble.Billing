@@ -7,22 +7,19 @@
     [Route("hooks")]
     public class HooksController : ControllerBase
     {
-        readonly IRootQueueProcessor _rootQueueProcessor;
+        readonly IRootHookInterceptor _rootHookInterceptor;
 
-        public HooksController(IRootQueueProcessor rootQueueProcessor)
+        public HooksController(IRootHookInterceptor rootHookInterceptor)
         {
-            _rootQueueProcessor = rootQueueProcessor;
+            _rootHookInterceptor = rootHookInterceptor;
         }
 
-        [HttpGet("process/{platform}")]
-        public async Task<string> Process(SubscriptionPlatform platform)
+        [HttpPost("intercept/{platform}")]
+        public async Task<string> Intercept([FromRoute] SubscriptionPlatform platform)
         {
-            var processedMessages = await _rootQueueProcessor.Process(platform);
+            await _rootHookInterceptor.Intercept(platform);
 
-            if (processedMessages == 0)
-                return $"No message found to process. ({platform})";
-
-            return $"{processedMessages} messages are processed. ({platform})";
+            return $"Trigerred hook intercepted. ({platform})";
         }
     }
 }
