@@ -7,5 +7,7 @@
         public static bool IsExpired(this Subscription @this) => @this.ExpiryDate?.IsInThePast() ?? false;
 
         public static bool IsCanceled(this Subscription @this) => @this.CancellationDate?.IsInThePast() ?? false;
+
+        public static bool RequiresStoreUpdate(this Subscription @this) => @this.IsExpired() || @this.IsCanceled();
     }
 }

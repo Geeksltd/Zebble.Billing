@@ -48,12 +48,13 @@
         {
             var subscription = await repository.GetMostUpdatedByUserId(userId);
 
-            await TryUpdateSubscription(subscription);
+            if (subscription?.RequiresStoreUpdate() == true)
+                await TryToUpdateSubscription(subscription);
 
             return subscription;
         }
 
-        async Task TryUpdateSubscription(Subscription subscription)
+        async Task TryToUpdateSubscription(Subscription subscription)
         {
             var storeConnector = storeConnectorResolver.Resolve(subscription.Platform);
             var updatedSubscription = await storeConnector.GetUpToDateInfo(subscription.ProductId, subscription.PurchaseToken);

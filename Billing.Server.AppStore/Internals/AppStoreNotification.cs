@@ -8,7 +8,7 @@
         /// The same value as the shared secret you submit in the password field of the requestBody when validating receipts.
         /// </summary>
         [JsonPropertyName("password")]
-        public string Password { get; set; }
+        public string SharedSecret { get; set; }
 
         /// <summary>
         /// The current renewal status for an auto-renewable subscription product. Note that these values are different from those of the auto_renew_status in the receipt
