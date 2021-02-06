@@ -7,12 +7,12 @@
     public class SubscriptionManager
     {
         readonly ISubscriptionRepository repository;
-        readonly IPlatformProvider platformProvider;
+        readonly IStoreConnector storeConnector;
 
-        public SubscriptionManager(ISubscriptionRepository repository, IPlatformProvider platformProvider)
+        public SubscriptionManager(ISubscriptionRepository repository, IStoreConnector storeConnector)
         {
             this.repository = repository;
-            this.platformProvider = platformProvider;
+            this.storeConnector = storeConnector;
         }
 
         public async Task PurchaseAttempt(string productId, string userId, string platform, string purchaseToken)
@@ -55,7 +55,7 @@
 
         async Task TryUpdateSubscription(Subscription subscription)
         {
-            var updatedSubscription = await platformProvider.GetUpToDateInfo(subscription.ProductId, subscription.PurchaseToken);
+            var updatedSubscription = await storeConnector.GetUpToDateInfo(subscription.ProductId, subscription.PurchaseToken);
 
             if (updatedSubscription == null) return;
 

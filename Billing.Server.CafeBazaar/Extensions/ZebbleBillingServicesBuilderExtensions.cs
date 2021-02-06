@@ -11,7 +11,7 @@
             builder.Services.AddCafeBazaarDeveloperApi(builder.Configuration, "CafeBazaar:DeveloperApi");
 
             builder.Services.Configure<CafeBazaarOptions>(opts => builder.Configuration.GetSection("CafeBazaar")?.Bind(opts));
-            builder.Services.AddScoped<IPlatformProvider, CafeBazaarPlatformProvider>();
+            builder.Services.AddScoped<IStoreConnector, CafeBazaarStoreConnector>();
 
             return builder;
         }

@@ -14,7 +14,7 @@ namespace Zebble.Billing.Sample
             return WebHost.CreateDefaultBuilder<Startup>(args)
                    .ConfigureAppConfiguration(builder =>
                    {
-                       var fileProvider = new EmbeddedFileProvider(typeof(IPlatformProvider).Assembly);
+                       var fileProvider = new EmbeddedFileProvider(typeof(IStoreConnector).Assembly);
                        builder.AddJsonFile(fileProvider, "Zebble.Catalog.json", false, true);
                    })
                    .Build();
