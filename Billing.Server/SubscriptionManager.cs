@@ -7,12 +7,12 @@
     public class SubscriptionManager
     {
         readonly ISubscriptionRepository repository;
-        readonly IStoreConnector storeConnector;
+        readonly StoreConnectorResolver storeConnectorResolver;
 
-        public SubscriptionManager(ISubscriptionRepository repository, IStoreConnector storeConnector)
+        internal SubscriptionManager(ISubscriptionRepository repository, StoreConnectorResolver storeConnectorResolver)
         {
             this.repository = repository;
-            this.storeConnector = storeConnector;
+            this.storeConnectorResolver = storeConnectorResolver;
         }
 
         public async Task PurchaseAttempt(string productId, string userId, string platform, string purchaseToken)
@@ -55,6 +55,7 @@
 
         async Task TryUpdateSubscription(Subscription subscription)
         {
+            var storeConnector = storeConnectorResolver.Resolve(subscription.Platform);
             var updatedSubscription = await storeConnector.GetUpToDateInfo(subscription.ProductId, subscription.PurchaseToken);
 
             if (updatedSubscription == null) return;

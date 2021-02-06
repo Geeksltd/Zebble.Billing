@@ -16,8 +16,6 @@
         readonly GooglePublisherOptions publisherOptions;
         AndroidPublisherService instance;
 
-        public string Platform => "GooglePlay";
-
         public GooglePlayConnector(IOptionsSnapshot<GooglePlayOptions> playOptions, IOptionsSnapshot<GooglePublisherOptions> publisherOptions)
         {
             this.playOptions = playOptions.Value;

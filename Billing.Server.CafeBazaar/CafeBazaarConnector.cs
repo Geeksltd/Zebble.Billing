@@ -11,8 +11,6 @@
         readonly CafeBazaarOptions options;
         readonly CafeBazaarDeveloperService developerService;
 
-        public string Platform => "CafeBazaar";
-
         public CafeBazaarConnector(IOptionsSnapshot<CafeBazaarOptions> options, CafeBazaarDeveloperService developerService)
         {
             this.options = options.Value;
