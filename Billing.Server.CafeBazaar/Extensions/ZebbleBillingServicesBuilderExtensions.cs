@@ -8,9 +8,14 @@
     {
         public static ZebbleBillingServicesBuilder AddCafeBazaar(this ZebbleBillingServicesBuilder builder)
         {
-            builder.Services.AddCafeBazaarDeveloperApi(builder.Configuration, "CafeBazaar:DeveloperApi");
+            var cafeBazaarConfig = builder.Configuration.GetSection("CafeBazaar");
 
-            builder.Services.Configure<CafeBazaarOptions>(opts => builder.Configuration.GetSection("CafeBazaar")?.Bind(opts));
+            builder.Services.AddCafeBazaarDeveloperApi(cafeBazaarConfig, "CafeBazaar:DeveloperApi");
+
+            builder.Services.AddOptions<CafeBazaarOptions>()
+                            .Configure(opts => cafeBazaarConfig?.Bind(opts))
+                            .Validate(opts => opts.Validate());
+
             builder.Services.AddStoreConnector<CafeBazaarConnector>("CafeBazaar");
 
             return builder;

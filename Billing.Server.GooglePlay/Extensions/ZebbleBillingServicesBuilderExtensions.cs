@@ -7,9 +7,18 @@
     {
         public static ZebbleBillingServicesBuilder AddGooglePlay(this ZebbleBillingServicesBuilder builder)
         {
-            builder.Services.Configure<GooglePlayOptions>(opts => builder.Configuration.GetSection("GooglePlay")?.Bind(opts));
-            builder.Services.Configure<GooglePubSubOptions>(opts => builder.Configuration.GetSection("GooglePlay:PubSub")?.Bind(opts));
-            builder.Services.Configure<GooglePublisherOptions>(opts => builder.Configuration.GetSection("GooglePlay:Publisher")?.Bind(opts));
+            builder.Services.AddOptions<GooglePlayOptions>()
+                            .Configure(opts => builder.Configuration.GetSection("GooglePlay")?.Bind(opts))
+                            .Validate(opts => opts.Validate());
+
+            builder.Services.AddOptions<GooglePubSubOptions>()
+                            .Configure(opts => builder.Configuration.GetSection("GooglePlay:PubSub")?.Bind(opts))
+                            .Validate(opts => opts.Validate());
+
+            builder.Services.AddOptions<GooglePublisherOptions>()
+                            .Configure(opts => builder.Configuration.GetSection("GooglePlay:Publisher")?.Bind(opts))
+                            .Validate(opts => opts.Validate());
+
             builder.Services.AddStoreConnector<GooglePlayConnector>("GooglePlay");
             builder.Services.AddScoped<GooglePlayQueueProcessor>();
 

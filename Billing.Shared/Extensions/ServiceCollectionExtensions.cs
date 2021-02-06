@@ -7,7 +7,10 @@
     {
         static IServiceCollection AddZebbleProductsCache(this IServiceCollection services, IConfiguration config)
         {
-            services.Configure<CatalogOptions>(opts => config.GetSection("Catalog")?.Bind(opts));
+            services.AddOptions<CatalogOptions>()
+                    .Configure(opts => config.GetSection("Catalog")?.Bind(opts))
+                    .Validate(opts => opts.Validate());
+
             services.AddScoped<IProductRepository, ProductRepository>();
 
             return services;

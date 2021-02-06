@@ -7,7 +7,10 @@
     {
         public static ZebbleBillingServicesBuilder AddAppStore(this ZebbleBillingServicesBuilder builder)
         {
-            builder.Services.Configure<AppStoreOptions>(opts => builder.Configuration.GetSection("AppStore")?.Bind(opts));
+            builder.Services.AddOptions<AppStoreOptions>()
+                            .Configure(opts => builder.Configuration.GetSection("AppStore")?.Bind(opts))
+                            .Validate(opts => opts.Validate());
+
             builder.Services.AddStoreConnector<AppStoreConnector>("AppStore");
             builder.Services.AddScoped<AppStoreHookInterceptor>();
 
