@@ -2,25 +2,20 @@
 {
     using System;
     using System.Linq;
-    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Olive;
 
     public static partial class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddZebbleBilling(this IServiceCollection services, IConfiguration config, Action<ZebbleBillingServicesBuilder> builder = null)
+        public static IServiceCollection AddZebbleBilling(this IServiceCollection services, Action<ZebbleBillingServicesBuilder> builder = null)
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
 
-            if (config == null) throw new ArgumentNullException(nameof(config));
-
-            var zebbleBillingConfig = config.GetSection("ZebbleBilling");
-
-            services.AddZebbleProductsCache(zebbleBillingConfig);
+            services.AddZebbleProductsCache();
 
             services.AddScoped<SubscriptionManager>();
 
-            builder?.Invoke(new ZebbleBillingServicesBuilder(services, zebbleBillingConfig));
+            builder?.Invoke(new ZebbleBillingServicesBuilder(services));
 
             return services;
         }

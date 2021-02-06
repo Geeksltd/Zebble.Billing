@@ -5,18 +5,18 @@
 
     public static partial class ZebbleBillingServicesBuilderExtensions
     {
-        public static ZebbleBillingServicesBuilder AddGooglePlay(this ZebbleBillingServicesBuilder builder)
+        public static ZebbleBillingServicesBuilder AddGooglePlay(this ZebbleBillingServicesBuilder builder, string configKey = "ZebbleBilling:GooglePlay")
         {
             builder.Services.AddOptions<GooglePlayOptions>()
-                            .Configure(opts => builder.Configuration.GetSection("GooglePlay")?.Bind(opts))
+                            .Configure<IConfiguration>((opts, config) => config.GetSection(configKey)?.Bind(opts))
                             .Validate(opts => opts.Validate());
 
             builder.Services.AddOptions<GooglePubSubOptions>()
-                            .Configure(opts => builder.Configuration.GetSection("GooglePlay:PubSub")?.Bind(opts))
+                            .Configure<IConfiguration>((opts, config) => config.GetSection($"{configKey}:PubSub")?.Bind(opts))
                             .Validate(opts => opts.Validate());
 
             builder.Services.AddOptions<GooglePublisherOptions>()
-                            .Configure(opts => builder.Configuration.GetSection("GooglePlay:Publisher")?.Bind(opts))
+                            .Configure<IConfiguration>((opts, config) => config.GetSection($"{configKey}:Publisher")?.Bind(opts))
                             .Validate(opts => opts.Validate());
 
             builder.Services.AddStoreConnector<GooglePlayConnector>("GooglePlay");

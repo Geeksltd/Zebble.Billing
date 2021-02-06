@@ -6,14 +6,12 @@
 
     public static class ZebbleBillingServicesBuilderExtensions
     {
-        public static ZebbleBillingServicesBuilder AddCafeBazaar(this ZebbleBillingServicesBuilder builder)
+        public static ZebbleBillingServicesBuilder AddCafeBazaar(this ZebbleBillingServicesBuilder builder, string configKey = "ZebbleBilling:CafeBazaar")
         {
-            var cafeBazaarConfig = builder.Configuration.GetSection("CafeBazaar");
-
-            builder.Services.AddCafeBazaarDeveloperApi(cafeBazaarConfig, "CafeBazaar:DeveloperApi");
+            builder.Services.AddCafeBazaarDeveloperApi($"{configKey}:DeveloperApi");
 
             builder.Services.AddOptions<CafeBazaarOptions>()
-                            .Configure(opts => cafeBazaarConfig?.Bind(opts))
+                            .Configure<IConfiguration>((opts, config) => config.GetSection(configKey)?.Bind(opts))
                             .Validate(opts => opts.Validate());
 
             builder.Services.AddStoreConnector<CafeBazaarConnector>("CafeBazaar");

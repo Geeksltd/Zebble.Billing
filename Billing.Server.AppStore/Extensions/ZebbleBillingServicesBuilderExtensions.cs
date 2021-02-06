@@ -5,10 +5,10 @@
 
     public static partial class ZebbleBillingServicesBuilderExtensions
     {
-        public static ZebbleBillingServicesBuilder AddAppStore(this ZebbleBillingServicesBuilder builder)
+        public static ZebbleBillingServicesBuilder AddAppStore(this ZebbleBillingServicesBuilder builder, string configKey = "ZebbleBilling:AppStore")
         {
             builder.Services.AddOptions<AppStoreOptions>()
-                            .Configure(opts => builder.Configuration.GetSection("AppStore")?.Bind(opts))
+                            .Configure<IConfiguration>((opts, config) => config.GetSection(configKey)?.Bind(opts))
                             .Validate(opts => opts.Validate());
 
             builder.Services.AddStoreConnector<AppStoreConnector>("AppStore");

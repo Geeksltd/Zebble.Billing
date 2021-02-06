@@ -5,10 +5,10 @@
 
     public static partial class ZebbleBillingServicesBuilderExtensions
     {
-        public static ZebbleBillingServicesBuilder AddEntityFramework(this ZebbleBillingServicesBuilder builder)
+        public static ZebbleBillingServicesBuilder AddEntityFramework(this ZebbleBillingServicesBuilder builder, string configKey = "ZebbleBilling:DbContext")
         {
             builder.Services.AddOptions<DbContextOptions>()
-                            .Configure(opts => builder.Configuration.GetSection("DbContext")?.Bind(opts))
+                            .Configure<IConfiguration>((opts, config) => config.GetSection(configKey)?.Bind(opts))
                             .Validate(opts => opts.Validate());
 
             builder.Services.AddDbContext<BillingDbContext>();
