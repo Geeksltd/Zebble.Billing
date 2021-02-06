@@ -5,7 +5,7 @@
     enum AppStoreEnvironment
     {
         [JsonPropertyName("Sandbox")]
-        SandBox,
+        Sandbox,
 
         [JsonPropertyName("PROD")]
         Production

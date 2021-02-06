@@ -38,6 +38,7 @@
     <None Remove=".gitignore" />
     <None Remove="icon.png" />
     <None Remove="README.md" />
+    <PackageReference Include="Apple.Receipt.Verificator" Version="2.1.0" />
     <!--<PackageReference Include="Zebble.Billing.Server" Version="1.0.0" />-->
     <ProjectReference Include="..\Billing.Server\Billing.Server.csproj" />
   </ItemGroup>

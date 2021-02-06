@@ -1,11 +1,13 @@
 ﻿namespace Zebble.Billing
 {
-    using Olive;
     using System;
+    using Apple.Receipt.Verificator.Models;
+    using Olive;
 
     public class AppStoreOptions : StoreOptionsBase
     {
         public string SharedSecret { get; set; }
+        public AppStoreEnvironment Environment { get; set; }
         public Uri HookInterceptorUri { get; set; }
 
         internal new bool Validate()
@@ -16,6 +18,13 @@
             if (HookInterceptorUri.IsAbsoluteUri == false) throw new InvalidOperationException($"{nameof(HookInterceptorUri)} should be absolute.");
 
             return base.Validate();
+        }
+
+        internal void Apply(AppleReceiptVerificationSettings @that)
+        {
+            @that.VerifyReceiptSharedSecret = SharedSecret;
+            @that.VerificationType = Environment == AppStoreEnvironment.Sandbox ? AppleReceiptVerificationType.Sandbox : AppleReceiptVerificationType.Production;
+            @that.AllowedBundleIds = new[] { PackageName };
         }
     }
 }
