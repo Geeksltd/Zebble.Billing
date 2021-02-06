@@ -4,6 +4,7 @@
 
     public class AppStoreOptions : StoreOptionsBase
     {
+        public string SharedSecret { get; set; }
         public Uri HookInterceptorUri { get; set; }
     }
 }
