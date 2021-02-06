@@ -12,9 +12,9 @@
     {
         readonly GooglePubSubOptions options;
         readonly ISubscriptionRepository repository;
-        readonly GooglePlayStoreConnector platformProvider;
+        readonly GooglePlayConnector platformProvider;
 
-        public GooglePlayQueueProcessor(IOptionsSnapshot<GooglePubSubOptions> options, ISubscriptionRepository repository, GooglePlayStoreConnector platformProvider)
+        public GooglePlayQueueProcessor(IOptionsSnapshot<GooglePubSubOptions> options, ISubscriptionRepository repository, GooglePlayConnector platformProvider)
         {
             this.options = options.Value;
             this.repository = repository;

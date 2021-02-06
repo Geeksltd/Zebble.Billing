@@ -6,14 +6,14 @@
     using Olive;
     using CafeBazaar.DeveloperApi;
 
-    class CafeBazaarStoreConnector : IStoreConnector
+    class CafeBazaarConnector : IStoreConnector
     {
         readonly CafeBazaarOptions options;
         readonly CafeBazaarDeveloperService developerService;
 
         public string Platform => "CafeBazaar";
 
-        public CafeBazaarStoreConnector(IOptionsSnapshot<CafeBazaarOptions> options, CafeBazaarDeveloperService developerService)
+        public CafeBazaarConnector(IOptionsSnapshot<CafeBazaarOptions> options, CafeBazaarDeveloperService developerService)
         {
             this.options = options.Value;
             this.developerService = developerService;

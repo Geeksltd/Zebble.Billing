@@ -1,6 +1,7 @@
 ﻿namespace Zebble.Billing
 {
     using System;
+    using System.Net;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Options;
@@ -23,7 +24,10 @@
             if (pathMatched && isPost)
             {
                 await hookInterceptor.Intercept(await context.Request.Body.ReadAllText());
+
+                context.Response.StatusCode = (int)HttpStatusCode.OK;
                 await context.Response.WriteAsync($"{hookInterceptor.GetType().Name} executed.");
+
                 return;
             }
 
