@@ -8,20 +8,20 @@
 
     class CafeBazaarConnector : IStoreConnector
     {
-        readonly CafeBazaarOptions options;
-        readonly CafeBazaarDeveloperService developerService;
+        readonly CafeBazaarOptions Options;
+        readonly CafeBazaarDeveloperService DeveloperService;
 
         public CafeBazaarConnector(IOptionsSnapshot<CafeBazaarOptions> options, CafeBazaarDeveloperService developerService)
         {
-            this.options = options.Value;
-            this.developerService = developerService;
+            Options = options.Value;
+            DeveloperService = developerService;
         }
 
         public async Task<Subscription> GetUpToDateInfo(string productId, string purchaseToken)
         {
-            var purchaseResult = await developerService.ValidatePurchase(new CafeBazaarValidatePurchaseRequest
+            var purchaseResult = await DeveloperService.ValidatePurchase(new CafeBazaarValidatePurchaseRequest
             {
-                PackageName = options.PackageName,
+                PackageName = Options.PackageName,
                 ProductId = productId,
                 PurchaseToken = purchaseToken
             });
@@ -29,9 +29,9 @@
             if (purchaseResult == null)
                 return null;
 
-            var subscriptionResult = await developerService.ValidateSubscription(new CafeBazaarValidateSubscriptionRequest
+            var subscriptionResult = await DeveloperService.ValidateSubscription(new CafeBazaarValidateSubscriptionRequest
             {
-                PackageName = options.PackageName,
+                PackageName = Options.PackageName,
                 SubscriptionId = productId,
                 PurchaseToken = purchaseToken
             });

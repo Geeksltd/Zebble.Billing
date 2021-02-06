@@ -9,11 +9,11 @@
 
     class HookInterceptionMiddleware
     {
-        readonly RequestDelegate next;
+        readonly RequestDelegate Next;
 
         public HookInterceptionMiddleware(RequestDelegate next)
         {
-            this.next = next ?? throw new ArgumentNullException(nameof(next));
+            Next = next ?? throw new ArgumentNullException(nameof(next));
         }
 
         public async Task InvokeAsync(HttpContext context, IOptionsSnapshot<AppStoreOptions> options, AppStoreHookInterceptor hookInterceptor)
@@ -31,7 +31,7 @@
                 return;
             }
 
-            await next(context);
+            await Next(context);
         }
     }
 }

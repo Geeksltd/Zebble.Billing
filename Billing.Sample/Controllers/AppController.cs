@@ -7,23 +7,23 @@
     [Route("app")]
     public class AppController : ControllerBase
     {
-        readonly SubscriptionManager subscriptionManager;
+        readonly SubscriptionManager SubscriptionManager;
 
         public AppController(SubscriptionManager subscriptionManager)
         {
-            this.subscriptionManager = subscriptionManager;
+            SubscriptionManager = subscriptionManager;
         }
 
         [HttpPost("purchase-attempt")]
         public Task PurchaseAttempt([FromBody] AppPurchaseAttemptModel model)
         {
-            return subscriptionManager.PurchaseAttempt(model.ProductId, model.UserId, model.Platform, model.PurchaseToken);
+            return SubscriptionManager.PurchaseAttempt(model.ProductId, model.UserId, model.Platform, model.PurchaseToken);
         }
 
         [HttpGet("subscription-status")]
         public Task<Subscription> SubscriptionStatus(string userId)
         {
-            return subscriptionManager.GetSubscriptionStatus(userId);
+            return SubscriptionManager.GetSubscriptionStatus(userId);
         }
     }
 }

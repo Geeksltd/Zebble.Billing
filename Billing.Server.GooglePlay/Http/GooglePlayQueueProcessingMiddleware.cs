@@ -8,11 +8,11 @@
 
     class GooglePlayQueueProcessingMiddleware
     {
-        readonly RequestDelegate next;
+        readonly RequestDelegate Next;
 
         public GooglePlayQueueProcessingMiddleware(RequestDelegate next)
         {
-            this.next = next ?? throw new ArgumentNullException(nameof(next));
+            Next = next ?? throw new ArgumentNullException(nameof(next));
         }
 
         public async Task InvokeAsync(HttpContext context, IOptionsSnapshot<GooglePlayOptions> options, GooglePlayQueueProcessor queueProcessor)
@@ -29,7 +29,7 @@
                 return;
             }
 
-            await next(context);
+            await Next(context);
         }
     }
 }

@@ -5,18 +5,18 @@
 
     class AppStoreHookInterceptor
     {
-        private readonly ISubscriptionRepository repository;
+        readonly ISubscriptionRepository Repository;
 
         public AppStoreHookInterceptor(ISubscriptionRepository repository)
         {
-            this.repository = repository;
+            Repository = repository;
         }
 
         public async Task Intercept(string body)
         {
             var notification = body.ToNotification();
 
-            await repository.AddTransaction(new Transaction
+            await Repository.AddTransaction(new Transaction
             {
                 TransactionId = Guid.NewGuid().ToString(),
                 //SubscriptionId = subscription.SubscriptionId,

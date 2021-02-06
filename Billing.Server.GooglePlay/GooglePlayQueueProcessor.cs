@@ -10,22 +10,22 @@
 
     class GooglePlayQueueProcessor
     {
-        readonly GooglePubSubOptions options;
-        readonly ISubscriptionRepository repository;
-        readonly GooglePlayConnector platformProvider;
+        readonly GooglePubSubOptions Options;
+        readonly ISubscriptionRepository Repository;
+        readonly GooglePlayConnector StoreConnector;
 
-        public GooglePlayQueueProcessor(IOptionsSnapshot<GooglePubSubOptions> options, ISubscriptionRepository repository, GooglePlayConnector platformProvider)
+        public GooglePlayQueueProcessor(IOptionsSnapshot<GooglePubSubOptions> options, ISubscriptionRepository repository, GooglePlayConnector storeConnector)
         {
-            this.options = options.Value;
-            this.repository = repository;
-            this.platformProvider = platformProvider;
+            Options = options.Value;
+            Repository = repository;
+            StoreConnector = storeConnector;
         }
 
         public async Task<int> Process()
         {
             var handled = 0;
 
-            var name = new SubscriptionName(options.ProjectId, options.SubscriptionId);
+            var name = new SubscriptionName(Options.ProjectId, Options.SubscriptionId);
             var client = await SubscriberClient.CreateAsync(name, GetSettings());
 
             var startTask = client.StartAsync(async (message, _) =>
@@ -51,16 +51,16 @@
 
         async Task<bool> ProccessNotification(GooglePlayNotification notification)
         {
-            var subscription = await repository.GetByPurchaseToken(notification.PurchaseToken);
+            var subscription = await Repository.GetByPurchaseToken(notification.PurchaseToken);
 
             if (subscription == null)
             {
-                subscription = await platformProvider.GetUpToDateInfo(notification.ProductId, notification.PurchaseToken);
+                subscription = await StoreConnector.GetUpToDateInfo(notification.ProductId, notification.PurchaseToken);
 
                 if (subscription == null)
                     return false;
 
-                subscription = await repository.AddSubscription(subscription);
+                subscription = await Repository.AddSubscription(subscription);
             }
             else
             {
@@ -69,10 +69,10 @@
                 else if (notification.State == GooglePlaySubscriptionState.Expired)
                     subscription.ExpiryDate = notification.EventTime;
 
-                await repository.UpdateSubscription(subscription);
+                await Repository.UpdateSubscription(subscription);
             }
 
-            await repository.AddTransaction(new Transaction
+            await Repository.AddTransaction(new Transaction
             {
                 TransactionId = Guid.NewGuid().ToString(),
                 SubscriptionId = subscription.SubscriptionId,
@@ -89,11 +89,11 @@
             var json = new JsonCredentialParameters
             {
                 Type = "service_account",
-                ProjectId = options.ProjectId,
-                PrivateKeyId = options.PrivateKeyId,
-                PrivateKey = options.PrivateKey,
-                ClientEmail = options.ClientEmail,
-                ClientId = options.ClientId
+                ProjectId = Options.ProjectId,
+                PrivateKeyId = Options.PrivateKeyId,
+                PrivateKey = Options.PrivateKey,
+                ClientEmail = Options.ClientEmail,
+                ClientId = Options.ClientId
             }.ToJson();
 
             return new SubscriberClient.ClientCreationSettings(

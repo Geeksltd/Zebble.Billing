@@ -7,18 +7,18 @@
 
     class SubscriptionRepository : ISubscriptionRepository
     {
-        readonly BillingDbContext context;
+        readonly BillingDbContext Context;
 
-        public SubscriptionRepository(BillingDbContext context) => this.context = context;
+        public SubscriptionRepository(BillingDbContext context) => Context = context;
 
         public Task<Subscription> GetByPurchaseToken(string purchaseToken)
         {
-            return context.Subscriptions.SingleOrDefaultAsync(x => x.PurchaseToken == purchaseToken);
+            return Context.Subscriptions.SingleOrDefaultAsync(x => x.PurchaseToken == purchaseToken);
         }
 
         public Task<Subscription> GetMostUpdatedByUserId(string userId)
         {
-            return context.Subscriptions.Where(x => x.UserId == userId)
+            return Context.Subscriptions.Where(x => x.UserId == userId)
                                          .Where(x => x.DateSubscribed <= LocalTime.Now)
                                          .Where(x => x.ExpiryDate >= LocalTime.Now)
                                          .Where(x => x.CancellationDate == null || x.CancellationDate >= LocalTime.Now)
@@ -28,22 +28,22 @@
 
         public async Task<Subscription> AddSubscription(Subscription subscription)
         {
-            await context.Subscriptions.AddAsync(subscription);
-            await context.SaveChangesAsync();
+            await Context.Subscriptions.AddAsync(subscription);
+            await Context.SaveChangesAsync();
 
             return subscription;
         }
 
         public async Task UpdateSubscription(Subscription subscription)
         {
-            context.Subscriptions.Update(subscription);
-            await context.SaveChangesAsync();
+            Context.Subscriptions.Update(subscription);
+            await Context.SaveChangesAsync();
         }
 
         public async Task<Transaction> AddTransaction(Transaction transaction)
         {
-            await context.Transactions.AddAsync(transaction);
-            await context.SaveChangesAsync();
+            await Context.Transactions.AddAsync(transaction);
+            await Context.SaveChangesAsync();
 
             return transaction;
         }

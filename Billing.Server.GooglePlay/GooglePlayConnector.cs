@@ -12,21 +12,21 @@
 
     class GooglePlayConnector : IStoreConnector
     {
-        readonly GooglePlayOptions playOptions;
-        readonly GooglePublisherOptions publisherOptions;
+        readonly GooglePlayOptions PlayOptions;
+        readonly GooglePublisherOptions PublisherOptions;
         AndroidPublisherService instance;
 
         public GooglePlayConnector(IOptionsSnapshot<GooglePlayOptions> playOptions, IOptionsSnapshot<GooglePublisherOptions> publisherOptions)
         {
-            this.playOptions = playOptions.Value;
-            this.publisherOptions = publisherOptions.Value;
+            PlayOptions = playOptions.Value;
+            PublisherOptions = publisherOptions.Value;
         }
 
         public async Task<Subscription> GetUpToDateInfo(string productId, string purchaseToken)
         {
             var publisher = GetPublisherService();
 
-            var result = await publisher.Purchases.Subscriptions.Get(playOptions.PackageName, productId, purchaseToken).ExecuteAsync();
+            var result = await publisher.Purchases.Subscriptions.Get(PlayOptions.PackageName, productId, purchaseToken).ExecuteAsync();
 
             if (result == null)
                 return null;
@@ -66,11 +66,11 @@
 
         IConfigurableHttpClientInitializer CreateClientInitializer()
         {
-            return new ServiceAccountCredential(new ServiceAccountCredential.Initializer(publisherOptions.ClientEmail)
+            return new ServiceAccountCredential(new ServiceAccountCredential.Initializer(PublisherOptions.ClientEmail)
             {
-                ProjectId = publisherOptions.ProjectId,
+                ProjectId = PublisherOptions.ProjectId,
                 Scopes = new[] { AndroidPublisherService.ScopeConstants.Androidpublisher }
-            }.FromPrivateKey(publisherOptions.PrivateKey));
+            }.FromPrivateKey(PublisherOptions.PrivateKey));
         }
     }
 }

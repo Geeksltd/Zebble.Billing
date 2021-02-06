@@ -5,19 +5,19 @@
 
     class BillingDbContext : DbContext
     {
-        readonly DbContextOptions options;
+        readonly DbContextOptions Options;
 
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
 
         public BillingDbContext(IOptionsSnapshot<DbContextOptions> options)
         {
-            this.options = options.Value;
+            Options = options.Value;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
-            builder.UseSqlServer(options.ConnectionString);
+            builder.UseSqlServer(Options.ConnectionString);
         }
     }
 }
