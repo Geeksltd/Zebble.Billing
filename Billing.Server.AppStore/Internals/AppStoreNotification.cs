@@ -2,7 +2,7 @@
 {
     using System.Text.Json.Serialization;
 
-    class AppStoreServerNotification
+    class AppStoreNotification
     {
         /// <summary>
         /// The same value as the shared secret you submit in the password field of the requestBody when validating receipts.
@@ -20,6 +20,6 @@
         /// The environment for which App Store generated the receipt.
         /// </summary>
         [JsonPropertyName("environment")]
-        public AppStoreServerEnvironment Environment { get; set; }
+        public AppStoreEnvironment Environment { get; set; }
     }
 }

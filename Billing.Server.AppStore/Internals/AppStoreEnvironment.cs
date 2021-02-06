@@ -2,7 +2,7 @@
 {
     using System.Text.Json.Serialization;
 
-    enum AppStoreServerEnvironment
+    enum AppStoreEnvironment
     {
         [JsonPropertyName("Sandbox")]
         SandBox,

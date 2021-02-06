@@ -49,7 +49,7 @@
             return handled;
         }
 
-        async Task<bool> ProccessNotification(GoogleNotification notification)
+        async Task<bool> ProccessNotification(GooglePlayNotification notification)
         {
             var subscription = await repository.GetByPurchaseToken(notification.PurchaseToken);
 
@@ -64,9 +64,9 @@
             }
             else
             {
-                if (notification.State == GoogleNotification.SubscriptionState.Canceled)
+                if (notification.State == GooglePlaySubscriptionState.Canceled)
                     subscription.CancellationDate = notification.EventTime;
-                else if (notification.State == GoogleNotification.SubscriptionState.Expired)
+                else if (notification.State == GooglePlaySubscriptionState.Expired)
                     subscription.ExpiryDate = notification.EventTime;
 
                 await repository.UpdateSubscription(subscription);
