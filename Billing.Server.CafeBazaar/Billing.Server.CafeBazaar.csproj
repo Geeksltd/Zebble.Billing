@@ -38,8 +38,12 @@
     <None Remove=".gitignore" />
     <None Remove="icon.png" />
     <None Remove="README.md" />
-    <!--<PackageReference Include="Zebble.Billing.Server" Version="1.0.0" />-->
-    <ProjectReference Include="..\Billing.Server\Billing.Server.csproj" />
     <PackageReference Include="CafeBazaar.DeveloperApi" Version="1.0.12" />
+  </ItemGroup>
+  <ItemGroup Condition=" $(Configuration.StartsWith('Debug')) ">
+    <ProjectReference Include="..\Billing.Server\Billing.Server.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition=" $(Configuration.StartsWith('Release')) ">
+    <PackageReference Include="Zebble.Billing.Server" Version="1.0.2" />
   </ItemGroup>
 </Project>
