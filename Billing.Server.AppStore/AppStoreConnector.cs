@@ -24,7 +24,7 @@
             var result = await AppleReceiptVerificator.VerifyAppleReceiptAsync(purchaseToken);
 
             if (result == null)
-                throw new Exception("Couldn't find subscription info.");
+                return null;
 
             ValidateVerificationResult(result);
 
