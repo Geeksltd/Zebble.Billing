@@ -2,6 +2,7 @@
 {
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Olive;
 
     static partial class ServiceCollectionExtensions
     {
@@ -9,7 +10,8 @@
         {
             services.AddOptions<CatalogOptions>()
                     .Configure<IConfiguration>((opts, config) => config.GetSection("ZebbleBilling:Catalog")?.Bind(opts))
-                    .Validate(opts => opts.Validate());
+                    .Validate(opts => opts.Products == null, $"{nameof(CatalogOptions.Products)} is null.")
+                    .Validate(opts => opts.Products.None(), $"{nameof(CatalogOptions.Products)} is empty.");
 
             services.AddScoped<IProductRepository, ProductRepository>();
 

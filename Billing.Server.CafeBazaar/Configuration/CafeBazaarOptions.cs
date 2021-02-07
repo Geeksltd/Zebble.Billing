@@ -1,7 +1,4 @@
 ﻿namespace Zebble.Billing
 {
-    public class CafeBazaarOptions : StoreOptionsBase
-    {
-        internal new bool Validate() => base.Validate();
-    }
+    public class CafeBazaarOptions : StoreOptionsBase { }
 }

@@ -2,6 +2,7 @@
 {
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Olive;
 
     public static partial class ZebbleBillingServicesBuilderExtensions
     {
@@ -9,7 +10,7 @@
         {
             builder.Services.AddOptions<DbContextOptions>()
                             .Configure<IConfiguration>((opts, config) => config.GetSection(configKey)?.Bind(opts))
-                            .Validate(opts => opts.Validate());
+                            .Validate(opts => opts.ConnectionString.IsEmpty(), $"{nameof(DbContextOptions.ConnectionString)} is empty.");
 
             builder.Services.AddDbContext<BillingDbContext>();
 

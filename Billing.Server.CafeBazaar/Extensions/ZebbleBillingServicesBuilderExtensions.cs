@@ -3,6 +3,7 @@
     using CafeBazaar.DeveloperApi;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Olive;
 
     public static class ZebbleBillingServicesBuilderExtensions
     {
@@ -12,7 +13,7 @@
 
             builder.Services.AddOptions<CafeBazaarOptions>()
                             .Configure<IConfiguration>((opts, config) => config.GetSection(configKey)?.Bind(opts))
-                            .Validate(opts => opts.Validate());
+                            .Validate(opts => opts.PackageName.IsEmpty(), $"{nameof(CafeBazaarOptions.PackageName)} is empty.");
 
             builder.Services.AddStoreConnector<CafeBazaarConnector>("CafeBazaar");
 

@@ -1,7 +1,4 @@
 ﻿namespace Zebble.Billing
 {
-    public class GooglePublisherOptions : GoogleServicesOptionsBase
-    {
-        internal new bool Validate() => base.Validate();
-    }
+    public class GooglePublisherOptions : GoogleServicesOptionsBase { }
 }
