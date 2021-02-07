@@ -10,17 +10,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\CatalogOptions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\IProductRepository.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\Provider\ProductRepository.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IProductProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enums.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\EntityExtensions.cs" />
-    <Compile Include="..\Billing.Shared\Extensions\ServiceCollectionExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Product.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Subscription.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Catalog.json">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-    </EmbeddedResource>
   </ItemGroup>
 </Project>

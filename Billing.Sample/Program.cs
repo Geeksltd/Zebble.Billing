@@ -2,8 +2,6 @@ namespace Zebble.Billing.Sample
 {
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.FileProviders;
 
     public class Program
     {
@@ -11,13 +9,7 @@ namespace Zebble.Billing.Sample
 
         static IWebHost BuildWebHost(string[] args)
         {
-            return WebHost.CreateDefaultBuilder<Startup>(args)
-                   .ConfigureAppConfiguration(builder =>
-                   {
-                       var fileProvider = new EmbeddedFileProvider(typeof(IStoreConnector).Assembly);
-                       builder.AddJsonFile(fileProvider, "Zebble.Catalog.json", false, true);
-                   })
-                   .Build();
+            return WebHost.CreateDefaultBuilder<Startup>(args).Build();
         }
     }
 }

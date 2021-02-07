@@ -7,17 +7,16 @@
     {
         public static string BaseUrl { get; private set; }
 
+        public static IProductProvider ProductProvider { get; private set; }
+
         public static IBillingUser User { get; private set; }
 
         public static AsyncEvent<PurchaseRecognizedEventArgs> PurchaseRecognized = new();
 
-        public static void Initialize(string baseUrl, params Product[] products)
+        public static void Initialize(string baseUrl, string catalogPath = @"Resources\Catalog.json")
         {
             BaseUrl = baseUrl.OrNullIfEmpty() ?? throw new ArgumentNullException(nameof(baseUrl));
-
-            if (products.None()) throw new ArgumentException("At least one product should be specified.", nameof(products));
-
-            products.Do(ProductsCache.RegisteredProducts.Add);
+            ProductProvider = new ProductProvider(catalogPath);
         }
 
         public static void SetUser(IBillingUser user) => User = user;

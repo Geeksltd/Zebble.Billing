@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Olive;
 
@@ -11,7 +12,12 @@
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
 
-            services.AddZebbleProductsCache();
+            services.AddOptions<CatalogOptions>()
+                    .Configure<IConfiguration>((opts, config) => config.GetSection("ZebbleBilling:Catalog")?.Bind(opts))
+                    .Validate(opts => opts.Products == null, $"{nameof(CatalogOptions.Products)} is null.")
+                    .Validate(opts => opts.Products.None(), $"{nameof(CatalogOptions.Products)} is empty.");
+
+            services.AddScoped<IProductProvider, ProductProvider>();
 
             services.AddScoped<SubscriptionManager>();
 

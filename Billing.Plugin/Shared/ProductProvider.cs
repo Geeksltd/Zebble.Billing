@@ -1,17 +1,21 @@
 ﻿namespace Zebble.Billing
 {
+    using System;
+    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
-    using Microsoft.Extensions.Options;
+    using Newtonsoft.Json;
     using Olive;
 
-    class ProductRepository : IProductRepository
+    class ProductProvider : IProductProvider
     {
+        readonly FileInfo File;
         readonly CatalogOptions Options;
 
-        public ProductRepository(IOptionsSnapshot<CatalogOptions> options)
+        public ProductProvider(string catalogPath)
         {
-            Options = options.Value;
+            File = catalogPath.IsEmpty() ? throw new ArgumentNullException(nameof(catalogPath)) : Device.IO.File(catalogPath);
+            Options = JsonConvert.DeserializeObject<CatalogOptions>(File.ReadAllText());
         }
 
         public Task<Product> GetById(string productId)

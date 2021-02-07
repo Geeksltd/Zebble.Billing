@@ -11,7 +11,7 @@
     {
         internal static readonly IList<Product> RegisteredProducts = new List<Product>();
 
-        static FileInfo File => IO.File("Products.json");
+        static FileInfo File => IO.File("Catalog.json");
 
         static ProductsCache()
         {
