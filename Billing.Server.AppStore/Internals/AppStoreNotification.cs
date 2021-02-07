@@ -19,7 +19,18 @@
         /// <summary>
         /// The environment for which App Store generated the receipt.
         /// </summary>
-        [JsonPropertyName("environment")]
-        public AppStoreEnvironment Environment { get; set; }
+        public AppStoreEnvironment Environment => UnifiedReceipt.Environment;
+
+        /// <summary>
+        /// The type that describes the in-app purchase event for which the App Store sent the notification.
+        /// </summary>
+        [JsonPropertyName("notification_type")]
+        public AppStoreNotificationType Type { get; set; }
+
+        /// <summary>
+        /// An object that contains information about the most-recent, in-app purchase transactions for the app.
+        /// </summary>
+        [JsonPropertyName("unified_receipt")]
+        public AppStoreUnifiedReceipt UnifiedReceipt { get; set; }
     }
 }

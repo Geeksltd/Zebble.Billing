@@ -7,7 +7,7 @@
         [JsonPropertyName("Sandbox")]
         Sandbox,
 
-        [JsonPropertyName("PROD")]
+        [JsonPropertyName("Production")]
         Production
     }
 }
