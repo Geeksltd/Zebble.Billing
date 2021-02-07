@@ -36,6 +36,9 @@
                 PurchaseToken = purchaseToken
             });
 
+            if (subscriptionResult == null)
+                return null;
+
             return CreateSubscription(productId, purchaseToken, purchaseResult, subscriptionResult);
         }
 

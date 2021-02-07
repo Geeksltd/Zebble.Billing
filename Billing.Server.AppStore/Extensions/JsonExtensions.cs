@@ -4,7 +4,7 @@
     {
         public static AppStoreNotification ToNotification(this string body)
         {
-            return body.FromJson<AppStoreNotification>();
+            return body.FromJson<AppStoreNotification>().WithOriginalData(body);
         }
     }
 }

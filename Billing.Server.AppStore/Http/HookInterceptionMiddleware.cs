@@ -24,8 +24,6 @@
             if (pathMatched && isPost)
             {
                 await hookInterceptor.Intercept(await context.Request.Body.ReadAllText());
-
-                context.Response.StatusCode = (int)HttpStatusCode.OK;
                 await context.Response.WriteAsync($"{hookInterceptor.GetType().Name} executed.");
 
                 return;

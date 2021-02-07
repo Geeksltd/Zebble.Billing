@@ -53,7 +53,7 @@
         InteractivelyRenewed,
 
         /// <summary>
-        /// Indicates that App Store has started asking the customer to consent to your app's subscription price increase. In the unified_receipt.Pending_renewal_infoobject, the price_consent_status value is 0, indicating that App Store is asking for the customer's consent, and hasn't received it. The subscription won't auto-renew unless the user agrees to the new price. When the customer agrees to the price increase, the system sets price_consent_status to 1. Check the receipt using verifyReceipt to view the updated price-consent status.
+        /// Indicates that App Store has started asking the customer to consent to your app's subscription price increase. In the UnifiedReceipt.PendingRenewalInfoObject, the PriceConsentStatus value is false, indicating that App Store is asking for the customer's consent, and hasn't received it. The subscription won't auto-renew unless the user agrees to the new price. When the customer agrees to the price increase, the system sets PriceConsentStatus to true. Check the receipt using VerifyReceipt to view the updated price-consent status.
         /// </summary>
         [JsonPropertyName("PRICE_INCREASE_CONSENT")]
         PriceIncreaseConsent,

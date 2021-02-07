@@ -21,5 +21,11 @@
         /// </summary>
         [JsonPropertyName("latest_receipt_info")]
         public AppStoreLatestReceiptInfo[] LatestReceiptInfo { get; set; }
+
+        /// <summary>
+        /// An array where each element contains the pending renewal information for each auto-renewable subscription identified in ProductId.
+        /// </summary>
+        [JsonPropertyName("Pending_renewal_info")]
+        public AppStorePendingRenewaInfo[] PendingRenewalInfo { get; set; }
     }
 }

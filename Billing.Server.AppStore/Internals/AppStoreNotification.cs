@@ -1,5 +1,7 @@
 ﻿namespace Zebble.Billing
 {
+    using System;
+    using System.Linq;
     using System.Text.Json.Serialization;
 
     class AppStoreNotification
@@ -9,12 +11,6 @@
         /// </summary>
         [JsonPropertyName("password")]
         public string SharedSecret { get; set; }
-
-        /// <summary>
-        /// The current renewal status for an auto-renewable subscription product. Note that these values are different from those of the auto_renew_status in the receipt
-        /// </summary>
-        [JsonPropertyName("auto_renew_status")]
-        public bool AutoRenew { get; set; }
 
         /// <summary>
         /// The environment for which App Store generated the receipt.
@@ -28,9 +24,44 @@
         public AppStoreNotificationType Type { get; set; }
 
         /// <summary>
+        /// The current renewal status for an auto-renewable subscription product.
+        /// </summary>
+        [JsonPropertyName("auto_renew_status")]
+        public bool? AutoRenewStatus { get; set; }
+
+        public string ProductId => CandidateReceiptInfo?.ProductId;
+
+        public string PurchaseToken => UnifiedReceipt.LatestReceipt;
+
+        public DateTime? PurchaseDate => CandidateReceiptInfo?.PurchaseDate;
+
+        public DateTime? CancellationDate => CandidateReceiptInfo?.CancellationDate;
+
+        public DateTime? ExpirationDate => CandidateReceiptInfo?.ExpirationDate;
+
+        public bool? IsInBillingRetryPeriod => CandidateRenewalInfo?.IsInBillingRetryPeriod;
+
+        public DateTime? GracePeriodExpirationDate => CandidateRenewalInfo?.GracePeriodExpirationDate;
+
+        /// <summary>
         /// An object that contains information about the most-recent, in-app purchase transactions for the app.
         /// </summary>
         [JsonPropertyName("unified_receipt")]
         public AppStoreUnifiedReceipt UnifiedReceipt { get; set; }
+
+        /// <summary>
+        /// Original notification json
+        /// </summary>
+        public string OriginalData { get; private set; }
+
+        public AppStoreNotification WithOriginalData(string originalData)
+        {
+            OriginalData = originalData;
+            return this;
+        }
+
+        AppStoreLatestReceiptInfo CandidateReceiptInfo => UnifiedReceipt.LatestReceiptInfo.FirstOrDefault();
+
+        AppStorePendingRenewaInfo CandidateRenewalInfo => UnifiedReceipt.PendingRenewalInfo.FirstOrDefault();
     }
 }

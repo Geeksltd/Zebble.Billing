@@ -7,14 +7,12 @@
     public class AppStoreOptions : StoreOptionsBase
     {
         public string SharedSecret { get; set; }
-        public string Environment { get; set; }
+        public AppStoreEnvironment Environment { get; set; }
         public Uri HookInterceptorUri { get; set; }
 
         internal new bool Validate()
         {
             if (SharedSecret.IsEmpty()) throw new ArgumentNullException(nameof(SharedSecret));
-
-            if (Environment.IsEmpty()) throw new ArgumentNullException(nameof(Environment));
 
             if (HookInterceptorUri == null) throw new ArgumentNullException(nameof(HookInterceptorUri));
             if (HookInterceptorUri.IsAbsoluteUri == false) throw new InvalidOperationException($"{nameof(HookInterceptorUri)} should be absolute.");
@@ -25,7 +23,7 @@
         internal void Apply(AppleReceiptVerificationSettings @that)
         {
             @that.VerifyReceiptSharedSecret = SharedSecret;
-            @that.VerificationType = Environment == "Sandbox" ? AppleReceiptVerificationType.Sandbox : AppleReceiptVerificationType.Production;
+            @that.VerificationType = Environment.ToVerificationType();
             @that.AllowedBundleIds = new[] { PackageName };
         }
     }

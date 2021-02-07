@@ -59,7 +59,7 @@
 
                 if (subscription == null)
                     return false;
-
+                
                 subscription = await Repository.AddSubscription(subscription);
             }
             else
