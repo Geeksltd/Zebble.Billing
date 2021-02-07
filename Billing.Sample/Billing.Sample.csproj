@@ -14,9 +14,9 @@
   </ItemGroup>
   <ItemGroup Condition=" $(Configuration.StartsWith('Release')) ">
     <PackageReference Include="Zebble.Billing.Server" Version="1.0.2" />
-    <PackageReference Include="Zebble.Billing.Server.AppStore" Version="1.0.2" />
-    <PackageReference Include="Zebble.Billing.Server.GooglePlay" Version="1.0.2" />
-    <PackageReference Include="Zebble.Billing.Server.CafeBazaar" Version="1.0.2" />
+    <PackageReference Include="Zebble.Billing.Server.AppStore" Version="1.0.1" />
+    <PackageReference Include="Zebble.Billing.Server.GooglePlay" Version="1.0.1" />
+    <PackageReference Include="Zebble.Billing.Server.CafeBazaar" Version="1.0.1" />
     <PackageReference Include="Zebble.Billing.Server.EntityFramework" Version="1.0.2" />
   </ItemGroup>
 </Project>
