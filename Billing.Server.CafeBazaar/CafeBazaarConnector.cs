@@ -51,10 +51,11 @@
                 UserId = purchase.DeveloperPayload,
                 Platform = "CafeBazaar",
                 PurchaseToken = purchaseToken,
-                DateSubscribed = subscription.InitiationTime.DateTime,
-                ExpiryDate = subscription.ValidUntil.DateTime,
+                OriginalTransactionId = null,
+                SubscriptionDate = subscription.InitiationTime.DateTime,
+                ExpirationDate = subscription.ValidUntil.DateTime,
                 CancellationDate = purchase.PurchaseState == CafeBazaarPurchaseState.Refunded ? (DateTime?)LocalTime.Now : null,
-                LastUpdated = LocalTime.Now,
+                LastUpdate = LocalTime.Now,
                 AutoRenews = subscription.AutoRenewing
             };
         }

@@ -67,7 +67,7 @@
                 if (notification.State == GooglePlaySubscriptionState.Canceled)
                     subscription.CancellationDate = notification.EventTime;
                 else if (notification.State == GooglePlaySubscriptionState.Expired)
-                    subscription.ExpiryDate = notification.EventTime;
+                    subscription.ExpirationDate = notification.EventTime;
 
                 await Repository.UpdateSubscription(subscription);
             }

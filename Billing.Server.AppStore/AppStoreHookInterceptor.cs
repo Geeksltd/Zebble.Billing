@@ -44,17 +44,17 @@
             {
                 if (notification.Type.IsAnyOf(AppStoreNotificationType.InitialBuy, AppStoreNotificationType.InteractivelyRenewed))
                 {
-                    subscription.DateSubscribed = notification.PurchaseDate;
-                    subscription.ExpiryDate = notification.ExpirationDate;
+                    subscription.SubscriptionDate = notification.PurchaseDate;
+                    subscription.ExpirationDate = notification.ExpirationDate;
                     subscription.CancellationDate = notification.CancellationDate;
                     subscription.AutoRenews = notification.AutoRenewStatus;
                 }
                 else if (notification.Type.IsAnyOf(AppStoreNotificationType.CanceledOrUpgraded, AppStoreNotificationType.Refunded, AppStoreNotificationType.FamilySharingRevoked))
                     subscription.CancellationDate = notification.CancellationDate;
                 else if (notification.Type.IsAnyOf(AppStoreNotificationType.AutoRenewed, AppStoreNotificationType.AutoRecovered))
-                    subscription.ExpiryDate = notification.ExpirationDate;
+                    subscription.ExpirationDate = notification.ExpirationDate;
                 else if (notification.Type == AppStoreNotificationType.AutoRenewFailed)
-                    subscription.ExpiryDate = notification.IsInBillingRetryPeriod == true ? notification.GracePeriodExpirationDate : LocalTime.Now;
+                    subscription.ExpirationDate = notification.IsInBillingRetryPeriod == true ? notification.GracePeriodExpirationDate : LocalTime.Now;
                 else if (notification.Type == AppStoreNotificationType.RenewalStatusChanged)
                     subscription.AutoRenews = notification.AutoRenewStatus;
 

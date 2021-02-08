@@ -20,8 +20,8 @@
             return SubscriptionManager.PurchaseAttempt(model.ProductId, model.UserId, model.Platform, model.PurchaseToken);
         }
 
-        [HttpGet("subscription-status")]
-        public Task<Subscription> SubscriptionStatus(string userId)
+        [HttpGet("subscription-status/{ticket}/{userId}")]
+        public Task<Subscription> SubscriptionStatus(string ticket, string userId)
         {
             return SubscriptionManager.GetSubscriptionStatus(userId);
         }

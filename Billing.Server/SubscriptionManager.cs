@@ -40,7 +40,7 @@
                 UserId = userId,
                 Platform = platform,
                 PurchaseToken = purchaseToken,
-                LastUpdated = LocalTime.Now
+                LastUpdate = LocalTime.Now
             });
         }
 
@@ -61,7 +61,7 @@
 
             if (updatedSubscription == null) return;
 
-            subscription.ExpiryDate = updatedSubscription.ExpiryDate;
+            subscription.ExpirationDate = updatedSubscription.ExpirationDate;
             subscription.CancellationDate = updatedSubscription.CancellationDate;
             subscription.AutoRenews = updatedSubscription.AutoRenews;
 

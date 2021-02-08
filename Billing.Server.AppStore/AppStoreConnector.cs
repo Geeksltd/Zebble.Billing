@@ -41,10 +41,10 @@
                 Platform = "AppStore",
                 PurchaseToken = purchaseToken,
                 OriginalTransactionId = purchase.OriginalTransactionId,
-                DateSubscribed = purchase.PurchaseDateDt,
-                ExpiryDate = purchase.ExpirationDateDt,
+                SubscriptionDate = purchase.PurchaseDateDt,
+                ExpirationDate = purchase.ExpirationDateDt,
                 CancellationDate = purchase.CancellationDateDt,
-                LastUpdated = LocalTime.Now,
+                LastUpdate = LocalTime.Now,
                 AutoRenews = purchase.SubscriptionAutoRenewStatus == AppleSubscriptionAutoRenewStatus.Active
             };
         }

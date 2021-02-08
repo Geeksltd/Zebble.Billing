@@ -44,10 +44,10 @@
                 Platform = "GooglePlay",
                 PurchaseToken = purchaseToken,
                 OriginalTransactionId = purchase.OrderId,
-                DateSubscribed = purchase.StartTimeMillis.ToDateTime() ?? LocalTime.Now,
-                ExpiryDate = purchase.ExpiryTimeMillis.ToDateTime() ?? LocalTime.Now,
+                SubscriptionDate = purchase.StartTimeMillis.ToDateTime() ?? LocalTime.Now,
+                ExpirationDate = purchase.ExpiryTimeMillis.ToDateTime() ?? LocalTime.Now,
                 CancellationDate = purchase.UserCancellationTimeMillis.ToDateTime(),
-                LastUpdated = LocalTime.Now,
+                LastUpdate = LocalTime.Now,
                 AutoRenews = purchase.AutoRenewing ?? false
             };
         }
