@@ -9,7 +9,7 @@
 #endif
     using Olive;
 
-    class SubscribeCommand : SubscriptionCommand<string>
+    class PurchaseSubscriptionCommand : StoreCommandBase<string>
     {
         const string NOT_COMPLETED = "Purchase was not completed. Please try again.";
         const string GeneralError = "There seems to be a problem in the subscription system. Please try again later.";
@@ -18,7 +18,7 @@
         static bool StartedTrying;
         readonly Product Product;
 
-        public SubscribeCommand(Product product) => Product = product;
+        public PurchaseSubscriptionCommand(Product product) => Product = product;
 
         protected override async Task<string> DoExecute()
         {
@@ -59,7 +59,7 @@
             {
                 Log.For(this).Error(ex);
 
-                await new RestoreSubscriptionCommand().Execute();
+                await new RestoreSubscriptionsCommand().Execute();
 
                 if (await BillingContext.RestoreSubscriptions())
                     return "OK";

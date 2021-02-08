@@ -9,26 +9,26 @@
     using Olive;
     using System.Linq;
 
-    class SubscriptionPriceProvider : SubscriptionCommand<bool>
+    class SubscriptionPriceProviderCommand : StoreCommandBase<bool>
     {
         protected override async Task<bool> DoExecute()
         {
             try
             {
-                var productGroups = ProductsCache.RegisteredProducts.GroupBy(x => x.ItemType)
+                var productProvider = BillingContext.ProductProvider;
+                var products = await productProvider.GetProducts();
+                var groups = products.GroupBy(x => x.ItemType)
                     .Select(x => new { ItemType = x.Key, ProductIds = x.Select(p => p.Id).ToArray() });
 
-                foreach (var group in productGroups)
+                foreach (var group in groups)
                 {
                     var items = await Billing.GetProductInfoAsync(group.ItemType, group.ProductIds);
                     if (items == null)
                         throw new Exception($"No product info was retrieved for {group.ProductIds.ToString(", ")} ({group.ItemType})");
 
                     foreach (var item in items)
-                        item.GetProduct()?.UpdatePrice(item.MicrosPrice / 1000000m);
+                        await productProvider.UpdatePrice(item.ProductId, item.MicrosPrice / 1000000m);
                 }
-
-                ProductsCache.SavePrices();
 
                 return true;
             }

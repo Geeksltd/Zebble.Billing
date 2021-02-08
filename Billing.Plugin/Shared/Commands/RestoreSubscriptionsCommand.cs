@@ -9,7 +9,7 @@
 #endif
     using Olive;
 
-    class RestoreSubscriptionCommand : SubscriptionCommand<bool>
+    class RestoreSubscriptionsCommand : StoreCommandBase<bool>
     {
         protected override async Task<bool> DoExecute()
         {

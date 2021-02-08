@@ -20,12 +20,21 @@
 
         public Task<Product> GetById(string productId)
         {
-            return GetProducts().FirstOrDefault(x => x.Id == productId);
+            return GetProducts().SingleOrDefault(x => x.Id == productId) ?? throw new Exception($"Product with id '{productId}' not found.");
         }
 
         public Task<Product[]> GetProducts()
         {
             return Task.FromResult(Options.Products.ToArray());
+        }
+
+        public async Task UpdatePrice(string productId, decimal price)
+        {
+            Options.Products.Single(
+                x => x.Id == productId
+            ).Price = price;
+
+            await File.WriteAllTextAsync(JsonConvert.SerializeObject(Options));
         }
     }
 }

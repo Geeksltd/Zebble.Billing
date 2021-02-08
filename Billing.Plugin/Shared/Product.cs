@@ -1,14 +1,10 @@
 ﻿namespace Zebble.Billing
 {
-    using Olive;
 #if CAFEBAZAAR
     using Plugin.InAppBilling.Abstractions;
 #else
     using Plugin.InAppBilling;
 #endif
-    using System;
-    using System.IO;
-    using System.Linq;
     using Zebble.Device;
 
     public partial class Product
@@ -28,20 +24,7 @@
             }
         }
 
-        internal void Reload(string data)
-        {
-            var parts = data.Split('|').Trim().ToArray();
-            if (parts.Length != 1) return;
-
-            Price = parts[0].To<decimal>();
-        }
-
-        internal void UpdatePrice(decimal price)
-        {
-            Price = price;
-        }
-
-        protected virtual string PaymentAuthority
+        protected string PaymentAuthority
         {
             get
             {

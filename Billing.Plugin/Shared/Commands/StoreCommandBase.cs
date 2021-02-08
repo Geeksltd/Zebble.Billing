@@ -8,7 +8,7 @@
 #endif
     using Plugin.InAppBilling;
 
-    abstract class SubscriptionCommand<TOut>
+    abstract class StoreCommandBase<TOut>
     {
         protected static IInAppBilling Billing => CrossInAppBilling.Current;
 
