@@ -16,7 +16,7 @@
         public static async Task BackgroundRefresh()
         {
             while (User == null) await Task.Delay(500);
-            if (!IsSubscribed(free: false) && !IsExpired()) return;
+            if (!IsSubscribed()) return;
 
             await UIContext.AwaitConnection();
             try { await DoRefresh(); }

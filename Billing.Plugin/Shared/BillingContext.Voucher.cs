@@ -35,7 +35,7 @@
             if (await ValidateVoucher(code) != null)
                 await RestoreSubscription(userRequest: true);
 
-            return User?.SubscriptionExpiry;
+            return Subscription?.ExpirationDate;
         }
     }
 }
