@@ -14,7 +14,6 @@
                             .Validate(opts => opts.PackageName.IsEmpty(), $"{nameof(AppStoreOptions.PackageName)} is empty.")
                             .Validate(opts => opts.SharedSecret.IsEmpty(), $"{nameof(AppStoreOptions.SharedSecret)} is empty.")
                             .Validate(opts => opts.HookInterceptorUri == null, $"{nameof(AppStoreOptions.HookInterceptorUri)} is null.")
-                            .Validate(opts => opts.HookInterceptorUri.IsAbsoluteUri == false, $"{nameof(AppStoreOptions.HookInterceptorUri)} should be absolute.")
                             .PostConfigure(opts => builder.Services.RegisterAppleReceiptVerificator(opts.Apply));
 
             builder.Services.AddStoreConnector<AppStoreConnector>("AppStore");

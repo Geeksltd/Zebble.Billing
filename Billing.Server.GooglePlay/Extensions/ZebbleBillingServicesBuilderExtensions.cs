@@ -11,8 +11,7 @@
             builder.Services.AddOptions<GooglePlayOptions>()
                             .Configure<IConfiguration>((opts, config) => config.GetSection(configKey)?.Bind(opts))
                             .Validate(opts => opts.PackageName.IsEmpty(), $"{nameof(GooglePlayOptions.PackageName)} is empty.")
-                            .Validate(opts => opts.QueueProcessorUri == null, $"{nameof(GooglePlayOptions.QueueProcessorUri)} is null.")
-                            .Validate(opts => opts.QueueProcessorUri.IsAbsoluteUri == false, $"{nameof(GooglePlayOptions.QueueProcessorUri)} should be absolute.");
+                            .Validate(opts => opts.QueueProcessorUri == null, $"{nameof(GooglePlayOptions.QueueProcessorUri)} is null.");
 
             builder.Services.AddOptions<GooglePubSubOptions>()
                             .Configure<IConfiguration>((opts, config) => config.GetSection($"{configKey}:PubSub")?.Bind(opts))

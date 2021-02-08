@@ -1,35 +1,16 @@
 ﻿namespace Zebble.Billing
 {
-    using System;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;
-    using Microsoft.Extensions.Options;
-    using Olive;
 
     class GooglePlayQueueProcessingMiddleware
     {
-        readonly RequestDelegate Next;
-
-        public GooglePlayQueueProcessingMiddleware(RequestDelegate next)
+        public async Task InvokeAsync(HttpContext context, GooglePlayQueueProcessor queueProcessor)
         {
-            Next = next ?? throw new ArgumentNullException(nameof(next));
-        }
+            var processedMessages = await queueProcessor.Process();
+            var responseText = processedMessages == 0 ? "No message found to process." : $"{processedMessages} messages are processed.";
 
-        public async Task InvokeAsync(HttpContext context, IOptionsSnapshot<GooglePlayOptions> options, GooglePlayQueueProcessor queueProcessor)
-        {
-            var pathMatched = context.Request.Path.StartsWithSegments(options.Value.QueueProcessorUri.AbsolutePath);
-            var isPost = context.Request.Method.Equals("POST", caseSensitive: false);
-
-            if (pathMatched && isPost)
-            {
-                var processedMessages = await queueProcessor.Process();
-                var responseText = processedMessages == 0 ? "No message found to process." : $"{processedMessages} messages are processed.";
-
-                await context.Response.WriteAsync(responseText);
-                return;
-            }
-
-            await Next(context);
+            await context.Response.WriteAsync(responseText);
         }
     }
 }
