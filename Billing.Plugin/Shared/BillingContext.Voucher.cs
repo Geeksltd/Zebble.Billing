@@ -7,35 +7,29 @@
 
     partial class BillingContext
     {
-        public static async Task<DateTime?> ValidateVoucher(string code)
+        public static async Task<bool> ApplyVoucher(string code)
         {
             if (await UIContext.IsOffline())
             {
                 await Alert.Show("Network connection is not available.");
-                return null;
+                return false;
             }
 
             try
             {
-                var url = $"{BaseUrl}voucher/apply/{User.UserId}/{code}";
+                var url = new Uri(Options.BaseUri, $"{Options.VoucherApplyPath}/{User.UserId}/{code}").ToString();
                 var result = await BaseApi.Post<DateTime?>(url, null, OnError.Ignore, showWaiting: false);
 
-                if (result == null) return null;
+                if (result == null) return false;
 
                 if (result?.IsInTheFuture() == true)
                     await VoucherApplied.Raise(new VoucherAppliedEventArgs { VoucherCode = code });
 
-                return result;
-            }
-            catch { return null; }
-        }
-
-        public static async Task<DateTime?> ApplyVoucher(string code)
-        {
-            if (await ValidateVoucher(code) != null)
                 await RestoreSubscription(userRequest: true);
 
-            return Subscription?.ExpirationDate;
+                return true;
+            }
+            catch { return false; }
         }
     }
 }

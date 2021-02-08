@@ -2,6 +2,7 @@
 {
     using Microsoft.AspNetCore.Mvc;
     using System.Threading.Tasks;
+    using Olive;
 
     [ApiController]
     [Route("app")]
@@ -15,15 +16,23 @@
         }
 
         [HttpPost("purchase-attempt")]
-        public Task PurchaseAttempt([FromBody] AppPurchaseAttemptModel model)
+        public async Task<IActionResult> PurchaseAttempt([FromBody] AppPurchaseAttemptModel model)
         {
-            return SubscriptionManager.PurchaseAttempt(model.ProductId, model.UserId, model.Platform, model.PurchaseToken);
+            if (ValidateTicket(model.Ticket)) return Unauthorized();
+
+            await SubscriptionManager.PurchaseAttempt(model.ProductId, model.UserId, model.Platform, model.PurchaseToken);
+
+            return Ok();
         }
 
-        [HttpGet("subscription-status/{ticket}/{userId}")]
-        public Task<Subscription> SubscriptionStatus(string ticket, string userId)
+        [HttpPost("subscription-status/{ticket}/{userId}")]
+        public async Task<IActionResult> SubscriptionStatus([FromBody] AppSubscriptionStatusModel model)
         {
-            return SubscriptionManager.GetSubscriptionStatus(userId);
+            if (ValidateTicket(model.Ticket)) return Unauthorized();
+
+            return Ok(await SubscriptionManager.GetSubscriptionStatus(model.UserId));
         }
+
+        bool ValidateTicket(string ticket) => ticket.HasValue();
     }
 }

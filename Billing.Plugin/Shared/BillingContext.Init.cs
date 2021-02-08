@@ -1,11 +1,8 @@
 ﻿namespace Zebble.Billing
 {
-    using Olive;
-    using System;
-
     public static partial class BillingContext
     {
-        public static string BaseUrl { get; private set; }
+        internal static BillingContextOptions Options { get; private set; }
 
         public static IProductProvider ProductProvider { get; private set; }
 
@@ -16,10 +13,11 @@
         public static AsyncEvent<SubscriptionRestoredEventArgs> SubscriptionRestored = new();
         public static AsyncEvent<VoucherAppliedEventArgs> VoucherApplied = new();
 
-        public static void Initialize(string baseUrl, string catalogPath = @"Resources\Catalog.json")
+        public static void Initialize(BillingContextOptions options)
         {
-            BaseUrl = baseUrl.OrNullIfEmpty() ?? throw new ArgumentNullException(nameof(baseUrl));
-            ProductProvider = new ProductProvider(catalogPath);
+            Options = options;
+
+            ProductProvider = new ProductProvider(Options.CatalogPath);
         }
 
         public static void SetUser(IBillingUser user) => User = user;
