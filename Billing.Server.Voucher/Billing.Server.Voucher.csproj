@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>Zebble.Billing.Server</AssemblyName>
+    <AssemblyName>Zebble.Billing.Server.Voucher</AssemblyName>
     <RootNamespace>Zebble</RootNamespace>
-    <PackageId>Zebble.Billing.Server</PackageId>
+    <PackageId>Zebble.Billing.Server.Voucher</PackageId>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
-    <Version>1.0.3.0</Version>
+    <Version>1.0.0.0</Version>
     <PackOnBuild>true</PackOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
     <LangVersion>default</LangVersion>
@@ -14,12 +14,12 @@
     <LangVersion>latest</LangVersion>
     <DebugType>portable</DebugType>
     <PackageLicenseUrl>https://raw.githubusercontent.com/Geeksltd/Zebble.Billing/master/Zebble-LicenseAgreement.txt</PackageLicenseUrl>
-    <PackageProjectUrl>https://nuget.org/packages/Zebble.Billing.Server/</PackageProjectUrl>
+    <PackageProjectUrl>https://nuget.org/packages/Zebble.Billing.Server.Voucher/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Geeksltd/Zebble.Billing/</RepositoryUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/Geeksltd/Zebble.Billing/master/icon.png</PackageIconUrl>
     <PackageTags>xamarin, windows, ios, android, zebble</PackageTags>
-    <Title>Zebble.Billing.Server</Title>
-    <Description>Zebble IAP server abstractions.</Description>
+    <Title>Zebble.Billing.Server.Voucher</Title>
+    <Description>Zebble IAP plugin for Voucher.</Description>
     <PackageReleaseNotes>Minor fixes</PackageReleaseNotes>
     <Owners>Geeks Ltd</Owners>
     <Authors>Geeks Ltd</Authors>
@@ -38,8 +38,11 @@
     <None Remove=".gitignore" />
     <None Remove="icon.png" />
     <None Remove="README.md" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Olive" Version="2.1.216" />
   </ItemGroup>
-  <Import Project="..\Billing.Shared\Billing.Shared.projitems" Label="Shared" />
+  <ItemGroup Condition=" $(Configuration.StartsWith('Debug')) ">
+    <ProjectReference Include="..\Billing.Server\Billing.Server.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition=" $(Configuration.StartsWith('Release')) ">
+    <PackageReference Include="Zebble.Billing.Server" Version="1.0.2" />
+  </ItemGroup>
 </Project>

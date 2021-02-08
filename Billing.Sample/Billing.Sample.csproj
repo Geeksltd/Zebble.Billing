@@ -10,13 +10,17 @@
     <ProjectReference Include="..\Billing.Server.AppStore\Billing.Server.AppStore.csproj" />
     <ProjectReference Include="..\Billing.Server.GooglePlay\Billing.Server.GooglePlay.csproj" />
     <ProjectReference Include="..\Billing.Server.CafeBazaar\Billing.Server.CafeBazaar.csproj" />
+    <ProjectReference Include="..\Billing.Server.Voucher\Billing.Server.Voucher.csproj" />
     <ProjectReference Include="..\Billing.Server.EntityFramework\Billing.Server.EntityFramework.csproj" />
+    <ProjectReference Include="..\Billing.Server.Voucher.EntityFramework\Billing.Server.Voucher.EntityFramework.csproj" />
   </ItemGroup>
   <ItemGroup Condition=" $(Configuration.StartsWith('Release')) ">
     <PackageReference Include="Zebble.Billing.Server" Version="1.0.2" />
     <PackageReference Include="Zebble.Billing.Server.AppStore" Version="1.0.1" />
     <PackageReference Include="Zebble.Billing.Server.GooglePlay" Version="1.0.1" />
     <PackageReference Include="Zebble.Billing.Server.CafeBazaar" Version="1.0.1" />
+    <PackageReference Include="Zebble.Billing.Server.Voucher" Version="1.0.1" />
     <PackageReference Include="Zebble.Billing.Server.EntityFramework" Version="1.0.2" />
+    <PackageReference Include="Zebble.Billing.Server.Voucher.EntityFramework" Version="1.0.1" />
   </ItemGroup>
 </Project>

@@ -16,7 +16,14 @@ namespace Zebble.Billing.Sample
 
             services.AddControllers();
 
-            services.AddZebbleBilling(builder => builder.AddEntityFramework().AddAppStore().AddGooglePlay().AddCafeBazaar());
+            services.AddZebbleBilling(builder =>
+            {
+                builder.AddEntityFramework();
+                builder.AddAppStore();
+                builder.AddGooglePlay();
+                builder.AddCafeBazaar();
+                builder.AddVoucher(builder => builder.AddEntityFramework());
+            });
         }
 
         public override void Configure(IApplicationBuilder app)
@@ -31,7 +38,13 @@ namespace Zebble.Billing.Sample
 
             app.UseEndpoints(builder => builder.MapControllers());
 
-            app.UseZebbleBilling(builder => builder.UseAppStore().UseGooglePlay().UseCafeBazaar());
+            app.UseZebbleBilling(builder =>
+            {
+                builder.UseAppStore();
+                builder.UseGooglePlay();
+                builder.UseCafeBazaar();
+                builder.UseVoucher();
+            });
         }
     }
 }
