@@ -10,8 +10,11 @@
         public static IProductProvider ProductProvider { get; private set; }
 
         public static IBillingUser User { get; private set; }
+        public static Subscription Subscription { get; private set; }
 
-        public static AsyncEvent<PurchaseRecognizedEventArgs> PurchaseRecognized = new();
+        public static AsyncEvent<SubscriptionPurchasedEventArgs> SubscriptionPurchased = new();
+        public static AsyncEvent<SubscriptionRestoredEventArgs> SubscriptionRestored = new();
+        public static AsyncEvent<VoucherAppliedEventArgs> VoucherApplied = new();
 
         public static void Initialize(string baseUrl, string catalogPath = @"Resources\Catalog.json")
         {

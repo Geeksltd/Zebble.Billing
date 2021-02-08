@@ -9,7 +9,7 @@
     using Olive;
     using System.Linq;
 
-    class SubscriptionPriceProviderCommand : StoreCommandBase<bool>
+    class ProductsPriceUpdaterCommand : StoreCommandBase<bool>
     {
         protected override async Task<bool> DoExecute()
         {

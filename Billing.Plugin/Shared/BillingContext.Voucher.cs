@@ -7,8 +7,6 @@
 
     partial class BillingContext
     {
-        public static AsyncEvent<VoucherAppliedEventArgs> VoucherApplied = new();
-
         public static async Task<DateTime?> ValidateVoucher(string code)
         {
             if (await UIContext.IsOffline())
@@ -19,13 +17,13 @@
 
             try
             {
-                var url = BaseUrl + "voucher/apply/" + User.UserId + "/" + code;
+                var url = $"{BaseUrl}voucher/apply/{User.UserId}/{code}";
                 var result = await BaseApi.Post<DateTime?>(url, null, OnError.Ignore, showWaiting: false);
+
                 if (result == null) return null;
-                else if (result > LocalTime.UtcNow)
-                {
+
+                if (result?.IsInTheFuture() == true)
                     await VoucherApplied.Raise(new VoucherAppliedEventArgs { VoucherCode = code });
-                }
 
                 return result;
             }
@@ -35,7 +33,7 @@
         public static async Task<DateTime?> ApplyVoucher(string code)
         {
             if (await ValidateVoucher(code) != null)
-                await RestoreSubscriptions(userRequest: true);
+                await RestoreSubscription(userRequest: true);
 
             return User?.SubscriptionExpiry;
         }

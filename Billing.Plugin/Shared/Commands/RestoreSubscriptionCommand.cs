@@ -9,7 +9,7 @@
 #endif
     using Olive;
 
-    class RestoreSubscriptionsCommand : StoreCommandBase<bool>
+    class RestoreSubscriptionCommand : StoreCommandBase<bool>
     {
         protected override async Task<bool> DoExecute()
         {
@@ -24,14 +24,9 @@
                 if (purchases.None()) return false;
 
                 foreach (var purchase in purchases)
-                    await BillingContext.PurchaseRecognized.Raise(purchase.ToEventArgs());
+                    await BillingContext.SubscriptionPurchased.Raise(purchase.ToEventArgs());
 
                 return true;
-            }
-            catch (InAppBillingPurchaseException purchaseEx)
-            {
-                Log.For(this).Error(purchaseEx);
-                return false;
             }
             catch (Exception ex)
             {

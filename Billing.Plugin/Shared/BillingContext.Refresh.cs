@@ -1,15 +1,12 @@
 ﻿namespace Zebble.Billing
 {
     using System;
-    using System.Linq;
     using System.Threading.Tasks;
     using Zebble;
     using Olive;
 
     partial class BillingContext
     {
-        public static AsyncEvent<SubscriptionRestoredEventArgs> Restored = new();
-
         public static async Task Refresh()
         {
             try { await DoRefresh(); }
@@ -30,21 +27,15 @@
         {
             if (User == null) return;
 
-            var args = new { User.Ticket, User.UserId, Tokens = User.SubscriptionTokens };
-            var result = await BaseApi.Post<Subscription[]>(BaseUrl + "refresh", args, errorAction: OnError.Ignore);
-            var current = result?.FirstOrDefault();
+            var current = await BaseApi.Get<Subscription>($"{BaseUrl}subscription-status?ticket={User.Ticket}&userId={User.UserId}", errorAction: OnError.Ignore);
             if (current == null) return;
 
-            var product = current.ProductId.GetProduct();
-
-            if (User.SubscriptionExpiry == current.ExpiryDate && User.SubscriptionType == product.SubscriptionType)
+            if (Subscription == current)
                 return;
 
-            await Restored.Raise(new SubscriptionRestoredEventArgs
-            {
-                Product = product,
-                SubscriptionExpiry = current.ExpiryDate.Value
-            });
+            Subscription = current;
+
+            await SubscriptionRestored.Raise(current.ToEventArgs());
         }
     }
 }
