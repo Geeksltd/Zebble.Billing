@@ -24,7 +24,7 @@
                 if (purchases.None()) return false;
 
                 foreach (var purchase in purchases)
-                    await BillingContext.SubscriptionPurchased.Raise(purchase.ToEventArgs());
+                    await BillingContext.PurchaseAttempt(purchase.ToEventArgs());
 
                 return true;
             }

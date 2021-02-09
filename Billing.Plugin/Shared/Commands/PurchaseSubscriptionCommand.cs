@@ -32,7 +32,7 @@
 
                 if (purchase == null) return NOT_COMPLETED;
 
-                await BillingContext.SubscriptionPurchased.Raise(purchase.ToEventArgs());
+                await BillingContext.PurchaseAttempt(purchase.ToEventArgs());
 
                 if (purchase.State.IsAnyOf(PurchaseState.Restored, PurchaseState.Purchased, PurchaseState.Purchasing, PurchaseState.PaymentPending))
                 {

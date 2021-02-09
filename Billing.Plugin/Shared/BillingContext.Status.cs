@@ -1,9 +1,5 @@
 ﻿namespace Zebble.Billing
 {
-    using Olive;
-    using System;
-    using System.Threading.Tasks;
-
     public static partial class BillingContext
     {
         public static bool IsSubscribed() => IsStarted() && !IsExpired() && !IsCanceled();
