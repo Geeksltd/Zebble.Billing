@@ -1,7 +1,9 @@
 ﻿namespace Zebble.Billing
 {
     using Android.App;
+#if CAFEBAZAAR
     using Android.Content;
+#endif
     using Android.OS;
 
     public static partial class BillingContext

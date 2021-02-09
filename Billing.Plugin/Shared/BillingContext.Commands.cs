@@ -23,7 +23,11 @@
             }
 
             var successful = false;
-            try { successful = await TryActivate(); }
+            try
+            {
+                await Refresh();
+                successful = IsSubscribed();
+            }
             catch (Exception ex)
             {
                 if (errorMessage.IsEmpty()) errorMessage = ex.Message;
@@ -37,12 +41,6 @@
             }
 
             return successful;
-        }
-
-        static async Task<bool> TryActivate()
-        {
-            await Refresh();
-            return IsSubscribed();
         }
 
         public static async Task UpdateProductPrices()
