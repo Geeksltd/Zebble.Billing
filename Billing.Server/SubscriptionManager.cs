@@ -33,6 +33,16 @@
                 return;
             }
 
+            var storeConnector = StoreConnectorResolver.Resolve(platform);
+            var updatedSubscription = await storeConnector.GetUpToDateInfo(productId, purchaseToken);
+
+            if (updatedSubscription != null)
+            {
+                updatedSubscription.UserId ??= userId;
+                await Repository.AddSubscription(updatedSubscription);
+                return;
+            }
+
             await Repository.AddSubscription(new Subscription
             {
                 SubscriptionId = Guid.NewGuid().ToString(),
