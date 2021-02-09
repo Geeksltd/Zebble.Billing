@@ -5,7 +5,7 @@
     <RootNamespace>Zebble</RootNamespace>
     <PackageId>Zebble.Billing.Server.Voucher.EntityFramework</PackageId>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
-    <Version>1.0.0.0</Version>
+    <Version>1.0.1.0</Version>
     <PackOnBuild>true</PackOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
     <LangVersion>default</LangVersion>
@@ -44,7 +44,7 @@
     <ProjectReference Include="..\Billing.Server.Voucher\Billing.Server.Voucher.csproj" />
   </ItemGroup>
   <ItemGroup Condition=" $(Configuration.StartsWith('Release')) ">
-    <PackageReference Include="Zebble.Billing.Server.EntityFramework" Version="1.0.2" />
+    <PackageReference Include="Zebble.Billing.Server.EntityFramework" Version="1.0.3" />
     <PackageReference Include="Zebble.Billing.Server.Voucher" Version="1.0.1" />
   </ItemGroup>
 </Project>
