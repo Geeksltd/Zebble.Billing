@@ -25,22 +25,5 @@
             }
             catch { }
         }
-
-        static string PaymentAuthority
-        {
-            get
-            {
-#if CAFEBAZAAR
-                return "CafeBazaar";
-#else
-                return OS.Platform switch
-                {
-                    DevicePlatform.IOS => "AppStore",
-                    DevicePlatform.Android => "GooglePlay",
-                    _ => "Windows Store",
-                };
-#endif
-            }
-        }
     }
 }
