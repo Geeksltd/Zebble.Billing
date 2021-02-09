@@ -27,7 +27,8 @@
         {
             if (User == null) return;
 
-            var current = await BaseApi.Get<Subscription>($"{BaseUrl}subscription-status?ticket={User.Ticket}&userId={User.UserId}", errorAction: OnError.Ignore);
+            var url = new Uri(Options.BaseUri, Options.SubscriptionStatusPath).ToString();
+            var current = await BaseApi.Post<Subscription>(url, new { User.Ticket, User.UserId }, errorAction: OnError.Ignore);
             if (current == null) return;
 
             if (Subscription == current)
