@@ -11,12 +11,10 @@
 
         public static AsyncEvent<SubscriptionPurchasedEventArgs> SubscriptionPurchased = new();
         public static AsyncEvent<SubscriptionRestoredEventArgs> SubscriptionRestored = new();
-        public static AsyncEvent<VoucherAppliedEventArgs> VoucherApplied = new();
 
         public static void Initialize(BillingContextOptions options)
         {
             Options = options;
-
             ProductProvider = new ProductProvider(Options.CatalogPath);
         }
 

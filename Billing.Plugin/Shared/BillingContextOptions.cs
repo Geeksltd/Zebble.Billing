@@ -26,14 +26,6 @@
         public string SubscriptionStatusPath { get; set; } = "app/subscription-status";
 
         /// <summary>
-        /// The relative path to voucher's apply endpoint. 
-        /// </summary>
-        /// <remarks>
-        /// The default value is "voucher/apply".
-        /// </remarks>
-        public string VoucherApplyPath { get; set; } = "voucher/apply";
-
-        /// <summary>
         /// The path of the catalog file in the client app. The default is "Resources\Catalog.json".
         /// </summary>
         /// <remarks>
