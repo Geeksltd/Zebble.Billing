@@ -7,12 +7,6 @@
 
     partial class BillingContext
     {
-        public async Task Refresh()
-        {
-            try { await DoRefresh(); }
-            catch (Exception ex) { Log.For<Subscription>().Error(ex); }
-        }
-
         public async Task BackgroundRefresh()
         {
             while (User == null) await Task.Delay(500);
@@ -21,6 +15,12 @@
             await UIContext.AwaitConnection();
             try { await DoRefresh(); }
             catch { /*Ignore*/ }
+        }
+
+        async Task Refresh()
+        {
+            try { await DoRefresh(); }
+            catch (Exception ex) { Log.For<Subscription>().Error(ex); }
         }
 
         async Task DoRefresh()

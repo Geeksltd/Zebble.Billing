@@ -1,8 +1,8 @@
 ﻿namespace Zebble.Billing
 {
-    using Olive;
     using System;
     using System.Threading.Tasks;
+    using Olive;
 
     partial class BillingContext
     {
@@ -43,13 +43,23 @@
             return successful;
         }
 
-        public async Task UpdateProductPrices()
+        internal async Task PurchaseAttempt(SubscriptionPurchasedEventArgs args)
         {
-            await UIContext.AwaitConnection(10);
-            await Task.Delay(3.Seconds());
+            if (await UIContext.IsOffline())
+            {
+                await Alert.Show("Network connection is not available.");
+                return;
+            }
 
-            try { await new ProductsPriceUpdaterCommand().Execute(); }
-            catch (Exception ex) { Log.For(typeof(BillingContext)).Error(ex); }
+            try
+            {
+                var url = new Uri(Options.BaseUri, Options.PurchaseAttemptPath).ToString();
+                var @params = new { User.Ticket, User.UserId, args.ProductId, Platform = PaymentAuthority, args.PurchaseToken };
+                await BaseApi.Post(url, @params, OnError.Ignore, showWaiting: false);
+
+                await SubscriptionPurchased.Raise(args);
+            }
+            catch { }
         }
     }
 }

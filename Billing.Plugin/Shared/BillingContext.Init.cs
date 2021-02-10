@@ -4,15 +4,13 @@
 
     public partial class BillingContext
     {
+        static BillingContextOptions Options;
+        IBillingUser User;
+        Subscription Subscription;
+
+        internal IProductProvider ProductProvider { get; private set; }
+
         public static BillingContext Current { get; private set; }
-
-        internal static BillingContextOptions Options { get; private set; }
-
-        public IProductProvider ProductProvider { get; private set; }
-
-        public IBillingUser User { get; private set; }
-        public Subscription Subscription { get; private set; }
-
         public static AsyncEvent<SubscriptionPurchasedEventArgs> SubscriptionPurchased = new();
         public static AsyncEvent<SubscriptionRestoredEventArgs> SubscriptionRestored = new();
 
