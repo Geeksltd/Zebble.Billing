@@ -15,6 +15,6 @@
             Xamarin.Essentials.Platform.Init(activity, bundle);
         }
 
-        static string PaymentAuthority => "GooglePlay";
+        public static string PaymentAuthority => "GooglePlay";
     }
 }

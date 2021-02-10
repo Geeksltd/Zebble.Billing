@@ -21,6 +21,6 @@
             Plugin.InAppBilling.InAppBillingImplementation.HandleActivityResult(requestCode, resultCode, data);
         }
 
-        static string PaymentAuthority => "CafeBazaar";
+        public static string PaymentAuthority => "CafeBazaar";
     }
 }

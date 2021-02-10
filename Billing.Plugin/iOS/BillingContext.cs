@@ -2,6 +2,6 @@
 {
     partial class BillingContext
     {
-        static string PaymentAuthority => "AppStore";
+        public static string PaymentAuthority => "AppStore";
     }
 }

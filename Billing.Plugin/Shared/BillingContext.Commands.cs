@@ -4,15 +4,15 @@
     using System;
     using System.Threading.Tasks;
 
-    public static partial class BillingContext
+    partial class BillingContext
     {
-        public static async Task<string> PurchaseSubscription(Product product)
+        public async Task<string> PurchaseSubscription(Product product)
         {
             return await new PurchaseSubscriptionCommand(product).Execute()
                  ?? "Failed to connect to the store. Are you connected to the network? If so, try 'Pay with Card'.";
         }
 
-        public static async Task<bool> RestoreSubscription(bool userRequest = false)
+        public async Task<bool> RestoreSubscription(bool userRequest = false)
         {
             var errorMessage = "";
             try { await new RestoreSubscriptionCommand().Execute(); }
@@ -43,7 +43,7 @@
             return successful;
         }
 
-        public static async Task UpdateProductPrices()
+        public async Task UpdateProductPrices()
         {
             await UIContext.AwaitConnection(10);
             await Task.Delay(3.Seconds());

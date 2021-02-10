@@ -3,11 +3,10 @@
     using System;
     using System.Threading.Tasks;
     using Zebble;
-    using Zebble.Device;
 
     partial class BillingContext
     {
-        public static async Task PurchaseAttempt(SubscriptionPurchasedEventArgs args)
+        public async Task PurchaseAttempt(SubscriptionPurchasedEventArgs args)
         {
             if (await UIContext.IsOffline())
             {

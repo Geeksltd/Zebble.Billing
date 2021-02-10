@@ -1,23 +1,33 @@
 ﻿namespace Zebble.Billing
 {
-    public static partial class BillingContext
+    using System;
+
+    public partial class BillingContext
     {
+        public static BillingContext Current { get; private set; }
+
         internal static BillingContextOptions Options { get; private set; }
 
-        public static IProductProvider ProductProvider { get; private set; }
+        public IProductProvider ProductProvider { get; private set; }
 
-        public static IBillingUser User { get; private set; }
-        public static Subscription Subscription { get; private set; }
+        public IBillingUser User { get; private set; }
+        public Subscription Subscription { get; private set; }
 
         public static AsyncEvent<SubscriptionPurchasedEventArgs> SubscriptionPurchased = new();
         public static AsyncEvent<SubscriptionRestoredEventArgs> SubscriptionRestored = new();
 
         public static void Initialize(BillingContextOptions options)
         {
+            if (Current != null) throw new InvalidOperationException($"{nameof(BillingContext)} is already initialized.");
+
             Options = options;
-            ProductProvider = new ProductProvider(Options.CatalogPath);
+
+            Current = new BillingContext
+            {
+                ProductProvider = new ProductProvider(Options.CatalogPath)
+            };
         }
 
-        public static void SetUser(IBillingUser user) => User = user;
+        public void SetUser(IBillingUser user) => User = user;
     }
 }

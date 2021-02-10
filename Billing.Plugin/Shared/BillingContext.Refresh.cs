@@ -7,13 +7,13 @@
 
     partial class BillingContext
     {
-        public static async Task Refresh()
+        public async Task Refresh()
         {
             try { await DoRefresh(); }
             catch (Exception ex) { Log.For<Subscription>().Error(ex); }
         }
 
-        public static async Task BackgroundRefresh()
+        public async Task BackgroundRefresh()
         {
             while (User == null) await Task.Delay(500);
             if (!IsSubscribed()) return;
@@ -23,7 +23,7 @@
             catch { /*Ignore*/ }
         }
 
-        static async Task DoRefresh()
+        async Task DoRefresh()
         {
             if (User == null) return;
 
