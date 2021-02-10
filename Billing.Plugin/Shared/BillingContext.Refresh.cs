@@ -29,11 +29,7 @@
 
             var url = new Uri(Options.BaseUri, Options.SubscriptionStatusPath).ToString();
             var current = await BaseApi.Post<Subscription>(url, new { User.Ticket, User.UserId }, errorAction: OnError.Ignore);
-            if (current == null) return;
-
-            if (Subscription == current)
-                return;
-
+            
             Subscription = current;
 
             await SubscriptionRestored.Raise(current.ToEventArgs());
