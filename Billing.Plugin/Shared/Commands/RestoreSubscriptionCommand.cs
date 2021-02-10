@@ -20,7 +20,7 @@
                 if (purchases.None()) return false;
 
                 foreach (var purchase in purchases)
-                    await BillingContext.PurchaseAttempt(purchase.ToEventArgs());
+                    await BillingContext.Current.PurchaseAttempt(purchase.ToEventArgs());
 
                 return true;
             }

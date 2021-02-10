@@ -24,14 +24,14 @@
 
                 if (purchase == null) return NOT_COMPLETED;
 
-                await BillingContext.PurchaseAttempt(purchase.ToEventArgs());
+                await BillingContext.Current.PurchaseAttempt(purchase.ToEventArgs());
 
                 if (purchase.State.IsAnyOf(PurchaseState.Restored, PurchaseState.Purchased, PurchaseState.Purchasing, PurchaseState.PaymentPending))
                 {
                     for (var attempt = 10; attempt > 0; attempt--)
                     {
                         await Task.Delay(100);
-                        if (await BillingContext.RestoreSubscription()) return "OK";
+                        if (await BillingContext.Current.RestoreSubscription()) return "OK";
                     }
 
                     Thread.Pool.RunOnNewThread(KeepTrying);
@@ -39,7 +39,7 @@
                 }
                 else if (purchase.State.IsAnyOf(PurchaseState.Failed, PurchaseState.Canceled))
                 {
-                    if (await BillingContext.RestoreSubscription())
+                    if (await BillingContext.Current.RestoreSubscription())
                         return "OK";
 
                     return NOT_COMPLETED;
@@ -53,7 +53,7 @@
 
                 await new RestoreSubscriptionCommand().Execute();
 
-                if (await BillingContext.RestoreSubscription())
+                if (await BillingContext.Current.RestoreSubscription())
                     return "OK";
 
                 Thread.Pool.RunOnNewThread(KeepTrying);
@@ -89,7 +89,7 @@
 
             for (var attempts = 10; attempts > 0; attempts--)
             {
-                if (await BillingContext.RestoreSubscription()) return;
+                if (await BillingContext.Current.RestoreSubscription()) return;
                 await Task.Delay(2.Seconds());
             }
         }
