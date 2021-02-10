@@ -10,7 +10,7 @@
     using Google.Apis.AndroidPublisher.v3.Data;
     using Olive;
 
-    class GooglePlayConnector : IStoreConnector
+    public class GooglePlayConnector : IStoreConnector
     {
         readonly GooglePlayOptions PlayOptions;
         readonly GooglePublisherOptions PublisherOptions;

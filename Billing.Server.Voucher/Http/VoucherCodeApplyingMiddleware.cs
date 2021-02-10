@@ -4,7 +4,7 @@
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;
 
-    class VoucherCodeApplyingMiddleware
+    public class VoucherCodeApplyingMiddleware
     {
         public async Task InvokeAsync(HttpContext context, VoucherCodeApplier codeApplier)
         {

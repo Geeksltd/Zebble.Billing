@@ -6,7 +6,7 @@
     using Olive;
     using CafeBazaar.DeveloperApi;
 
-    class CafeBazaarConnector : IStoreConnector
+    public class CafeBazaarConnector : IStoreConnector
     {
         readonly CafeBazaarOptions Options;
         readonly CafeBazaarDeveloperService DeveloperService;

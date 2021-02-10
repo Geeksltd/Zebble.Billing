@@ -4,7 +4,7 @@
     using Microsoft.AspNetCore.Http;
     using Olive;
 
-    class HookInterceptionMiddleware
+    public class HookInterceptionMiddleware
     {
         public async Task InvokeAsync(HttpContext context, AppStoreHookInterceptor hookInterceptor)
         {

@@ -3,7 +3,7 @@
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;
 
-    class GooglePlayQueueProcessingMiddleware
+    public class GooglePlayQueueProcessingMiddleware
     {
         public async Task InvokeAsync(HttpContext context, GooglePlayQueueProcessor queueProcessor)
         {

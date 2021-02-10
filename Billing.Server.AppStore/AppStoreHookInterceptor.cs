@@ -5,7 +5,7 @@
     using Microsoft.Extensions.Options;
     using Olive;
 
-    class AppStoreHookInterceptor
+   public class AppStoreHookInterceptor
     {
         readonly AppStoreOptions Options;
         readonly ISubscriptionRepository Repository;
