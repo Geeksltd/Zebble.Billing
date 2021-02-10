@@ -1,7 +1,6 @@
 ﻿namespace Zebble.Billing
 {
     using Plugin.InAppBilling;
-    using Zebble.Device;
 
     public partial class Product
     {
