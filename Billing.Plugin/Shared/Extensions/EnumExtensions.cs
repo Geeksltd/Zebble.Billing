@@ -1,10 +1,6 @@
 ﻿namespace Zebble.Billing
 {
-#if CAFEBAZAAR
-    using Plugin.InAppBilling.Abstractions;
-#else
     using Plugin.InAppBilling;
-#endif
     using System;
 
     static class EnumExtensions

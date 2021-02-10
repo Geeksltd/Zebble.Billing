@@ -2,11 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
-#if CAFEBAZAAR
-    using Plugin.InAppBilling.Abstractions;
-#else
     using Plugin.InAppBilling;
-#endif
     using Olive;
 
     class RestoreSubscriptionCommand : StoreCommandBase<bool>

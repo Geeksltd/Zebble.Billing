@@ -3,9 +3,6 @@
     using System;
     using System.Threading.Tasks;
     using Olive;
-#if CAFEBAZAAR
-    using Plugin.InAppBilling.Abstractions;
-#endif
     using Plugin.InAppBilling;
 
     abstract class StoreCommandBase<TOut>

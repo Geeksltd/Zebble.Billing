@@ -1,10 +1,7 @@
 ﻿namespace Zebble.Billing
 {
-#if CAFEBAZAAR
-    using Plugin.InAppBilling.Abstractions;
-#else
     using Plugin.InAppBilling;
-#endif
+
     static class EventArgsExtensions
     {
         public static SubscriptionRestoredEventArgs ToEventArgs(this Subscription subscription)
