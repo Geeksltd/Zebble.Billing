@@ -3,7 +3,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Olive.Mvc" Version="3.1.115" />
+    <PackageReference Include="Olive.Mvc" Version="3.1.116" />
   </ItemGroup>
   <ItemGroup Condition=" $(Configuration.StartsWith('Debug')) ">
     <ProjectReference Include="..\Billing.Server\Billing.Server.csproj" />
@@ -15,12 +15,12 @@
     <ProjectReference Include="..\Billing.Server.Voucher.EntityFramework\Billing.Server.Voucher.EntityFramework.csproj" />
   </ItemGroup>
   <ItemGroup Condition=" $(Configuration.StartsWith('Release')) ">
-    <PackageReference Include="Zebble.Billing.Server" Version="1.0.2" />
-    <PackageReference Include="Zebble.Billing.Server.AppStore" Version="1.0.1" />
-    <PackageReference Include="Zebble.Billing.Server.GooglePlay" Version="1.0.1" />
-    <PackageReference Include="Zebble.Billing.Server.CafeBazaar" Version="1.0.1" />
+    <PackageReference Include="Zebble.Billing.Server" Version="1.0.4" />
+    <PackageReference Include="Zebble.Billing.Server.AppStore" Version="1.0.2" />
+    <PackageReference Include="Zebble.Billing.Server.GooglePlay" Version="1.0.2" />
+    <PackageReference Include="Zebble.Billing.Server.CafeBazaar" Version="1.0.2" />
     <PackageReference Include="Zebble.Billing.Server.Voucher" Version="1.0.1" />
-    <PackageReference Include="Zebble.Billing.Server.EntityFramework" Version="1.0.2" />
+    <PackageReference Include="Zebble.Billing.Server.EntityFramework" Version="1.0.3" />
     <PackageReference Include="Zebble.Billing.Server.Voucher.EntityFramework" Version="1.0.1" />
   </ItemGroup>
 </Project>
