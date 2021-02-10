@@ -26,7 +26,7 @@
         public string SubscriptionStatusPath { get; set; } = "app/subscription-status";
 
         /// <summary>
-        /// The path of the catalog file in the client app. The default is "Resources\Catalog.json".
+        /// The path of the catalog file in the client app.
         /// </summary>
         /// <remarks>
         /// The default value is "Resources\Catalog.json".
