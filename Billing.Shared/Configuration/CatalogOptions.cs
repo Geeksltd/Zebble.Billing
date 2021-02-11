@@ -2,8 +2,8 @@
 {
     using System.Collections.Generic;
 
-    public class CatalogOptions<T> where T : Product
+    public class CatalogOptions
     {
-        public IEnumerable<T> Products { get; set; }
+        public IEnumerable<Product> Products { get; set; }
     }
 }

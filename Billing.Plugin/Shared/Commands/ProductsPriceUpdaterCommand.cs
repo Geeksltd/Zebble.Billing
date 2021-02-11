@@ -6,13 +6,13 @@
     using Olive;
     using System.Linq;
 
-    class ProductsPriceUpdaterCommand<T> : StoreCommandBase<bool> where T : Product
+    class ProductsPriceUpdaterCommand : StoreCommandBase<bool>
     {
         protected override async Task<bool> DoExecute()
         {
             try
             {
-                var productProvider = BillingContext<T>.Current.ProductProvider;
+                var productProvider = BillingContext.Current.ProductProvider;
                 var products = await productProvider.GetProducts();
                 var groups = products.GroupBy(x => x.ItemType)
                     .Select(x => new { ItemType = x.Key, ProductIds = x.Select(p => p.Id).ToArray() });

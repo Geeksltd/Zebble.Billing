@@ -1,6 +1,6 @@
 ﻿namespace Zebble.Billing
 {
-    partial class BillingContext<T>
+    partial class BillingContext
     {
         public bool IsSubscribed() => IsStarted() && !IsExpired() && !IsCanceled();
 

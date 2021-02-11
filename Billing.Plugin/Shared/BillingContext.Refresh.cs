@@ -5,7 +5,7 @@
     using Zebble;
     using Olive;
 
-    partial class BillingContext<T>
+    partial class BillingContext
     {
         public async Task BackgroundRefresh()
         {
@@ -32,7 +32,7 @@
 
             Subscription = current;
 
-            await SubscriptionRestored.Raise(await current.ToEventArgs<T>());
+            await SubscriptionRestored.Raise(current.ToEventArgs());
         }
     }
 }

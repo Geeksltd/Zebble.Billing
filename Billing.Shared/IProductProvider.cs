@@ -2,9 +2,9 @@
 {
     using System.Threading.Tasks;
 
-    public partial interface IProductProvider<T>
+    public partial interface IProductProvider
     {
-        Task<T[]> GetProducts();
-        Task<T> GetById(string productId);
+        Task<Product[]> GetProducts();
+        Task<Product> GetById(string productId);
     }
 }

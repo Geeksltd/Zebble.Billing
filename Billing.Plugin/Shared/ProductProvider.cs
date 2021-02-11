@@ -7,23 +7,23 @@
     using Newtonsoft.Json;
     using Olive;
 
-    class ProductProvider<T> : IProductProvider<T> where T: Product
+    class ProductProvider : IProductProvider
     {
         readonly FileInfo File;
-        readonly CatalogOptions<T> Options;
+        readonly CatalogOptions Options;
 
         public ProductProvider(string catalogPath)
         {
             File = catalogPath.IsEmpty() ? throw new ArgumentNullException(nameof(catalogPath)) : Device.IO.File(catalogPath);
-            Options = JsonConvert.DeserializeObject<CatalogOptions<T>>(File.ReadAllText());
+            Options = JsonConvert.DeserializeObject<CatalogOptions>(File.ReadAllText());
         }
 
-        public Task<T> GetById(string productId)
+        public Task<Product> GetById(string productId)
         {
             return GetProducts().SingleOrDefault(x => x.Id == productId) ?? throw new Exception($"Product with id '{productId}' not found.");
         }
 
-        public Task<T[]> GetProducts() => Task.FromResult(Options.Products.ToArray());
+        public Task<Product[]> GetProducts() => Task.FromResult(Options.Products.ToArray());
 
         public async Task UpdatePrice(string productId, decimal price)
         {

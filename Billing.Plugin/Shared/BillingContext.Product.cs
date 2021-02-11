@@ -4,9 +4,9 @@
     using System.Threading.Tasks;
     using Olive;
 
-    partial class BillingContext<T>
+    partial class BillingContext
     {
-        public Task<T> GetProduct(string productId) => ProductProvider.GetById(productId);
+        public Task<Product> GetProduct(string productId) => ProductProvider.GetById(productId);
 
         public async Task<decimal> GetPrice(string productId) => (await GetProduct(productId)).Price;
 
@@ -15,8 +15,8 @@
             await UIContext.AwaitConnection(10);
             await Task.Delay(3.Seconds());
 
-            try { await new ProductsPriceUpdaterCommand<T>().Execute(); }
-            catch (Exception ex) { Log.For(typeof(BillingContext<T>)).Error(ex); }
+            try { await new ProductsPriceUpdaterCommand().Execute(); }
+            catch (Exception ex) { Log.For(typeof(BillingContext)).Error(ex); }
         }
     }
 }

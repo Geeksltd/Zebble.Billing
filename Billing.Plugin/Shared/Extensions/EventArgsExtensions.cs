@@ -1,25 +1,26 @@
 ﻿namespace Zebble.Billing
 {
     using Plugin.InAppBilling;
-    using System.Threading.Tasks;
 
     static class EventArgsExtensions
     {
-        public static async Task<SubscriptionRestoredEventArgs<T>> ToEventArgs<T>(this Subscription subscription) where T : Product
+        public static SubscriptionRestoredEventArgs ToEventArgs(this Subscription subscription)
         {
-            return new SubscriptionRestoredEventArgs<T>
+            return new SubscriptionRestoredEventArgs
             {
-                Product = await BillingContext<T>.Current.ProductProvider.GetById(subscription.ProductId),
-                Subscription = subscription
+                ProductId = subscription.ProductId,
+                SubscriptionDate = subscription.SubscriptionDate,
+                ExpirationDate = subscription.ExpirationDate,
+                CancellationDate = subscription.CancellationDate
             };
         }
 
-        public static async Task<SubscriptionPurchasedEventArgs<T>> ToEventArgs<T>(this InAppBillingPurchase purchase) where T : Product
+        public static SubscriptionPurchasedEventArgs ToEventArgs(this InAppBillingPurchase purchase)
         {
-            return new SubscriptionPurchasedEventArgs<T>
+            return new SubscriptionPurchasedEventArgs
             {
                 Id = purchase.Id,
-                Product = await BillingContext<T>.Current.ProductProvider.GetById(purchase.ProductId),
+                ProductId = purchase.ProductId,
                 TransactionDateUtc = purchase.TransactionDateUtc,
                 PurchaseToken = purchase.PurchaseToken
             };
