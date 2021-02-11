@@ -17,7 +17,7 @@
             catch { /*Ignore*/ }
         }
 
-        async Task Refresh()
+        public async Task Refresh()
         {
             try { await DoRefresh(); }
             catch (Exception ex) { Log.For<Subscription>().Error(ex); }

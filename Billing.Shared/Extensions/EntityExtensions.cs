@@ -2,9 +2,9 @@
 {
     using Olive;
 
-    static partial class EntityExtensions
+    public static partial class EntityExtensions
     {
-        public static SubscriptionStatus GetStatus(this Subscription @this)
+        internal static SubscriptionStatus GetStatus(this Subscription @this)
         {
             if (@this.IsCanceled()) return SubscriptionStatus.Canceled;
 
