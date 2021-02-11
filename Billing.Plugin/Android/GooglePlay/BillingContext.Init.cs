@@ -3,7 +3,7 @@
     using Android.App;
     using Android.OS;
 
-    partial class BillingContext
+    partial class BillingContext<T>
     {
         public static void InitApp(Application app)
         {

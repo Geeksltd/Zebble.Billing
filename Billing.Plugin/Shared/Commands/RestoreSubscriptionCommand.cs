@@ -5,7 +5,7 @@
     using Plugin.InAppBilling;
     using Olive;
 
-    class RestoreSubscriptionCommand : StoreCommandBase<bool>
+    class RestoreSubscriptionCommand<T> : StoreCommandBase<bool> where T : Product
     {
         protected override async Task<bool> DoExecute()
         {
@@ -20,7 +20,7 @@
                 if (purchases.None()) return false;
 
                 foreach (var purchase in purchases)
-                    await BillingContext.Current.PurchaseAttempt(purchase.ToEventArgs());
+                    await BillingContext<T>.Current.PurchaseAttempt(await purchase.ToEventArgs<T>());
 
                 return true;
             }

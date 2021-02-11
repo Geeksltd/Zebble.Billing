@@ -2,27 +2,27 @@
 {
     using System;
 
-    public partial class BillingContext
+    public partial class BillingContext<T> where T : Product
     {
         static BillingContextOptions Options;
         IBillingUser User;
         Subscription Subscription;
 
-        internal IProductProvider ProductProvider { get; private set; }
+        internal IProductProvider<T> ProductProvider { get; private set; }
 
-        public static BillingContext Current { get; private set; }
-        public static AsyncEvent<SubscriptionPurchasedEventArgs> SubscriptionPurchased = new();
-        public static AsyncEvent<SubscriptionRestoredEventArgs> SubscriptionRestored = new();
+        public static BillingContext<T> Current { get; private set; }
+        public static AsyncEvent<SubscriptionPurchasedEventArgs<T>> SubscriptionPurchased = new();
+        public static AsyncEvent<SubscriptionRestoredEventArgs<T>> SubscriptionRestored = new();
 
         public static void Initialize(BillingContextOptions options)
         {
-            if (Current != null) throw new InvalidOperationException($"{nameof(BillingContext)} is already initialized.");
+            if (Current != null) throw new InvalidOperationException($"{nameof(BillingContext<T>)} is already initialized.");
 
             Options = options;
 
-            Current = new BillingContext
+            Current = new BillingContext<T>
             {
-                ProductProvider = new ProductProvider(Options.CatalogPath)
+                ProductProvider = new ProductProvider<T>(Options.CatalogPath)
             };
         }
 

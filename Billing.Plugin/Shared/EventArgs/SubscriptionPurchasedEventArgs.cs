@@ -2,10 +2,10 @@
 {
     using System;
 
-    public class SubscriptionPurchasedEventArgs : EventArgs
+    public class SubscriptionPurchasedEventArgs<T> : EventArgs where T : Product
     {
         public string Id { get; set; }
-        public string ProductId { get; set; }
+        public T Product { get; set; }
         public DateTime TransactionDateUtc { get; set; }
         public string PurchaseToken { get; set; }
     }

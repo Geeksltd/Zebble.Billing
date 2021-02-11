@@ -5,7 +5,7 @@
     using Zebble;
     using Olive;
 
-    partial class BillingContext
+    partial class BillingContext<T>
     {
         public async Task BackgroundRefresh()
         {
@@ -29,10 +29,10 @@
 
             var url = new Uri(Options.BaseUri, Options.SubscriptionStatusPath).ToString();
             var current = await BaseApi.Post<Subscription>(url, new { User.Ticket, User.UserId }, errorAction: OnError.Ignore);
-            
+
             Subscription = current;
 
-            await SubscriptionRestored.Raise(current.ToEventArgs());
+            await SubscriptionRestored.Raise(await current.ToEventArgs<T>());
         }
     }
 }

@@ -4,7 +4,7 @@
     using System.Threading.Tasks;
     using Olive;
 
-    partial class BillingContext
+    partial class BillingContext<T>
     {
         public async Task<decimal> GetPrice(string productId) => (await ProductProvider.GetById(productId)).Price;
 
@@ -13,8 +13,8 @@
             await UIContext.AwaitConnection(10);
             await Task.Delay(3.Seconds());
 
-            try { await new ProductsPriceUpdaterCommand().Execute(); }
-            catch (Exception ex) { Log.For(typeof(BillingContext)).Error(ex); }
+            try { await new ProductsPriceUpdaterCommand<T>().Execute(); }
+            catch (Exception ex) { Log.For(typeof(BillingContext<T>)).Error(ex); }
         }
     }
 }

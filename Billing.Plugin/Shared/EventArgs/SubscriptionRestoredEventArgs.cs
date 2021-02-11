@@ -2,11 +2,9 @@
 {
     using System;
 
-    public class SubscriptionRestoredEventArgs : EventArgs
+    public class SubscriptionRestoredEventArgs<T> : EventArgs where T : Product
     {
-        public string ProductId { get; set; }
-        public DateTime? SubscriptionDate { get; set; }
-        public DateTime? ExpirationDate { get; set; }
-        public DateTime? CancellationDate { get; set; }
+        public T Product { get; set; }
+        public Subscription Subscription { get; set; }
     }
 }

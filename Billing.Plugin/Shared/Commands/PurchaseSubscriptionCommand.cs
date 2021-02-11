@@ -5,7 +5,7 @@
     using Plugin.InAppBilling;
     using Olive;
 
-    class PurchaseSubscriptionCommand : StoreCommandBase<string>
+    class PurchaseSubscriptionCommand<T> : StoreCommandBase<string> where T : Product
     {
         const string NOT_COMPLETED = "Purchase was not completed. Please try again.";
         const string GeneralError = "There seems to be a problem in the subscription system. Please try again later.";
@@ -24,14 +24,14 @@
 
                 if (purchase == null) return NOT_COMPLETED;
 
-                await BillingContext.Current.PurchaseAttempt(purchase.ToEventArgs());
+                await BillingContext<T>.Current.PurchaseAttempt(await purchase.ToEventArgs<T>());
 
                 if (purchase.State.IsAnyOf(PurchaseState.Restored, PurchaseState.Purchased, PurchaseState.Purchasing, PurchaseState.PaymentPending))
                 {
                     for (var attempt = 10; attempt > 0; attempt--)
                     {
                         await Task.Delay(100);
-                        if (await BillingContext.Current.RestoreSubscription()) return "OK";
+                        if (await BillingContext<T>.Current.RestoreSubscription()) return "OK";
                     }
 
                     Thread.Pool.RunOnNewThread(KeepTrying);
@@ -39,8 +39,7 @@
                 }
                 else if (purchase.State.IsAnyOf(PurchaseState.Failed, PurchaseState.Canceled))
                 {
-                    if (await BillingContext.Current.RestoreSubscription())
-                        return "OK";
+                    if (await BillingContext<T>.Current.RestoreSubscription()) return "OK";
 
                     return NOT_COMPLETED;
                 }
@@ -51,10 +50,9 @@
             {
                 Log.For(this).Error(ex);
 
-                await new RestoreSubscriptionCommand().Execute();
+                await new RestoreSubscriptionCommand<T>().Execute();
 
-                if (await BillingContext.Current.RestoreSubscription())
-                    return "OK";
+                if (await BillingContext<T>.Current.RestoreSubscription()) return "OK";
 
                 Thread.Pool.RunOnNewThread(KeepTrying);
 
@@ -89,7 +87,7 @@
 
             for (var attempts = 10; attempts > 0; attempts--)
             {
-                if (await BillingContext.Current.RestoreSubscription()) return;
+                if (await BillingContext<T>.Current.RestoreSubscription()) return;
                 await Task.Delay(2.Seconds());
             }
         }
