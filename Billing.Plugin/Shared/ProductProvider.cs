@@ -20,7 +20,7 @@
 
         public Task<Product> GetById(string productId)
         {
-            return GetProducts().SingleOrDefault(x => x.Id == productId) ?? throw new Exception($"Product with id '{productId}' not found.");
+            return GetProducts().SingleOrDefault(x => x.Id == productId);
         }
 
         public Task<Product[]> GetProducts() => Task.FromResult(Options.Products.ToArray());

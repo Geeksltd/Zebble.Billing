@@ -10,7 +10,7 @@
         public async Task BackgroundRefresh()
         {
             while (User == null) await Task.Delay(500);
-            if (!IsSubscribed()) return;
+            if (!IsSubscribed) return;
 
             await UIContext.AwaitConnection();
             try { await DoRefresh(); }

@@ -1,13 +1,19 @@
 ﻿namespace Zebble.Billing
 {
+    using System.Threading.Tasks;
+
     partial class BillingContext
     {
-        public bool IsSubscribed() => IsStarted() && !IsExpired() && !IsCanceled();
+        public bool IsSubscribed => IsStarted && !IsExpired && !IsCanceled;
 
-        public bool IsStarted() => Subscription.IsStarted();
+        public Task<Product> CurrentProduct => GetProduct(CurrentProductId);
 
-        public bool IsExpired() => Subscription.IsExpired();
+        public string CurrentProductId => Subscription?.ProductId;
 
-        public bool IsCanceled() => Subscription.IsCanceled();
+        public bool IsStarted => Subscription.IsStarted();
+
+        public bool IsExpired => Subscription.IsExpired();
+
+        public bool IsCanceled => Subscription.IsCanceled();
     }
 }
