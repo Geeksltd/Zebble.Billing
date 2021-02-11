@@ -6,7 +6,9 @@
 
     partial class BillingContext<T>
     {
-        public async Task<decimal> GetPrice(string productId) => (await ProductProvider.GetById(productId)).Price;
+        public Task<T> GetProduct(string productId) => ProductProvider.GetById(productId);
+
+        public async Task<decimal> GetPrice(string productId) => (await GetProduct(productId)).Price;
 
         public async Task UpdateProductPrices()
         {
