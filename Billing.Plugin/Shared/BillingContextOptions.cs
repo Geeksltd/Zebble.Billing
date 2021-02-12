@@ -29,8 +29,8 @@
         /// The path of the catalog file in the client app.
         /// </summary>
         /// <remarks>
-        /// The default value is "Resources\Catalog.json".
+        /// The default value is "Catalog.json".
         /// </remarks>
-        public string CatalogPath { get; set; } = @"Resources\Catalog.json";
+        public string CatalogPath { get; set; } = @"Catalog.json";
     }
 }
