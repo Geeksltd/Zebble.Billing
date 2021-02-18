@@ -1,4 +1,4 @@
-﻿namespace Zebble.Billing.Sample
+namespace Zebble.Billing.Sample
 {
     using Microsoft.AspNetCore.Mvc;
     using System.Threading.Tasks;
@@ -10,18 +10,13 @@
     {
         readonly SubscriptionManager SubscriptionManager;
 
-        public AppController(SubscriptionManager subscriptionManager)
-        {
-            SubscriptionManager = subscriptionManager;
-        }
-
+        public AppController(SubscriptionManager manager) => SubscriptionManager = manager;
+        
         [HttpPost("purchase-attempt")]
         public async Task<IActionResult> PurchaseAttempt([FromBody] AppPurchaseAttemptModel model)
         {
             if (ValidateTicket(model.Ticket)) return Unauthorized();
-
             await SubscriptionManager.PurchaseAttempt(model.ProductId, model.UserId, model.Platform, model.PurchaseToken);
-
             return Ok();
         }
 
@@ -29,7 +24,6 @@
         public async Task<IActionResult> SubscriptionStatus([FromBody] AppSubscriptionStatusModel model)
         {
             if (ValidateTicket(model.Ticket)) return Unauthorized();
-
             return Ok(await SubscriptionManager.GetSubscriptionStatus(model.UserId));
         }
 
