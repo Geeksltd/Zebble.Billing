@@ -40,4 +40,5 @@ Then add the required configuration and files from [this sample app](https://git
 ---
 
 
-
+# How does it work?
+![](https://github.com/Geeksltd/Zebble.Billing/raw/master/Architecture.png)
