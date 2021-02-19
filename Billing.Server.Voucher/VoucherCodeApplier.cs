@@ -4,7 +4,7 @@
     using System.Threading.Tasks;
     using Olive;
 
-    public class VoucherCodeApplier
+    class VoucherCodeApplier
     {
         readonly IVoucherRepository VoucherRepository;
         readonly ISubscriptionRepository SubscriptionRepository;

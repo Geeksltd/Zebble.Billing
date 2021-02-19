@@ -4,7 +4,7 @@
     using System.Threading.Tasks;
     using Olive;
 
-    public class VoucherConnector : IStoreConnector
+    class VoucherConnector : IStoreConnector
     {
         readonly IVoucherRepository Repository;
 

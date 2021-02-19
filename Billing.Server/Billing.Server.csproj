@@ -38,7 +38,7 @@
     <None Remove="icon.png" />
     <None Remove="README.md" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Olive" Version="2.1.216" />
+    <PackageReference Include="Olive" Version="2.1.233" />
   </ItemGroup>
   <Import Project="..\Billing.Shared\Billing.Shared.projitems" Label="Shared" />
 </Project>

@@ -4,14 +4,23 @@
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;
 
-    public class VoucherCodeApplyingMiddleware
+    class VoucherCodeApplyingMiddleware
     {
+        readonly RequestDelegate Next;
+
+        public VoucherCodeApplyingMiddleware(RequestDelegate next)
+        {
+            Next = next ?? throw new ArgumentNullException(nameof(next));
+        }
+
         public async Task InvokeAsync(HttpContext context, VoucherCodeApplier codeApplier)
         {
             var (userId, code) = ParseRouteValues(context.Request.Path);
 
             await codeApplier.Apply(userId, code);
             await context.Response.WriteAsync("Voucher is applied.");
+
+            await Next(context);
         }
 
         static (string, string) ParseRouteValues(PathString path)

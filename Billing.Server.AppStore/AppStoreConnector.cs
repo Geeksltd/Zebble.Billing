@@ -10,7 +10,7 @@
     using Apple.Receipt.Verificator.Services;
     using Olive;
 
-    public class AppStoreConnector : IStoreConnector
+    class AppStoreConnector : IStoreConnector
     {
         readonly IAppleReceiptVerificatorService AppleReceiptVerificator;
 
