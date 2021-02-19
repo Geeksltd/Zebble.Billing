@@ -41,6 +41,7 @@ Then add the required configuration and files from [this sample app](https://git
 
 
 # How does it work?
-[edit the diagram](https://app.diagrams.net/#HGeeksltd%2FZebble.Billing%2Fmaster%2FArchitecture.png)
+[edit](https://app.diagrams.net/#HGeeksltd%2FZebble.Billing%2Fmaster%2FArchitecture.png)
+
 ![](https://github.com/Geeksltd/Zebble.Billing/raw/master/Architecture.png)
 
