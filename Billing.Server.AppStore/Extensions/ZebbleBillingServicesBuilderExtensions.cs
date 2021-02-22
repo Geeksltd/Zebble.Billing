@@ -1,5 +1,6 @@
 ﻿namespace Zebble.Billing
 {
+    using Apple.Receipt.Verificator.Models;
     using Apple.Receipt.Verificator.Modules;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Configuration;
@@ -19,8 +20,11 @@
                             {
                                 if (opts.HookInterceptorUri.IsAbsoluteUri) return;
                                 opts.HookInterceptorUri = contextAccessor.ToAbsolute(opts.HookInterceptorUri);
-                            })
-                            .PostConfigure(opts => builder.Services.RegisterAppleReceiptVerificator(opts.Apply));
+                            });
+
+            builder.Services.AddOptions<AppleReceiptVerificationSettings>()
+                            .Configure<AppStoreOptions>((settings, options) => options.Apply(settings));
+            builder.Services.RegisterAppleReceiptVerificator();
 
             builder.Services.AddStoreConnector<AppStoreConnector>("AppStore");
             builder.Services.AddScoped<AppStoreHookInterceptor>();
