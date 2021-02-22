@@ -33,15 +33,22 @@ Then add the required configuration and files from [this sample app](https://git
 
 ---
 
-### Products.json
-....
-
-
----
-
 
 # How does it work?
 [edit](https://app.diagrams.net/#HGeeksltd%2FZebble.Billing%2Fmaster%2FArchitecture.png)
 
 ![](https://github.com/Geeksltd/Zebble.Billing/raw/master/Architecture.png)
+
+---
+
+### Products.json
+Every app will have some products that the user can buy. Products are either one-off or they are recurring payments. Recurring products are called Subscriptions, and one-off products are called InApp-Products. Regardless, each product should be defined in the appropriate app store first (Google Play, Apple iTunes Connect, etc) with the appropriate settings. 
+
+The product settings should also be added to the server side application in the `products.json` file as below.
+
+```json
+....
+```
+
+Also a copy of the same file should be added to the mobile app under `....?` folder.
 
