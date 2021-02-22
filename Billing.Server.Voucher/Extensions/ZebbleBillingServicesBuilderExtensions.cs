@@ -1,6 +1,7 @@
 ﻿namespace Zebble.Billing
 {
     using System;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
@@ -10,7 +11,12 @@
         {
             builder.Services.AddOptions<VoucherOptions>()
                             .Configure<IConfiguration>((opts, config) => config.GetSection(configKey)?.Bind(opts))
-                            .Validate(opts => opts.CodeApplyUri == null, $"{nameof(VoucherOptions.CodeApplyUri)} is null.");
+                            .PostConfigure<IHttpContextAccessor>((opts, contextAccessor) =>
+                            {
+                                if (opts.CodeApplyUri.IsAbsoluteUri) return;
+                                opts.CodeApplyUri = contextAccessor.ToAbsolute(opts.CodeApplyUri);
+                            })
+                            .Validate(opts => opts.CodeApplyUri is not null, $"{nameof(VoucherOptions.CodeApplyUri)} is null.");
 
             builder.Services.AddStoreConnector<VoucherConnector>("Voucher");
             builder.Services.AddScoped<VoucherCodeApplier>();

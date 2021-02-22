@@ -10,7 +10,7 @@
         {
             builder.Services.AddOptions<DbContextOptions>()
                             .Configure<IConfiguration>((opts, config) => config.GetSection(configKey)?.Bind(opts))
-                            .Validate(opts => opts.ConnectionString.IsEmpty(), $"{nameof(DbContextOptions.ConnectionString)} is empty.");
+                            .Validate(opts => opts.ConnectionString.HasValue(), $"{nameof(DbContextOptions.ConnectionString)} is empty.");
 
             builder.Services.AddDbContext<BillingDbContext>();
 

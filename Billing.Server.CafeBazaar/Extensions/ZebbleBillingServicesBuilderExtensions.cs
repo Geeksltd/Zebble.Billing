@@ -13,7 +13,7 @@
 
             builder.Services.AddOptions<CafeBazaarOptions>()
                             .Configure<IConfiguration>((opts, config) => config.GetSection(configKey)?.Bind(opts))
-                            .Validate(opts => opts.PackageName.IsEmpty(), $"{nameof(CafeBazaarOptions.PackageName)} is empty.");
+                            .Validate(opts => opts.PackageName.HasValue(), $"{nameof(CafeBazaarOptions.PackageName)} is empty.");
 
             builder.Services.AddStoreConnector<CafeBazaarConnector>("CafeBazaar");
 

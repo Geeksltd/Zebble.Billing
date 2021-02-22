@@ -14,8 +14,8 @@
 
             services.AddOptions<CatalogOptions>()
                     .Configure<IConfiguration>((opts, config) => config.GetSection("ZebbleBilling:Catalog")?.Bind(opts))
-                    .Validate(opts => opts.Products == null, $"{nameof(CatalogOptions.Products)} is null.")
-                    .Validate(opts => opts.Products.None(), $"{nameof(CatalogOptions.Products)} is empty.");
+                    .Validate(opts => opts.Products is not null, $"{nameof(CatalogOptions.Products)} is null.")
+                    .Validate(opts => opts.Products.Any(), $"{nameof(CatalogOptions.Products)} is empty.");
 
             services.AddScoped<IProductProvider, ProductProvider>();
 
