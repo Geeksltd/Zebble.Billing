@@ -61,7 +61,7 @@
             try
             {
                 var url = new Uri(Options.BaseUri, Options.PurchaseAttemptPath).ToString();
-                var @params = new { User.Ticket, User.UserId, ProductId = args.ProductId, Platform = PaymentAuthority, args.PurchaseToken };
+                var @params = new { User.Ticket, User.UserId, args.ProductId, Platform = PaymentAuthority, args.PurchaseToken };
                 await BaseApi.Post(url, @params, OnError.Ignore, showWaiting: false);
 
                 await SubscriptionPurchased.Raise(args);
