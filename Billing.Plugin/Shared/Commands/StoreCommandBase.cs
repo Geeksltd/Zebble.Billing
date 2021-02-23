@@ -32,7 +32,10 @@
             }
             finally
             {
-                try { await Billing.DisconnectAsync(); }
+                try
+                {
+                    if (CrossInAppBilling.IsSupported) await Billing.DisconnectAsync();
+                }
                 catch (Exception ex) { Log.For(this).Error(ex, "Failed to disconnect from billing!"); }
             }
         }
