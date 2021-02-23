@@ -52,6 +52,12 @@
                 return;
             }
 
+            if (User == null)
+            {
+                await Alert.Show("User is not available.");
+                return;
+            }
+
             try
             {
                 var url = new Uri(Options.BaseUri, Options.PurchaseAttemptPath).ToString();
