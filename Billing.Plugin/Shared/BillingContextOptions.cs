@@ -1,6 +1,7 @@
 ﻿namespace Zebble.Billing
 {
     using System;
+    using Olive;
 
     public class BillingContextOptions
     {
@@ -32,5 +33,17 @@
         /// The default value is "Catalog.json".
         /// </remarks>
         public string CatalogPath { get; set; } = @"Catalog.json";
+
+        internal void Validate()
+        {
+            if (BaseUri == null) throw new ArgumentNullException(nameof(BaseUri));
+            if (!BaseUri.IsAbsoluteUri) throw new ArgumentException($"{nameof(BaseUri)} should be absolute.");
+
+            if (PurchaseAttemptPath.IsEmpty()) throw new ArgumentNullException(nameof(PurchaseAttemptPath));
+
+            if (SubscriptionStatusPath.IsEmpty()) throw new ArgumentNullException(nameof(SubscriptionStatusPath));
+
+            if (CatalogPath.IsEmpty()) throw new ArgumentNullException(nameof(CatalogPath));
+        }
     }
 }

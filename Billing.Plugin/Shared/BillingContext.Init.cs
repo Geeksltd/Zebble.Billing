@@ -24,6 +24,8 @@
                 BaseUri = new Uri(Config.Get("Billing.Base.Url").OrNullIfEmpty() ?? throw new Exception("Add Billing.Base.Url to your Config.xml."))
             };
 
+            Options.Validate();
+
             Current = new BillingContext
             {
                 ProductProvider = new ProductProvider(Options.CatalogPath)
