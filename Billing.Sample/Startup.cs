@@ -40,10 +40,11 @@ namespace Zebble.Billing.Sample
 
             app.UseZebbleBilling(builder =>
             {
+                builder.UseEntityFramework();
                 builder.UseAppStore();
                 builder.UseGooglePlay();
                 builder.UseCafeBazaar();
-                builder.UseVoucher();
+                builder.UseVoucher(builder => builder.UseEntityFramework());
             });
         }
     }

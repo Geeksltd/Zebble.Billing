@@ -1,5 +1,6 @@
 ﻿namespace Zebble.Billing
 {
+    using System;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.DependencyInjection;
@@ -7,9 +8,11 @@
 
     public static class ZebbleBillingAppBuilderExtensions
     {
-        public static ZebbleBillingAppBuilder UseVoucher(this ZebbleBillingAppBuilder builder)
+        public static ZebbleBillingAppBuilder UseVoucher(this ZebbleBillingAppBuilder builder, Action<ZebbleBillingVoucherAppBuilder> voucherBuilder = null)
         {
             builder.App.MapWhen(MatchesCodeApplyEndpoint, builder => builder.UseMiddleware<VoucherCodeApplyingMiddleware>());
+
+            voucherBuilder?.Invoke(new ZebbleBillingVoucherAppBuilder(builder.App));
 
             return builder;
         }
