@@ -12,7 +12,7 @@
                             .Configure<IConfiguration>((opts, config) => config.GetSection(configKey)?.Bind(opts))
                             .Validate(opts => opts.ConnectionString.HasValue(), $"{nameof(DbContextOptions.ConnectionString)} is empty.");
 
-            builder.Services.AddDbContext<BillingDbContext>();
+            builder.Services.AddDbContext<SubscriptionDbContext>();
 
             builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
 

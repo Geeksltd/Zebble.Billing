@@ -6,7 +6,7 @@
     {
         public static ZebbleBillingVoucherServicesBuilder AddEntityFramework(this ZebbleBillingVoucherServicesBuilder builder)
         {
-            builder.Services.AddDbContext<BillingDbContext>();
+            builder.Services.AddDbContext<VoucherDbContext>();
 
             builder.Services.AddScoped<IVoucherRepository, VoucherRepository>();
 
