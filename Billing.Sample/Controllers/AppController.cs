@@ -20,7 +20,7 @@ namespace Zebble.Billing.Sample
             return Ok();
         }
 
-        [HttpPost("subscription-status/{ticket}/{userId}")]
+        [HttpPost("subscription-status")]
         public async Task<IActionResult> SubscriptionStatus([FromBody] AppSubscriptionStatusModel model)
         {
             if (ValidateTicket(model.Ticket)) return Unauthorized();
