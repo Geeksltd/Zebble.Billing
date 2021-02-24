@@ -34,13 +34,7 @@
 
             if (name.IsEmpty()) throw new ArgumentNullException(nameof(name));
 
-            services.AddScoped(sp =>
-            {
-                if (sp.GetServices<StoreConnectorRegistry>().Any(x => x.Name == name))
-                    throw new InvalidOperationException($"There is another {nameof(StoreConnectorRegistry)} with name '{name}' in the container.");
-
-                return new StoreConnectorRegistry(name, typeof(TType));
-            });
+            services.AddScoped(sp => new StoreConnectorRegistry(name, typeof(TType)));
 
             services.AddScoped<IStoreConnector, TType>();
 
