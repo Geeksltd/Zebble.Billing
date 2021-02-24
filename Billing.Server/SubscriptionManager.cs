@@ -69,9 +69,13 @@
 
             // ToDO
             var storeConnector = StoreConnectorResolver.Resolve(platform);
-            var updatedSubscription = await storeConnector.GetUpToDateInfo(productId, subscription.ReceiptData);
+            var subscriptionInfo = await storeConnector.GetUpToDateInfo(productId, subscription.ReceiptData);
 
             subscription.PurchaseToken = purchaseToken;
+            subscription.SubscriptionDate = subscriptionInfo.SubscriptionDate;
+            subscription.ExpirationDate = subscriptionInfo.ExpirationDate;
+            subscription.CancellationDate = subscriptionInfo.CancellationDate;
+            subscription.AutoRenews = subscriptionInfo.AutoRenews;
             subscription.LastUpdate = LocalTime.Now;
 
             await Repository.UpdateSubscription(subscription);
