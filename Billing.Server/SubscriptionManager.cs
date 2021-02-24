@@ -99,6 +99,7 @@
 
             if (updatedSubscription == null) return;
 
+            subscription.SubscriptionDate = updatedSubscription.SubscriptionDate;
             subscription.ExpirationDate = updatedSubscription.ExpirationDate;
             subscription.CancellationDate = updatedSubscription.CancellationDate;
             subscription.AutoRenews = updatedSubscription.AutoRenews;

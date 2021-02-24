@@ -24,11 +24,8 @@
         public Task<Subscription> GetMostUpdatedByUserId(string userId)
         {
             return Context.Subscriptions.Where(x => x.UserId == userId)
-                                         .Where(x => x.SubscriptionDate <= LocalTime.Now)
-                                         .Where(x => x.ExpirationDate >= LocalTime.Now)
-                                         .Where(x => x.CancellationDate == null || x.CancellationDate >= LocalTime.Now)
-                                         .OrderBy(x => x.ExpirationDate)
-                                         .LastOrDefaultAsync();
+                                        .OrderBy(x => x.ExpirationDate)
+                                        .LastOrDefaultAsync();
         }
 
         public async Task<Subscription> AddSubscription(Subscription subscription)
