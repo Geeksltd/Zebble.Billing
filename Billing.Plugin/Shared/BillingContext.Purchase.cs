@@ -44,6 +44,31 @@
             return successful;
         }
 
+        internal async Task<bool> VerifyPurchase(VerifyPurchaseEventArgs args)
+        {
+            if (await UIContext.IsOffline())
+            {
+                await Alert.Show("Network connection is not available.");
+                return false;
+            }
+
+            if (User == null)
+            {
+                await Alert.Show("User is not available.");
+                return false;
+            }
+
+            try
+            {
+                var url = new Uri(Options.BaseUri, Options.VerifyPurchasePath).ToString();
+                var @params = new { User.Ticket, User.UserId, Platform = PaymentAuthority, args.ProductId, args.TransactionId, args.ReceiptData };
+                var result = await BaseApi.Post(url, @params, OnError.Ignore, showWaiting: false);
+
+                return result;
+            }
+            catch { return false; }
+        }
+
         internal async Task PurchaseAttempt(SubscriptionPurchasedEventArgs args)
         {
             if (await UIContext.IsOffline())
@@ -61,7 +86,7 @@
             try
             {
                 var url = new Uri(Options.BaseUri, Options.PurchaseAttemptPath).ToString();
-                var @params = new { User.Ticket, User.UserId, args.ProductId, Platform = PaymentAuthority, args.PurchaseToken };
+                var @params = new { User.Ticket, User.UserId, Platform = PaymentAuthority, args.ProductId, args.TransactionId, args.TransactionDateUtc, args.PurchaseToken };
                 await BaseApi.Post(url, @params, OnError.Ignore, showWaiting: false);
 
                 await SubscriptionPurchased.Raise(args);

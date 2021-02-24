@@ -28,7 +28,8 @@
             if (User == null) return;
 
             var url = new Uri(Options.BaseUri, Options.SubscriptionStatusPath).ToString();
-            var current = await BaseApi.Post<Subscription>(url, new { User.Ticket, User.UserId }, errorAction: OnError.Ignore);
+            var @params = new { User.Ticket, User.UserId };
+            var current = await BaseApi.Post<Subscription>(url, @params, errorAction: OnError.Ignore);
 
             Subscription = current;
 

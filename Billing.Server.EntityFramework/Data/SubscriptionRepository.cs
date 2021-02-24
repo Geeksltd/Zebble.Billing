@@ -11,6 +11,11 @@
 
         public SubscriptionRepository(SubscriptionDbContext context) => Context = context;
 
+        public Task<Subscription> GetByTransactionId(string transactionId)
+        {
+            return Context.Subscriptions.SingleOrDefaultAsync(x => x.TransactionId == transactionId);
+        }
+
         public Task<Subscription> GetByPurchaseToken(string purchaseToken)
         {
             return Context.Subscriptions.SingleOrDefaultAsync(x => x.PurchaseToken == purchaseToken);

@@ -19,8 +19,8 @@
         {
             return new SubscriptionPurchasedEventArgs
             {
-                Id = purchase.Id,
                 ProductId = purchase.ProductId,
+                TransactionId = purchase.Id,
                 TransactionDateUtc = purchase.TransactionDateUtc,
                 PurchaseToken = purchase.PurchaseToken
             };

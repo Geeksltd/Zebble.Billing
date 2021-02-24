@@ -1,6 +1,5 @@
 ﻿namespace Zebble.Billing
 {
-    using System;
     using System.Threading.Tasks;
     using Olive;
 
@@ -13,30 +12,30 @@
             Repository = repository;
         }
 
-        public async Task<Subscription> GetUpToDateInfo(string productId, string purchaseToken)
+        public Task<bool> VerifyPurchase(string productId, string receiptData)
+        {
+            return Task.FromResult(true);
+        }
+
+        public async Task<SubscriptionInfo> GetUpToDateInfo(string productId, string purchaseToken)
         {
             var result = await Repository.GetByCode(purchaseToken);
 
             if (result == null)
                 return null;
 
-            return CreateSubscription(productId, purchaseToken, result);
+            return CreateSubscription(result);
         }
 
-        Subscription CreateSubscription(string productId, string purchaseToken, Voucher voucher)
+        SubscriptionInfo CreateSubscription(Voucher voucher)
         {
-            return new Subscription
+            return new SubscriptionInfo
             {
-                SubscriptionId = Guid.NewGuid().ToString(),
-                ProductId = productId,
                 UserId = voucher.UserId,
-                Platform = "Voucher",
-                PurchaseToken = purchaseToken,
-                OriginalTransactionId = voucher.Id,
+                TransactionId = voucher.Id,
                 SubscriptionDate = voucher.ActivationDate ?? LocalTime.Now,
                 ExpirationDate = voucher.ExpirationDate(),
                 CancellationDate = null,
-                LastUpdate = LocalTime.Now,
                 AutoRenews = false
             };
         }

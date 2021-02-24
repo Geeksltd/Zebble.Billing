@@ -20,7 +20,7 @@
         {
             try
             {
-                var purchase = await Billing.PurchaseAsync(Product.Id, Product.ItemType, null);
+                var purchase = await Billing.PurchaseAsync(Product.Id, Product.ItemType, new PurchaseVerificator());
 
                 if (purchase == null) return NOT_COMPLETED;
 

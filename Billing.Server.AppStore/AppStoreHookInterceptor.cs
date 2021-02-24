@@ -33,12 +33,24 @@
 
             if (subscription == null)
             {
-                subscription = await StoreConnector.GetUpToDateInfo(notification.ProductId, notification.PurchaseToken);
+                var subscriptionInfo = await StoreConnector.GetUpToDateInfo(notification.ProductId, notification.PurchaseToken);
 
-                if (subscription == null)
-                    throw new Exception("Couldn't find subscription info.");
+                if (subscriptionInfo == null) throw new Exception("Couldn't find receipt info.");
 
-                subscription = await Repository.AddSubscription(subscription);
+                subscription = await Repository.AddSubscription(new Subscription
+                {
+                    SubscriptionId = Guid.NewGuid().ToString(),
+                    ProductId = notification.ProductId,
+                    UserId = subscriptionInfo.UserId,
+                    Platform = "AppStore",
+                    TransactionId = subscriptionInfo.TransactionId,
+                    PurchaseToken = notification.PurchaseToken,
+                    SubscriptionDate = subscriptionInfo.SubscriptionDate,
+                    ExpirationDate = subscriptionInfo.ExpirationDate,
+                    CancellationDate = subscriptionInfo.CancellationDate,
+                    LastUpdate = LocalTime.Now,
+                    AutoRenews = subscriptionInfo.AutoRenews
+                });
             }
             else
             {

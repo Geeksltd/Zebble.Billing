@@ -12,39 +12,44 @@
 
     class AppStoreConnector : IStoreConnector
     {
-        readonly IAppleReceiptVerificatorService AppleReceiptVerificator;
+        readonly IAppleReceiptVerificatorService ReceiptVerificator;
 
-        public AppStoreConnector(IAppleReceiptVerificatorService appleReceiptVerificator)
+        public AppStoreConnector(IAppleReceiptVerificatorService receiptVerificator)
         {
-            AppleReceiptVerificator = appleReceiptVerificator;
+            ReceiptVerificator = receiptVerificator ?? throw new ArgumentNullException(nameof(receiptVerificator));
         }
 
-        public async Task<Subscription> GetUpToDateInfo(string productId, string purchaseToken)
+        public async Task<bool> VerifyPurchase(string productId, string receiptData)
         {
-            var result = await AppleReceiptVerificator.VerifyAppleReceiptAsync(purchaseToken);
+            var result = await ReceiptVerificator.VerifyAppleReceiptAsync(receiptData);
 
-            if (result == null)
-                return null;
+            if (result == null) return false;
 
             ValidateVerificationResult(result);
 
-            return CreateSubscription(productId, purchaseToken, result.AppleVerificationResponse.LatestReceiptInfo.First());
+            return true;
         }
 
-        Subscription CreateSubscription(string productId, string purchaseToken, AppleInAppPurchaseReceipt purchase)
+        public async Task<SubscriptionInfo> GetUpToDateInfo(string productId, string purchaseToken)
         {
-            return new Subscription
+            var result = await ReceiptVerificator.VerifyAppleReceiptAsync(purchaseToken);
+
+            if (result == null) return null;
+
+            ValidateVerificationResult(result);
+
+            return CreateSubscription(result.AppleVerificationResponse.LatestReceiptInfo.First());
+        }
+
+        SubscriptionInfo CreateSubscription(AppleInAppPurchaseReceipt purchase)
+        {
+            return new SubscriptionInfo
             {
-                SubscriptionId = Guid.NewGuid().ToString(),
-                ProductId = productId,
                 UserId = null,
-                Platform = "AppStore",
-                PurchaseToken = purchaseToken,
-                OriginalTransactionId = purchase.OriginalTransactionId,
+                TransactionId = purchase.OriginalTransactionId,
                 SubscriptionDate = purchase.PurchaseDateDt,
                 ExpirationDate = purchase.ExpirationDateDt,
                 CancellationDate = purchase.CancellationDateDt,
-                LastUpdate = LocalTime.Now,
                 AutoRenews = purchase.SubscriptionAutoRenewStatus == AppleSubscriptionAutoRenewStatus.Active
             };
         }

@@ -17,7 +17,12 @@
             DeveloperService = developerService;
         }
 
-        public async Task<Subscription> GetUpToDateInfo(string productId, string purchaseToken)
+        public Task<bool> VerifyPurchase(string productId, string receiptData)
+        {
+            return Task.FromResult(true);
+        }
+
+        public async Task<SubscriptionInfo> GetUpToDateInfo(string productId, string purchaseToken)
         {
             var purchaseResult = await DeveloperService.ValidatePurchase(new CafeBazaarValidatePurchaseRequest
             {
@@ -39,23 +44,18 @@
             if (subscriptionResult == null)
                 return null;
 
-            return CreateSubscription(productId, purchaseToken, purchaseResult, subscriptionResult);
+            return CreateSubscription(purchaseResult, subscriptionResult);
         }
 
-        Subscription CreateSubscription(string productId, string purchaseToken, CafeBazaarValidatePurchaseResult purchase, CafeBazaarValidateSubscriptionResult subscription)
+        SubscriptionInfo CreateSubscription(CafeBazaarValidatePurchaseResult purchase, CafeBazaarValidateSubscriptionResult subscription)
         {
-            return new Subscription
+            return new SubscriptionInfo
             {
-                SubscriptionId = Guid.NewGuid().ToString(),
-                ProductId = productId,
                 UserId = purchase.DeveloperPayload,
-                Platform = "CafeBazaar",
-                PurchaseToken = purchaseToken,
-                OriginalTransactionId = null,
+                TransactionId = null,
                 SubscriptionDate = subscription.InitiationTime.DateTime,
                 ExpirationDate = subscription.ValidUntil.DateTime,
                 CancellationDate = purchase.PurchaseState == CafeBazaarPurchaseState.Refunded ? (DateTime?)LocalTime.Now : null,
-                LastUpdate = LocalTime.Now,
                 AutoRenews = subscription.AutoRenewing
             };
         }

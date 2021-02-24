@@ -10,8 +10,9 @@
 
         public string Platform { get; set; }
 
+        public string TransactionId { get; set; }
+        public string ReceiptData { get; set; }
         public string PurchaseToken { get; set; }
-        public string OriginalTransactionId { get; set; }
 
         public DateTime? LastUpdate { get; set; }
 

@@ -51,12 +51,25 @@
 
             if (subscription == null)
             {
-                subscription = await StoreConnector.GetUpToDateInfo(voucher.ProductId, voucher.Code);
+                var subscriptionInfo = await StoreConnector.GetUpToDateInfo(voucher.ProductId, voucher.Code);
 
-                if (subscription == null)
-                    throw new Exception("Couldn't convert voucher to a subscription.");
+                if (subscriptionInfo == null) throw new Exception("Couldn't find voucher info.");
 
-                subscription = await SubscriptionRepository.AddSubscription(subscription);
+                subscription = await SubscriptionRepository.AddSubscription(new Subscription
+                {
+                    SubscriptionId = Guid.NewGuid().ToString(),
+                    ProductId = voucher.ProductId,
+                    UserId = subscriptionInfo.UserId,
+                    Platform = "Voucher",
+                    TransactionId = subscriptionInfo.TransactionId,
+                    ReceiptData = voucher.Code,
+                    PurchaseToken = voucher.Code,
+                    SubscriptionDate = subscriptionInfo.SubscriptionDate,
+                    ExpirationDate = subscriptionInfo.ExpirationDate,
+                    CancellationDate = subscriptionInfo.CancellationDate,
+                    LastUpdate = LocalTime.Now,
+                    AutoRenews = subscriptionInfo.AutoRenews
+                });
             }
 
             await SubscriptionRepository.AddTransaction(new Transaction

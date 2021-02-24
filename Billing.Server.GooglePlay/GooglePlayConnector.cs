@@ -14,7 +14,7 @@
     {
         readonly GooglePlayOptions PlayOptions;
         readonly GooglePublisherOptions PublisherOptions;
-        AndroidPublisherService instance;
+        AndroidPublisherService Instance;
 
         public GooglePlayConnector(IOptionsSnapshot<GooglePlayOptions> playOptions, IOptionsSnapshot<GooglePublisherOptions> publisherOptions)
         {
@@ -22,7 +22,12 @@
             PublisherOptions = publisherOptions.Value;
         }
 
-        public async Task<Subscription> GetUpToDateInfo(string productId, string purchaseToken)
+        public Task<bool> VerifyPurchase(string productId, string receiptData)
+        {
+            return Task.FromResult(true);
+        }
+
+        public async Task<SubscriptionInfo> GetUpToDateInfo(string productId, string purchaseToken)
         {
             var publisher = GetPublisherService();
 
@@ -31,37 +36,32 @@
             if (result == null)
                 return null;
 
-            return CreateSubscription(productId, purchaseToken, result);
+            return CreateSubscription(result);
         }
 
-        Subscription CreateSubscription(string productId, string purchaseToken, SubscriptionPurchase purchase)
+        SubscriptionInfo CreateSubscription(SubscriptionPurchase purchase)
         {
-            return new Subscription
+            return new SubscriptionInfo
             {
-                SubscriptionId = Guid.NewGuid().ToString(),
-                ProductId = productId,
                 UserId = purchase.EmailAddress,
-                Platform = "GooglePlay",
-                PurchaseToken = purchaseToken,
-                OriginalTransactionId = purchase.OrderId,
+                TransactionId = purchase.OrderId,
                 SubscriptionDate = purchase.StartTimeMillis.ToDateTime() ?? LocalTime.Now,
                 ExpirationDate = purchase.ExpiryTimeMillis.ToDateTime() ?? LocalTime.Now,
                 CancellationDate = purchase.UserCancellationTimeMillis.ToDateTime(),
-                LastUpdate = LocalTime.Now,
                 AutoRenews = purchase.AutoRenewing ?? false
             };
         }
 
         AndroidPublisherService GetPublisherService()
         {
-            if (instance != null) return instance;
+            if (Instance != null) return Instance;
 
             var initializer = new BaseClientService.Initializer
             {
                 HttpClientInitializer = CreateClientInitializer()
             };
 
-            return instance = new AndroidPublisherService(initializer);
+            return Instance = new AndroidPublisherService(initializer);
         }
 
         IConfigurableHttpClientInitializer CreateClientInitializer()

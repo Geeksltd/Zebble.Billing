@@ -11,6 +11,14 @@
         public Uri BaseUri { get; set; }
 
         /// <summary>
+        /// The relative path to verify purchase endpoint. 
+        /// </summary>
+        /// <remarks>
+        /// The default value is "app/verify-purchase".
+        /// </remarks>
+        public string VerifyPurchasePath { get; set; } = "app/verify-purchase";
+
+        /// <summary>
         /// The relative path to purchase attempt endpoint. 
         /// </summary>
         /// <remarks>

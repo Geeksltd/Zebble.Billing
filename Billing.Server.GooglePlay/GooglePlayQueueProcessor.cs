@@ -55,12 +55,25 @@
 
             if (subscription == null)
             {
-                subscription = await StoreConnector.GetUpToDateInfo(notification.ProductId, notification.PurchaseToken);
+                var subscriptionInfo = await StoreConnector.GetUpToDateInfo(notification.ProductId, notification.PurchaseToken);
 
-                if (subscription == null)
-                    return false;
+                if (subscriptionInfo == null) return false;
 
-                subscription = await Repository.AddSubscription(subscription);
+                subscription = await Repository.AddSubscription(new Subscription
+                {
+                    SubscriptionId = Guid.NewGuid().ToString(),
+                    ProductId = notification.ProductId,
+                    UserId = subscriptionInfo.UserId,
+                    Platform = "GooglePlay",
+                    TransactionId = subscriptionInfo.TransactionId,
+                    ReceiptData = null,
+                    PurchaseToken = notification.PurchaseToken,
+                    SubscriptionDate = subscriptionInfo.SubscriptionDate,
+                    ExpirationDate = subscriptionInfo.ExpirationDate,
+                    CancellationDate = subscriptionInfo.CancellationDate,
+                    LastUpdate = LocalTime.Now,
+                    AutoRenews = subscriptionInfo.AutoRenews
+                });
             }
             else
             {

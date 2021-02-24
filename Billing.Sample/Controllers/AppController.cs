@@ -12,11 +12,19 @@ namespace Zebble.Billing.Sample
 
         public AppController(SubscriptionManager manager) => SubscriptionManager = manager;
 
+        [HttpPost("verify-purchase")]
+        public async Task<IActionResult> VerifyPurchase([FromBody] AppVerifyPurchaseModel model)
+        {
+            if (!ValidateTicket(model.Ticket)) return Unauthorized();
+            await SubscriptionManager.VerifyPurchase(model.UserId, model.Platform, model.ProductId, model.TransactionId, model.PurchaseToken);
+            return Ok();
+        }
+
         [HttpPost("purchase-attempt")]
         public async Task<IActionResult> PurchaseAttempt([FromBody] AppPurchaseAttemptModel model)
         {
             if (!ValidateTicket(model.Ticket)) return Unauthorized();
-            await SubscriptionManager.PurchaseAttempt(model.ProductId, model.UserId, model.Platform, model.PurchaseToken);
+            await SubscriptionManager.PurchaseAttempt(model.UserId, model.Platform, model.ProductId, model.TransactionId, model.TransactionDateUtc, model.PurchaseToken);
             return Ok();
         }
 
