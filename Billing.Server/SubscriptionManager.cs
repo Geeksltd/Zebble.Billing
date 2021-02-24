@@ -67,16 +67,16 @@
             if (subscription.ProductId != productId)
                 throw new Exception("Provided purchase token is associated with another product!");
 
-            // ToDO
+            subscription.PurchaseToken = purchaseToken;
+            subscription.LastUpdate = LocalTime.Now;
+
             var storeConnector = StoreConnectorResolver.Resolve(platform);
             var subscriptionInfo = await storeConnector.GetUpToDateInfo(productId, subscription.ReceiptData);
 
-            subscription.PurchaseToken = purchaseToken;
-            subscription.SubscriptionDate = subscriptionInfo.SubscriptionDate;
-            subscription.ExpirationDate = subscriptionInfo.ExpirationDate;
-            subscription.CancellationDate = subscriptionInfo.CancellationDate;
-            subscription.AutoRenews = subscriptionInfo.AutoRenews;
-            subscription.LastUpdate = LocalTime.Now;
+            subscription.SubscriptionDate = subscriptionInfo?.SubscriptionDate;
+            subscription.ExpirationDate = subscriptionInfo?.ExpirationDate;
+            subscription.CancellationDate = subscriptionInfo?.CancellationDate;
+            subscription.AutoRenews = subscriptionInfo?.AutoRenews;
 
             await Repository.UpdateSubscription(subscription);
         }
