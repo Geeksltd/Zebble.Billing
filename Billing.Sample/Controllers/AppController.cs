@@ -16,7 +16,7 @@ namespace Zebble.Billing.Sample
         public async Task<IActionResult> VerifyPurchase([FromBody] AppVerifyPurchaseModel model)
         {
             if (!ValidateTicket(model.Ticket)) return Unauthorized();
-            await SubscriptionManager.VerifyPurchase(model.UserId, model.Platform, model.ProductId, model.TransactionId, model.PurchaseToken);
+            await SubscriptionManager.VerifyPurchase(model.UserId, model.Platform, model.ProductId, model.TransactionId, model.ReceiptData);
             return Ok();
         }
 
