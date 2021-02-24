@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Microsoft.Extensions.DependencyInjection;
     using Olive;
 
     class StoreConnectorResolver : IStoreConnectorResolver
@@ -20,11 +21,11 @@
         {
             var registries = StoreConnectorRegistries.Where(x => x.Name == storeName);
 
-            if (registries == null) throw new NotSupportedException($"Couldn't find any registry with name '{storeName}'.");
+            if (registries.None()) throw new NotSupportedException($"Couldn't find any registry with name '{storeName}'.");
 
             if (registries.HasMany()) throw new NotSupportedException($"Found multiple registries with name '{storeName}'.");
 
-            return (IStoreConnector)ServiceProvider.GetService(registries.Single().Type);
+            return (IStoreConnector)ServiceProvider.GetRequiredService(registries.Single().Type);
         }
     }
 }

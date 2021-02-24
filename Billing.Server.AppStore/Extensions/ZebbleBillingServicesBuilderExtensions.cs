@@ -5,6 +5,7 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Options;
     using Olive;
 
     public static partial class ZebbleBillingServicesBuilderExtensions
@@ -23,7 +24,7 @@
                             });
 
             builder.Services.AddOptions<AppleReceiptVerificationSettings>()
-                            .Configure<AppStoreOptions>((settings, options) => options.Apply(settings));
+                            .Configure<IOptions<AppStoreOptions>>((settings, options) => options.Value.Apply(settings));
             builder.Services.RegisterAppleReceiptVerificator();
 
             builder.Services.AddStoreConnector<AppStoreConnector>("AppStore");

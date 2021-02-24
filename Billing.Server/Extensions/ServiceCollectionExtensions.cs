@@ -37,6 +37,7 @@
             services.AddScoped(sp => new StoreConnectorRegistry(name, typeof(TType)));
 
             services.AddScoped<IStoreConnector, TType>();
+            services.AddScoped(sp => sp.GetServices<IStoreConnector>().OfType<TType>().Single());
 
             return services;
         }
