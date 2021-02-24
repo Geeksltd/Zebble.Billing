@@ -51,8 +51,11 @@
 
         void ValidateVerificationResult(AppleReceiptVerificationResult verificationResult)
         {
+            if (verificationResult.AppleVerificationResponse == null)
+                throw new Exception($"{verificationResult.Message}.");
+
             if (verificationResult.AppleVerificationResponse.StatusCode != IAPVerificationResponseStatus.Ok)
-                throw new Exception($"{verificationResult.Message} ({verificationResult.AppleVerificationResponse.StatusCode} [{verificationResult.AppleVerificationResponse.Status}])");
+                throw new Exception($"{verificationResult.Message} [{verificationResult.AppleVerificationResponse.Status} - {verificationResult.AppleVerificationResponse.StatusCode}]");
         }
     }
 }
