@@ -12,7 +12,7 @@
     <DisableExtraReferences>true</DisableExtraReferences>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Olive.Mvc" Version="3.1.117" />
+    <PackageReference Include="Olive.Mvc" Version="3.1.120" />
     <ProjectReference Include="..\Billing.Server\Billing.Server.csproj" />
     <ProjectReference Include="..\Billing.Server.AppStore\Billing.Server.AppStore.csproj" />
     <ProjectReference Include="..\Billing.Server.GooglePlay\Billing.Server.GooglePlay.csproj" />
