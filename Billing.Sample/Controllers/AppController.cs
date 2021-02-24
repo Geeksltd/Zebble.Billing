@@ -11,11 +11,11 @@ namespace Zebble.Billing.Sample
         readonly SubscriptionManager SubscriptionManager;
 
         public AppController(SubscriptionManager manager) => SubscriptionManager = manager;
-        
+
         [HttpPost("purchase-attempt")]
         public async Task<IActionResult> PurchaseAttempt([FromBody] AppPurchaseAttemptModel model)
         {
-            if (ValidateTicket(model.Ticket)) return Unauthorized();
+            if (!ValidateTicket(model.Ticket)) return Unauthorized();
             await SubscriptionManager.PurchaseAttempt(model.ProductId, model.UserId, model.Platform, model.PurchaseToken);
             return Ok();
         }
@@ -23,7 +23,7 @@ namespace Zebble.Billing.Sample
         [HttpPost("subscription-status")]
         public async Task<IActionResult> SubscriptionStatus([FromBody] AppSubscriptionStatusModel model)
         {
-            if (ValidateTicket(model.Ticket)) return Unauthorized();
+            if (!ValidateTicket(model.Ticket)) return Unauthorized();
             return Ok(await SubscriptionManager.GetSubscriptionStatus(model.UserId));
         }
 

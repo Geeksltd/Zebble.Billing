@@ -7,9 +7,9 @@
     public class SubscriptionManager
     {
         readonly ISubscriptionRepository Repository;
-        readonly StoreConnectorResolver StoreConnectorResolver;
+        readonly IStoreConnectorResolver StoreConnectorResolver;
 
-        internal SubscriptionManager(ISubscriptionRepository repository, StoreConnectorResolver storeConnectorResolver)
+        public SubscriptionManager(ISubscriptionRepository repository, IStoreConnectorResolver storeConnectorResolver)
         {
             Repository = repository;
             StoreConnectorResolver = storeConnectorResolver;

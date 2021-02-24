@@ -19,9 +19,9 @@
 
             services.AddScoped<IProductProvider, ProductProvider>();
 
-            services.AddScoped<SubscriptionManager>();
+            services.AddScoped<IStoreConnectorResolver, StoreConnectorResolver>();
 
-            services.AddScoped<StoreConnectorResolver>();
+            services.AddScoped<SubscriptionManager>();
 
             builder?.Invoke(new ZebbleBillingServicesBuilder(services));
 
