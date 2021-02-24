@@ -19,7 +19,7 @@
                 var purchases = await Billing.GetPurchasesAsync(type);
                 if (purchases.None()) return false;
 
-                foreach (var purchase in purchases)
+                foreach (var purchase in purchases.Distinct(x => x.Id))
                     await BillingContext.Current.PurchaseAttempt(purchase.ToEventArgs());
 
                 return true;
