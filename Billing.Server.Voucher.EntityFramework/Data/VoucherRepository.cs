@@ -6,9 +6,9 @@
 
     class VoucherRepository : IVoucherRepository
     {
-        readonly BillingDbContext Context;
+        readonly VoucherDbContext Context;
 
-        public VoucherRepository(BillingDbContext context) => Context = context;
+        public VoucherRepository(VoucherDbContext context) => Context = context;
 
         public Task<Voucher> GetByCode(string code)
         {

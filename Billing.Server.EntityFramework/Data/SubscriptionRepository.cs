@@ -7,9 +7,9 @@
 
     class SubscriptionRepository : ISubscriptionRepository
     {
-        readonly BillingDbContext Context;
+        readonly SubscriptionDbContext Context;
 
-        public SubscriptionRepository(BillingDbContext context) => Context = context;
+        public SubscriptionRepository(SubscriptionDbContext context) => Context = context;
 
         public Task<Subscription> GetByPurchaseToken(string purchaseToken)
         {
