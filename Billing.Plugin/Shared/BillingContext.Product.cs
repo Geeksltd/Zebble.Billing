@@ -6,6 +6,8 @@
 
     partial class BillingContext
     {
+        public Task<Product[]> GetProducts() => ProductProvider.GetProducts();
+
         public Task<Product> GetProduct(string productId) => ProductProvider.GetById(productId);
 
         public async Task<decimal> GetPrice(string productId) => (await GetProduct(productId)).Price;
