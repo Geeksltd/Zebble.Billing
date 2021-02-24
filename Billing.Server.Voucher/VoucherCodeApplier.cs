@@ -63,6 +63,7 @@
                     Platform = "Voucher",
                     TransactionId = subscriptionInfo.TransactionId,
                     ReceiptData = voucher.Code,
+                    TransactionDate = voucher.ActivationDate,
                     PurchaseToken = voucher.Code,
                     SubscriptionDate = subscriptionInfo.SubscriptionDate,
                     ExpirationDate = subscriptionInfo.ExpirationDate,

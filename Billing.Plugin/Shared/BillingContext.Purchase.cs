@@ -9,8 +9,7 @@
         public async Task<string> PurchaseSubscription(string productId)
         {
             var product = await ProductProvider.GetById(productId) ?? throw new Exception($"Product with id '{productId}' not found.");
-            return await new PurchaseSubscriptionCommand(product).Execute()
-                 ?? "Failed to connect to the store. Are you connected to the network? If so, try 'Pay with Card'.";
+            return await new PurchaseSubscriptionCommand(product).Execute();
         }
 
         public async Task<bool> RestoreSubscription(bool userRequest = false)

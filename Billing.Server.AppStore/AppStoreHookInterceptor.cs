@@ -45,6 +45,7 @@
                     Platform = "AppStore",
                     TransactionId = subscriptionInfo.TransactionId,
                     PurchaseToken = notification.PurchaseToken,
+                    TransactionDate = notification.PurchaseDate,
                     SubscriptionDate = subscriptionInfo.SubscriptionDate,
                     ExpirationDate = subscriptionInfo.ExpirationDate,
                     CancellationDate = subscriptionInfo.CancellationDate,

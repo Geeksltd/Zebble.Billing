@@ -7,11 +7,16 @@
 
     class PurchaseSubscriptionCommand : StoreCommandBase<string>
     {
-        const string NOT_COMPLETED = "Purchase was not completed. Please try again.";
+        const string NotCompleted = "Purchase was not completed. Please try again.";
         const string GeneralError = "There seems to be a problem in the subscription system. Please try again later.";
-        const string SuccessMessage = "Thank you. Your Pro will be activated as soon as the payment has been received.";
+        const string SuccessMessage = "Thank you. Your subscription will be activated as soon as the payment has been received.";
+        const string BillingUnavailable = "Billing seems to be unavailable, please try again or contact us.";
+        const string PaymentInvalid = "Payment seems to be invalid, please try again.";
+        const string PaymentNotAllowed = "Payment does not seem to be enabled/allowed, please try again.";
+        const string AppStoreUnavailable = "The app store seems to be unavailable. Try again later.";
+        const string Cancelled = "Cancelled";
+        const string OK = "OK";
 
-        static bool StartedTrying;
         readonly Product Product;
 
         public PurchaseSubscriptionCommand(Product product) => Product = product;
@@ -22,73 +27,40 @@
             {
                 var purchase = await Billing.PurchaseAsync(Product.Id, Product.ItemType, new PurchaseVerificator());
 
-                if (purchase == null) return NOT_COMPLETED;
+                if (purchase == null) return NotCompleted;
 
                 await BillingContext.Current.PurchaseAttempt(purchase.ToEventArgs());
 
+                if (await BillingContext.Current.RestoreSubscription()) return OK;
+
                 if (purchase.State.IsAnyOf(PurchaseState.Restored, PurchaseState.Purchased, PurchaseState.Purchasing, PurchaseState.PaymentPending))
-                {
-                    for (var attempt = 10; attempt > 0; attempt--)
-                    {
-                        await Task.Delay(100);
-                        if (await BillingContext.Current.RestoreSubscription()) return "OK";
-                    }
-
-                    Thread.Pool.RunOnNewThread(KeepTrying);
                     return SuccessMessage;
-                }
-                else if (purchase.State.IsAnyOf(PurchaseState.Failed, PurchaseState.Canceled))
-                {
-                    if (await BillingContext.Current.RestoreSubscription()) return "OK";
 
-                    return NOT_COMPLETED;
-                }
+                if (purchase.State.IsAnyOf(PurchaseState.Failed, PurchaseState.Canceled))
+                    return NotCompleted;
 
-                return "Billing seems to be unavailable, please try again or contact support@wordupapp.co.";
+                return BillingUnavailable;
             }
             catch (InAppBillingPurchaseException ex)
             {
                 Log.For(this).Error(ex);
 
-                await new RestoreSubscriptionCommand().Execute();
+                if (await BillingContext.Current.RestoreSubscription()) return OK;
 
-                if (await BillingContext.Current.RestoreSubscription()) return "OK";
-
-                Thread.Pool.RunOnNewThread(KeepTrying);
-
-                switch (ex.PurchaseError)
+                return ex.PurchaseError switch
                 {
-                    case PurchaseError.AppStoreUnavailable:
-                        return "The app store seems to be unavailable. Try again later.";
-                    case PurchaseError.BillingUnavailable:
-                        return "Billing seems to be unavailable, please try again later.";
-                    case PurchaseError.PaymentInvalid:
-                        return "Payment seems to be invalid, please try again.";
-                    case PurchaseError.PaymentNotAllowed:
-                        return "Payment does not seem to be enabled/allowed, please try again.";
-                    case PurchaseError.UserCancelled:
-                        return "Cancelled";
-                    default:
-                        Log.For(this).Error(ex);
-                        return GeneralError;
-                }
+                    PurchaseError.AppStoreUnavailable => AppStoreUnavailable,
+                    PurchaseError.BillingUnavailable => BillingUnavailable,
+                    PurchaseError.PaymentInvalid => PaymentInvalid,
+                    PurchaseError.PaymentNotAllowed => PaymentNotAllowed,
+                    PurchaseError.UserCancelled => Cancelled,
+                    _ => GeneralError,
+                };
             }
             catch (Exception ex)
             {
                 Log.For(this).Error(ex);
                 return GeneralError;
-            }
-        }
-
-        static async Task KeepTrying()
-        {
-            if (StartedTrying) return;
-            else StartedTrying = true;
-
-            for (var attempts = 10; attempts > 0; attempts--)
-            {
-                if (await BillingContext.Current.RestoreSubscription()) return;
-                await Task.Delay(2.Seconds());
             }
         }
     }

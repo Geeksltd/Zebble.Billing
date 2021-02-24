@@ -52,7 +52,7 @@
             return true;
         }
 
-        public async Task PurchaseAttempt(string userId, string platform, string productId, string transactionId, DateTime transactionDateUtc, string purchaseToken)
+        public async Task PurchaseAttempt(string userId, string platform, string productId, string transactionId, DateTime transactionDate, string purchaseToken)
         {
             var subscription = await Repository.GetByTransactionId(transactionId);
 
@@ -67,6 +67,7 @@
             if (subscription.ProductId != productId)
                 throw new Exception("Provided purchase token is associated with another product!");
 
+            subscription.TransactionDate = transactionDate;
             subscription.PurchaseToken = purchaseToken;
             subscription.LastUpdate = LocalTime.Now;
 

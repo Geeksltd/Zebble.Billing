@@ -67,6 +67,7 @@
                     Platform = "GooglePlay",
                     TransactionId = subscriptionInfo.TransactionId,
                     ReceiptData = null,
+                    TransactionDate = notification.EventTime,
                     PurchaseToken = notification.PurchaseToken,
                     SubscriptionDate = subscriptionInfo.SubscriptionDate,
                     ExpirationDate = subscriptionInfo.ExpirationDate,
