@@ -25,7 +25,11 @@
         {
             try
             {
+#if CAFEBAZAAR
+                var purchase = await Billing.PurchaseAsync(Product.Id, Product.ItemType, BillingContext.Current.User.UserId, new PurchaseVerificator());
+#else
                 var purchase = await Billing.PurchaseAsync(Product.Id, Product.ItemType, new PurchaseVerificator());
+#endif
 
                 if (purchase == null) return NotCompleted;
 

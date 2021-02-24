@@ -6,9 +6,9 @@
     public partial class BillingContext
     {
         static BillingContextOptions Options;
-        IBillingUser User;
-        Subscription Subscription;
 
+        internal IBillingUser User { get; private set; }
+        internal Subscription Subscription { get; private set; }
         internal IProductProvider ProductProvider { get; private set; }
 
         public static BillingContext Current { get; private set; }
