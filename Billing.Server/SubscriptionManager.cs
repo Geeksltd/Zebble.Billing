@@ -95,7 +95,7 @@
         async Task TryToUpdateSubscription(Subscription subscription)
         {
             var storeConnector = StoreConnectorResolver.Resolve(subscription.Platform);
-            var updatedSubscription = await storeConnector.GetUpToDateInfo(subscription.ProductId, subscription.PurchaseToken);
+            var updatedSubscription = await storeConnector.GetUpToDateInfo(subscription.ProductId, subscription.ReceiptData);
 
             if (updatedSubscription == null) return;
 
