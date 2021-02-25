@@ -22,16 +22,16 @@
             PublisherOptions = publisherOptions.Value;
         }
 
-        public Task<bool> VerifyPurchase(string productId, string receiptData)
+        public Task<bool> VerifyPurchase(VerifyPurchaseArgs args)
         {
             return Task.FromResult(true);
         }
 
-        public async Task<SubscriptionInfo> GetUpToDateInfo(string productId, string purchaseToken)
+        public async Task<SubscriptionInfo> GetSubscriptionInfo(SubscriptionInfoArgs args)
         {
             var publisher = GetPublisherService();
 
-            var result = await publisher.Purchases.Subscriptions.Get(PlayOptions.PackageName, productId, purchaseToken).ExecuteAsync();
+            var result = await publisher.Purchases.Subscriptions.Get(PlayOptions.PackageName, args.ProductId, args.PurchaseToken).ExecuteAsync();
 
             if (result == null)
                 return null;

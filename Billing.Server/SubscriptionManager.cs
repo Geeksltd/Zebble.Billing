@@ -18,7 +18,10 @@
         public async Task<bool> VerifyPurchase(string userId, string platform, string productId, string transactionId, string receiptData)
         {
             var storeConnector = StoreConnectorResolver.Resolve(platform);
-            var isValid = await storeConnector.VerifyPurchase(productId, receiptData);
+            var isValid = await storeConnector.VerifyPurchase(new VerifyPurchaseArgs
+            {
+                ReceiptData = receiptData
+            });
 
             if (!isValid) return false;
 
@@ -72,7 +75,7 @@
             subscription.LastUpdate = LocalTime.Now;
 
             var storeConnector = StoreConnectorResolver.Resolve(platform);
-            var subscriptionInfo = await storeConnector.GetUpToDateInfo(productId, subscription.ReceiptData);
+            var subscriptionInfo = await storeConnector.GetSubscriptionInfo(subscription.ToArgs());
 
             subscription.SubscriptionDate = subscriptionInfo?.SubscriptionDate;
             subscription.ExpirationDate = subscriptionInfo?.ExpirationDate;
@@ -95,7 +98,7 @@
         async Task TryToUpdateSubscription(Subscription subscription)
         {
             var storeConnector = StoreConnectorResolver.Resolve(subscription.Platform);
-            var updatedSubscription = await storeConnector.GetUpToDateInfo(subscription.ProductId, subscription.ReceiptData);
+            var updatedSubscription = await storeConnector.GetSubscriptionInfo(subscription.ToArgs());
 
             if (updatedSubscription == null) return;
 

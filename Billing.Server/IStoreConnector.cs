@@ -4,7 +4,7 @@
 
     public interface IStoreConnector
     {
-        Task<bool> VerifyPurchase(string productId, string receiptData);
-        Task<SubscriptionInfo> GetUpToDateInfo(string productId, string purchaseToken);
+        Task<bool> VerifyPurchase(VerifyPurchaseArgs args);
+        Task<SubscriptionInfo> GetSubscriptionInfo(SubscriptionInfoArgs args);
     }
 }

@@ -17,18 +17,18 @@
             DeveloperService = developerService;
         }
 
-        public Task<bool> VerifyPurchase(string productId, string receiptData)
+        public Task<bool> VerifyPurchase(VerifyPurchaseArgs args)
         {
             return Task.FromResult(true);
         }
 
-        public async Task<SubscriptionInfo> GetUpToDateInfo(string productId, string purchaseToken)
+        public async Task<SubscriptionInfo> GetSubscriptionInfo(SubscriptionInfoArgs args)
         {
             var purchaseResult = await DeveloperService.ValidatePurchase(new CafeBazaarValidatePurchaseRequest
             {
                 PackageName = Options.PackageName,
-                ProductId = productId,
-                PurchaseToken = purchaseToken
+                ProductId = args.ProductId,
+                PurchaseToken = args.PurchaseToken
             });
 
             if (purchaseResult == null)
@@ -37,8 +37,8 @@
             var subscriptionResult = await DeveloperService.ValidateSubscription(new CafeBazaarValidateSubscriptionRequest
             {
                 PackageName = Options.PackageName,
-                SubscriptionId = productId,
-                PurchaseToken = purchaseToken
+                SubscriptionId = args.ProductId,
+                PurchaseToken = args.PurchaseToken
             });
 
             if (subscriptionResult == null)

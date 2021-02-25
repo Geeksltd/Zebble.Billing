@@ -51,7 +51,7 @@
 
             if (subscription == null)
             {
-                var subscriptionInfo = await StoreConnector.GetUpToDateInfo(voucher.ProductId, voucher.Code);
+                var subscriptionInfo = await StoreConnector.GetSubscriptionInfo(voucher.ToArgs());
 
                 if (subscriptionInfo == null) throw new Exception("Couldn't find voucher info.");
 

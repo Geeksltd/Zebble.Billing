@@ -33,7 +33,11 @@
 
             if (subscription == null)
             {
-                var subscriptionInfo = await StoreConnector.GetUpToDateInfo(notification.ProductId, notification.UnifiedReceipt.LatestReceipt);
+                var subscriptionInfo = await StoreConnector.GetSubscriptionInfo(new SubscriptionInfoArgs
+                {
+                    ProductId = notification.ProductId,
+                    ReceiptData = notification.UnifiedReceipt.LatestReceipt
+                });
 
                 if (subscriptionInfo == null) throw new Exception("Couldn't find receipt info.");
 

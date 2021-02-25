@@ -55,7 +55,7 @@
 
             if (subscription == null)
             {
-                var subscriptionInfo = await StoreConnector.GetUpToDateInfo(notification.ProductId, notification.PurchaseToken);
+                var subscriptionInfo = await StoreConnector.GetSubscriptionInfo(notification.ToArgs());
 
                 if (subscriptionInfo == null) return false;
 

@@ -12,14 +12,14 @@
             Repository = repository;
         }
 
-        public Task<bool> VerifyPurchase(string productId, string receiptData)
+        public Task<bool> VerifyPurchase(VerifyPurchaseArgs args)
         {
             return Task.FromResult(true);
         }
 
-        public async Task<SubscriptionInfo> GetUpToDateInfo(string productId, string purchaseToken)
+        public async Task<SubscriptionInfo> GetSubscriptionInfo(SubscriptionInfoArgs args)
         {
-            var result = await Repository.GetByCode(purchaseToken);
+            var result = await Repository.GetByCode(args.PurchaseToken);
 
             if (result == null)
                 return null;

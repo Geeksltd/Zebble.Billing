@@ -25,12 +25,24 @@
                 public string SubscriptionId { get; set; }
             }
 
-            public GooglePlayNotification ToNotification(string originalData) => new GooglePlayNotification
+            public GooglePlayNotification ToNotification(string originalData)
             {
-                PurchaseToken = Subscription.PurchaseToken,
-                ProductId = Subscription.SubscriptionId,
-                EventTime = EventTimeMillis.ToDateTime(),
-                OriginalData = originalData
+                return new GooglePlayNotification
+                {
+                    PurchaseToken = Subscription.PurchaseToken,
+                    ProductId = Subscription.SubscriptionId,
+                    EventTime = EventTimeMillis.ToDateTime(),
+                    OriginalData = originalData
+                };
+            }
+        }
+
+        public SubscriptionInfoArgs ToArgs()
+        {
+            return new SubscriptionInfoArgs
+            {
+                ProductId = ProductId,
+                PurchaseToken = PurchaseToken
             };
         }
     }

@@ -19,9 +19,9 @@
             ReceiptVerificator = receiptVerificator ?? throw new ArgumentNullException(nameof(receiptVerificator));
         }
 
-        public async Task<bool> VerifyPurchase(string productId, string receiptData)
+        public async Task<bool> VerifyPurchase(VerifyPurchaseArgs args)
         {
-            var result = await ReceiptVerificator.VerifyAppleReceiptAsync(receiptData);
+            var result = await ReceiptVerificator.VerifyAppleReceiptAsync(args.ReceiptData);
 
             if (result == null) return false;
 
@@ -30,9 +30,9 @@
             return true;
         }
 
-        public async Task<SubscriptionInfo> GetUpToDateInfo(string productId, string purchaseToken)
+        public async Task<SubscriptionInfo> GetSubscriptionInfo(SubscriptionInfoArgs args)
         {
-            var result = await ReceiptVerificator.VerifyAppleReceiptAsync(purchaseToken);
+            var result = await ReceiptVerificator.VerifyAppleReceiptAsync(args.ReceiptData);
 
             if (result == null) return null;
 
