@@ -2,6 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
+    using System.Text.Json;
     using Microsoft.Extensions.Options;
     using Google.Apis.Auth.OAuth2;
     using Google.Cloud.PubSub.V1;
@@ -102,17 +103,21 @@
         {
             var json = new JsonCredentialParameters
             {
-                Type = "service_account",
+                Type = JsonCredentialParameters.ServiceAccountCredentialType,
                 ProjectId = Options.ProjectId,
                 PrivateKeyId = Options.PrivateKeyId,
                 PrivateKey = Options.PrivateKey,
                 ClientEmail = Options.ClientEmail,
                 ClientId = Options.ClientId
-            }.ToJson();
+            }.ToJson(new JsonSerializerOptions { PropertyNamingPolicy = new SnakeCasePropertyNamingPolicy() });
 
             return new SubscriberClient.ClientCreationSettings(
                 credentials: GoogleCredential.FromJson(json).ToChannelCredentials()
             );
+        }
+        class SnakeCasePropertyNamingPolicy : JsonNamingPolicy
+        {
+            public override string ConvertName(string name) => name.ToSnakeCase();
         }
     }
 }
