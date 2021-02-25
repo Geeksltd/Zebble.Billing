@@ -10,16 +10,14 @@
     using Google.Apis.AndroidPublisher.v3.Data;
     using Olive;
 
-    class GooglePlayConnector : IStoreConnector
+    class GooglePlayConnector : IStoreConnector, IDisposable
     {
-        readonly GooglePlayOptions PlayOptions;
-        readonly GooglePublisherOptions PublisherOptions;
+        readonly GooglePlayOptions Options;
         AndroidPublisherService Instance;
 
-        public GooglePlayConnector(IOptionsSnapshot<GooglePlayOptions> playOptions, IOptionsSnapshot<GooglePublisherOptions> publisherOptions)
+        public GooglePlayConnector(IOptionsSnapshot<GooglePlayOptions> options)
         {
-            PlayOptions = playOptions.Value;
-            PublisherOptions = publisherOptions.Value;
+            Options = options.Value;
         }
 
         public Task<bool> VerifyPurchase(VerifyPurchaseArgs args)
@@ -31,13 +29,15 @@
         {
             var publisher = GetPublisherService();
 
-            var result = await publisher.Purchases.Subscriptions.Get(PlayOptions.PackageName, args.ProductId, args.PurchaseToken).ExecuteAsync();
+            var result = await publisher.Purchases.Subscriptions.Get(Options.PackageName, args.ProductId, args.PurchaseToken).ExecuteAsync();
 
             if (result == null)
                 return null;
 
             return CreateSubscription(result);
         }
+
+        public void Dispose() => Instance?.Dispose();
 
         SubscriptionInfo CreateSubscription(SubscriptionPurchase purchase)
         {
@@ -66,11 +66,11 @@
 
         IConfigurableHttpClientInitializer CreateClientInitializer()
         {
-            return new ServiceAccountCredential(new ServiceAccountCredential.Initializer(PublisherOptions.ClientEmail)
+            return new ServiceAccountCredential(new ServiceAccountCredential.Initializer(Options.ClientEmail)
             {
-                ProjectId = PublisherOptions.ProjectId,
+                ProjectId = Options.ProjectId,
                 Scopes = new[] { AndroidPublisherService.ScopeConstants.Androidpublisher }
-            }.FromPrivateKey(PublisherOptions.PrivateKey));
+            }.FromPrivateKey(Options.PrivateKey));
         }
     }
 }

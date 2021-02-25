@@ -10,11 +10,11 @@
 
     class GooglePlayQueueProcessor
     {
-        readonly GooglePubSubOptions Options;
+        readonly GooglePlayOptions Options;
         readonly ISubscriptionRepository Repository;
         readonly GooglePlayConnector StoreConnector;
 
-        public GooglePlayQueueProcessor(IOptionsSnapshot<GooglePubSubOptions> options, ISubscriptionRepository repository, GooglePlayConnector storeConnector)
+        public GooglePlayQueueProcessor(IOptionsSnapshot<GooglePlayOptions> options, ISubscriptionRepository repository, GooglePlayConnector storeConnector)
         {
             Options = options.Value;
             Repository = repository;
