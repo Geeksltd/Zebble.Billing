@@ -78,7 +78,9 @@
             }
             else
             {
-                if (notification.State == GooglePlaySubscriptionState.Canceled)
+                if (notification.State.IsAnyOf(GooglePlaySubscriptionState.Purchased, GooglePlaySubscriptionState.Renewed))
+                    subscription.SubscriptionDate = notification.EventTime;
+                else if (notification.State.IsAnyOf(GooglePlaySubscriptionState.Canceled, GooglePlaySubscriptionState.Revoked))
                     subscription.CancellationDate = notification.EventTime;
                 else if (notification.State == GooglePlaySubscriptionState.Expired)
                     subscription.ExpirationDate = notification.EventTime;

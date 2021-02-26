@@ -7,10 +7,11 @@
     class GooglePlayNotification
     {
         public DateTime? EventTime { get; set; }
-        public string PurchaseToken { get; set; }
         public string ProductId { get; set; }
-        public string OriginalData { get; set; }
+        public string PurchaseToken { get; set; }
         public GooglePlaySubscriptionState State { get; set; }
+
+        public string OriginalData { get; set; }
 
         public bool IsTest => PurchaseToken.IsEmpty();
 
@@ -39,9 +40,10 @@
             {
                 return new GooglePlayNotification
                 {
-                    PurchaseToken = SubscriptionNotification?.PurchaseToken,
-                    ProductId = SubscriptionNotification?.SubscriptionId,
                     EventTime = EventTimeMillis?.ToDateTime(),
+                    ProductId = SubscriptionNotification?.SubscriptionId,
+                    PurchaseToken = SubscriptionNotification?.PurchaseToken,
+                    State = (GooglePlaySubscriptionState)SubscriptionNotification.NotificationType,
                     OriginalData = originalData
                 };
             }

@@ -45,8 +45,8 @@
             {
                 UserId = purchase.EmailAddress,
                 TransactionId = purchase.OrderId,
-                SubscriptionDate = purchase.StartTimeMillis.ToDateTime() ?? LocalTime.Now,
-                ExpirationDate = purchase.ExpiryTimeMillis.ToDateTime() ?? LocalTime.Now,
+                SubscriptionDate = purchase.StartTimeMillis.ToDateTime() ?? LocalTime.UtcNow,
+                ExpirationDate = purchase.ExpiryTimeMillis.ToDateTime() ?? LocalTime.UtcNow,
                 CancellationDate = purchase.UserCancellationTimeMillis.ToDateTime(),
                 AutoRenews = purchase.AutoRenewing ?? false
             };

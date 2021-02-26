@@ -22,7 +22,7 @@
             var voucher = await FindVoucher(userId, code);
 
             voucher.UserId = userId;
-            voucher.ActivationDate ??= LocalTime.Now;
+            voucher.ActivationDate ??= LocalTime.UtcNow;
 
             await VoucherRepository.Update(voucher);
 

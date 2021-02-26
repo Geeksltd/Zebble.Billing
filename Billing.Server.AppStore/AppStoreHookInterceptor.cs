@@ -71,7 +71,7 @@
                 else if (notification.Type.IsAnyOf(AppStoreNotificationType.AutoRenewed, AppStoreNotificationType.AutoRecovered))
                     subscription.ExpirationDate = notification.ExpirationDate;
                 else if (notification.Type == AppStoreNotificationType.AutoRenewFailed)
-                    subscription.ExpirationDate = notification.IsInBillingRetryPeriod == true ? notification.GracePeriodExpirationDate : LocalTime.Now;
+                    subscription.ExpirationDate = notification.IsInBillingRetryPeriod == true ? notification.GracePeriodExpirationDate : LocalTime.UtcNow;
                 else if (notification.Type == AppStoreNotificationType.RenewalStatusChanged)
                     subscription.AutoRenews = notification.AutoRenewStatus;
 

@@ -33,7 +33,7 @@
             {
                 UserId = voucher.UserId,
                 TransactionId = voucher.Id,
-                SubscriptionDate = voucher.ActivationDate ?? LocalTime.Now,
+                SubscriptionDate = voucher.ActivationDate ?? LocalTime.UtcNow,
                 ExpirationDate = voucher.ExpirationDate(),
                 CancellationDate = null,
                 AutoRenews = false
