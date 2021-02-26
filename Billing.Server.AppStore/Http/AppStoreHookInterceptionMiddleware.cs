@@ -19,7 +19,7 @@
 
         async Task<string> ReadAsync(Stream stream)
         {
-            await using var copy = new MemoryStream();
+            using var copy = new MemoryStream();
             await stream.CopyToAsync(copy);
 
             copy.Seek(0, SeekOrigin.Begin);
