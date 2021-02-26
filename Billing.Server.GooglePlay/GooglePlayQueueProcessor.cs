@@ -78,10 +78,6 @@
             }
             else
             {
-                var subscriptionInfo = await StoreConnector.GetSubscriptionInfo(notification.ToArgs());
-
-                if (subscriptionInfo == null) return false;
-
                 if (notification.State.IsAnyOf(GooglePlaySubscriptionState.Purchased, GooglePlaySubscriptionState.Renewed))
                     subscription.SubscriptionDate = notification.EventTime;
                 else if (notification.State == GooglePlaySubscriptionState.Canceled)
