@@ -1,7 +1,8 @@
 ﻿namespace Zebble.Billing
 {
-    using Olive;
     using System;
+    using System.Text.Json.Serialization;
+    using Olive;
 
     class GooglePlayNotification
     {
@@ -15,13 +16,22 @@
 
         public class UnderlayingType
         {
+            [JsonPropertyName("eventTimeMillis")]
+            [JsonConverter(typeof(StringToLongConverter))]
             public long? EventTimeMillis { get; set; }
-            public Subs Subscription { get; set; }
+
+            [JsonPropertyName("subscriptionNotification")]
+            public Subs SubscriptionNotification { get; set; }
 
             public class Subs
             {
+                [JsonPropertyName("notificationType")]
                 public int NotificationType { get; set; }
+
+                [JsonPropertyName("purchaseToken")]
                 public string PurchaseToken { get; set; }
+
+                [JsonPropertyName("subscriptionId")]
                 public string SubscriptionId { get; set; }
             }
 
@@ -29,8 +39,8 @@
             {
                 return new GooglePlayNotification
                 {
-                    PurchaseToken = Subscription?.PurchaseToken,
-                    ProductId = Subscription?.SubscriptionId,
+                    PurchaseToken = SubscriptionNotification?.PurchaseToken,
+                    ProductId = SubscriptionNotification?.SubscriptionId,
                     EventTime = EventTimeMillis?.ToDateTime(),
                     OriginalData = originalData
                 };
