@@ -9,7 +9,7 @@
     {
         public static ZebbleBillingAppBuilder UseAppStore(this ZebbleBillingAppBuilder builder)
         {
-            builder.App.MapWhen(MatchesHookInterceptorEndpoint, builder => builder.UseMiddleware<HookInterceptionMiddleware>());
+            builder.App.MapWhen(MatchesHookInterceptorEndpoint, builder => builder.UseMiddleware<AppStoreHookInterceptionMiddleware>());
 
             return builder;
         }

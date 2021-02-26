@@ -6,12 +6,7 @@
 
     class VoucherCodeApplyingMiddleware
     {
-        readonly RequestDelegate Next;
-
-        public VoucherCodeApplyingMiddleware(RequestDelegate next)
-        {
-            Next = next ?? throw new ArgumentNullException(nameof(next));
-        }
+        public VoucherCodeApplyingMiddleware(RequestDelegate _) { }
 
         public async Task InvokeAsync(HttpContext context, VoucherCodeApplier codeApplier)
         {
@@ -19,8 +14,6 @@
 
             await codeApplier.Apply(userId, code);
             await context.Response.WriteAsync("Voucher is applied.");
-
-            await Next(context);
         }
 
         static (string, string) ParseRouteValues(PathString path)
