@@ -1,5 +1,6 @@
 ﻿namespace Zebble.Billing
 {
+    using System;
     using Olive;
 
     public static partial class EntityExtensions
@@ -15,10 +16,12 @@
             return SubscriptionStatus.None;
         }
 
-        public static bool IsStarted(this Subscription @this) => @this?.SubscriptionDate?.IsInThePast() ?? false;
+        public static bool IsStarted(this Subscription @this) => IsInThePast(@this?.SubscriptionDate);
 
-        public static bool IsExpired(this Subscription @this) => @this?.ExpirationDate?.IsInThePast() ?? false;
+        public static bool IsExpired(this Subscription @this) => IsInThePast(@this?.ExpirationDate);
 
-        public static bool IsCanceled(this Subscription @this) => @this?.CancellationDate?.IsInThePast() ?? false;
+        public static bool IsCanceled(this Subscription @this) => IsInThePast(@this?.CancellationDate);
+
+        static bool IsInThePast(DateTime? @this) => @this?.ToLocal().IsInThePast() ?? false;
     }
 }

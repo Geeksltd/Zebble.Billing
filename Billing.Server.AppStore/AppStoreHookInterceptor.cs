@@ -53,7 +53,7 @@
                     SubscriptionDate = subscriptionInfo.SubscriptionDate,
                     ExpirationDate = subscriptionInfo.ExpirationDate,
                     CancellationDate = subscriptionInfo.CancellationDate,
-                    LastUpdate = LocalTime.Now,
+                    LastUpdate = LocalTime.UtcNow,
                     AutoRenews = subscriptionInfo.AutoRenews
                 });
             }
@@ -83,7 +83,7 @@
                 TransactionId = Guid.NewGuid().ToString(),
                 SubscriptionId = subscription.SubscriptionId,
                 Platform = "AppStore",
-                Date = LocalTime.Now,
+                Date = LocalTime.UtcNow,
                 Details = notification.OriginalData
             });
         }

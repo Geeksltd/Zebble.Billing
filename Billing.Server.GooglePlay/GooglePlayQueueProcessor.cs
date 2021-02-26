@@ -73,7 +73,7 @@
                     SubscriptionDate = subscriptionInfo.SubscriptionDate,
                     ExpirationDate = subscriptionInfo.ExpirationDate,
                     CancellationDate = subscriptionInfo.CancellationDate,
-                    LastUpdate = LocalTime.Now,
+                    LastUpdate = LocalTime.UtcNow,
                     AutoRenews = subscriptionInfo.AutoRenews
                 });
             }

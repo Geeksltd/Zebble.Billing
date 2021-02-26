@@ -49,7 +49,7 @@
                 ProductId = productId,
                 TransactionId = transactionId,
                 ReceiptData = receiptData,
-                LastUpdate = LocalTime.Now
+                LastUpdate = LocalTime.UtcNow
             });
 
             return true;
@@ -72,7 +72,7 @@
 
             subscription.TransactionDate = transactionDate;
             subscription.PurchaseToken = purchaseToken;
-            subscription.LastUpdate = LocalTime.Now;
+            subscription.LastUpdate = LocalTime.UtcNow;
 
             var storeConnector = StoreConnectorResolver.Resolve(platform);
             var subscriptionInfo = await storeConnector.GetSubscriptionInfo(subscription.ToArgs());
