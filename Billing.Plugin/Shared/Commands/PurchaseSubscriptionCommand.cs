@@ -35,13 +35,14 @@
 
                 await BillingContext.Current.PurchaseAttempt(purchase.ToEventArgs());
 
-                if (await BillingContext.Current.RestoreSubscription()) return OK;
+                await BillingContext.Current.Refresh();
+
+                if (BillingContext.Current.IsSubscribed) return OK;
 
                 if (purchase.State.IsAnyOf(PurchaseState.Restored, PurchaseState.Purchased, PurchaseState.Purchasing, PurchaseState.PaymentPending))
                     return SuccessMessage;
 
-                if (purchase.State.IsAnyOf(PurchaseState.Failed, PurchaseState.Canceled))
-                    return NotCompleted;
+                if (purchase.State.IsAnyOf(PurchaseState.Failed, PurchaseState.Canceled)) return NotCompleted;
 
                 return BillingUnavailable;
             }
