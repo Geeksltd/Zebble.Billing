@@ -1,6 +1,7 @@
 ﻿namespace Zebble.Billing
 {
     using System;
+    using System.Threading;
     using System.Threading.Tasks;
     using System.Text.Json;
     using Microsoft.Extensions.Options;
@@ -8,7 +9,6 @@
     using Google.Cloud.PubSub.V1;
     using Grpc.Auth;
     using Olive;
-    using System.Threading;
 
     class GooglePlayQueueProcessor
     {
