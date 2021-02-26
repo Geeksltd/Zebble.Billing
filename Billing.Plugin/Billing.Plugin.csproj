@@ -1,12 +1,12 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.23">
   <PropertyGroup>
-    <TargetFrameworks>Xamarin.iOS10;MonoAndroid90</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1;Xamarin.iOS10;MonoAndroid90</TargetFrameworks>
     <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">$(TargetFrameworks);uap10.0.18362</TargetFrameworks>
     <AssemblyName>Zebble.Billing</AssemblyName>
     <RootNamespace>Zebble</RootNamespace>
     <PackageId>Zebble.Billing</PackageId>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
-    <Version>1.0.35.0</Version>
+    <Version>1.0.36.0</Version>
     <PackOnBuild>true</PackOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
     <DefineConstants>$(DefineConstants)</DefineConstants>
@@ -52,6 +52,9 @@
   <PropertyGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
     <DefineConstants>$(DefineConstants);IOS</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition=" $(TargetFramework.StartsWith('netcoreapp')) ">
+    <DefineConstants>$(DefineConstants);MVVM</DefineConstants>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="Shared\**\*.cs" />
   </ItemGroup>
@@ -70,6 +73,9 @@
   </ItemGroup>
   <ItemGroup Condition=" $(DefineConstants.Contains('IOS')) ">
     <Compile Include="iOS\**\*.cs" />
+  </ItemGroup>
+  <ItemGroup Condition=" $(DefineConstants.Contains('MVVM')) ">
+    <Compile Include="Mvvm\**\*.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Remove=".gitignore" />
@@ -90,6 +96,7 @@
     <Folder Include="Android\" />
     <Folder Include="iOS\" />
     <Folder Include="UWP\" />
+    <Folder Include="Mvvm\" />
   </ItemGroup>
   <Import Project="..\Billing.Shared\Billing.Shared.projitems" Label="Shared" />
 </Project>

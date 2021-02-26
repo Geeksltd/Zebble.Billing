@@ -35,62 +35,35 @@
             }
 
             if (!successful && userRequest)
-            {
-                if (errorMessage.IsEmpty()) errorMessage = "Unable to find an active subscription.";
-                await Alert.Show(errorMessage);
-            }
+                throw new Exception(errorMessage.Or("Unable to find an active subscription."));
 
             return successful;
         }
 
         internal async Task<bool> VerifyPurchase(VerifyPurchaseEventArgs args)
         {
-            if (await UIContext.IsOffline())
-            {
-                await Alert.Show("Network connection is not available.");
-                return false;
-            }
+            if (await UIContext.IsOffline()) throw new Exception("Network connection is not available.");
 
-            if (User == null)
-            {
-                await Alert.Show("User is not available.");
-                return false;
-            }
+            if (User == null) throw new Exception("User is not available.");
 
-            try
-            {
-                var url = new Uri(Options.BaseUri, Options.VerifyPurchasePath).ToString();
-                var @params = new { User.Ticket, User.UserId, Platform = PaymentAuthority, args.ProductId, args.TransactionId, args.ReceiptData };
-                var result = await BaseApi.Post(url, @params, OnError.Ignore, showWaiting: false);
+            var url = new Uri(Options.BaseUri, Options.VerifyPurchasePath).ToString();
+            var @params = new { User.Ticket, User.UserId, Platform = PaymentAuthority, args.ProductId, args.TransactionId, args.ReceiptData };
 
-                return result;
-            }
-            catch { return false; }
+            return await BaseApi.Post(url, @params, OnError.Ignore, showWaiting: false);
         }
 
         internal async Task PurchaseAttempt(SubscriptionPurchasedEventArgs args)
         {
-            if (await UIContext.IsOffline())
-            {
-                await Alert.Show("Network connection is not available.");
-                return;
-            }
+            if (await UIContext.IsOffline()) throw new Exception("Network connection is not available.");
 
-            if (User == null)
-            {
-                await Alert.Show("User is not available.");
-                return;
-            }
+            if (User == null) throw new Exception("User is not available.");
 
-            try
-            {
-                var url = new Uri(Options.BaseUri, Options.PurchaseAttemptPath).ToString();
-                var @params = new { User.Ticket, User.UserId, Platform = PaymentAuthority, args.ProductId, args.TransactionId, args.TransactionDateUtc, args.PurchaseToken };
-                await BaseApi.Post(url, @params, OnError.Ignore, showWaiting: false);
+            var url = new Uri(Options.BaseUri, Options.PurchaseAttemptPath).ToString();
+            var @params = new { User.Ticket, User.UserId, Platform = PaymentAuthority, args.ProductId, args.TransactionId, args.TransactionDateUtc, args.PurchaseToken };
 
-                await SubscriptionPurchased.Raise(args);
-            }
-            catch { }
+            await BaseApi.Post(url, @params, OnError.Ignore, showWaiting: false);
+
+            await SubscriptionPurchased.Raise(args);
         }
     }
 }
