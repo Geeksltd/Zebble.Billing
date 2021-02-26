@@ -78,11 +78,15 @@
             }
             else
             {
+                var subscriptionInfo = await StoreConnector.GetSubscriptionInfo(notification.ToArgs());
+
+                if (subscriptionInfo == null) return false;
+
                 if (notification.State.IsAnyOf(GooglePlaySubscriptionState.Purchased, GooglePlaySubscriptionState.Renewed))
                     subscription.SubscriptionDate = notification.EventTime;
-                else if (notification.State.IsAnyOf(GooglePlaySubscriptionState.Canceled, GooglePlaySubscriptionState.Revoked))
+                else if (notification.State == GooglePlaySubscriptionState.Canceled)
                     subscription.CancellationDate = notification.EventTime;
-                else if (notification.State == GooglePlaySubscriptionState.Expired)
+                else if (notification.State.IsAnyOf(GooglePlaySubscriptionState.Expired, GooglePlaySubscriptionState.Revoked))
                     subscription.ExpirationDate = notification.EventTime;
 
                 await Repository.UpdateSubscription(subscription);
