@@ -8,6 +8,7 @@
     using Google.Cloud.PubSub.V1;
     using Grpc.Auth;
     using Olive;
+    using System.Threading;
 
     class GooglePlayQueueProcessor
     {
@@ -24,30 +25,28 @@
 
         public async Task<int> Process()
         {
-            var handled = 0;
-
             var name = new SubscriptionName(Options.ProjectId, Options.SubscriptionId);
             var client = await SubscriberClient.CreateAsync(name, GetSettings());
+            var messageCount = 0;
 
             var startTask = client.StartAsync(async (message, _) =>
             {
                 var notification = message.ToNotification();
 
+                Interlocked.Increment(ref messageCount);
+
                 if (notification.IsTest == false && !await ProccessNotification(notification))
                     return SubscriberClient.Reply.Nack;
-
-                handled++;
 
                 return SubscriberClient.Reply.Ack;
             });
 
-            await Task.Delay(1.Seconds());
-            var stopTask = client.StopAsync(10.Seconds());
+            await Task.Delay(5.Seconds());
+            await client.StopAsync(10.Seconds());
 
             await startTask;
-            await stopTask;
 
-            return handled;
+            return messageCount;
         }
 
         async Task<bool> ProccessNotification(GooglePlayNotification notification)
@@ -92,7 +91,7 @@
                 TransactionId = Guid.NewGuid().ToString(),
                 SubscriptionId = subscription.SubscriptionId,
                 Platform = "GooglePlay",
-                Date = notification.EventTime,
+                Date = notification.EventTime ?? LocalTime.UtcNow,
                 Details = notification.OriginalData
             });
 

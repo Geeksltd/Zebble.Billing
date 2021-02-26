@@ -5,7 +5,7 @@
 
     class GooglePlayNotification
     {
-        public DateTime EventTime { get; set; }
+        public DateTime? EventTime { get; set; }
         public string PurchaseToken { get; set; }
         public string ProductId { get; set; }
         public string OriginalData { get; set; }
@@ -15,7 +15,7 @@
 
         public class UnderlayingType
         {
-            public long EventTimeMillis { get; set; }
+            public long? EventTimeMillis { get; set; }
             public Subs Subscription { get; set; }
 
             public class Subs
@@ -29,9 +29,9 @@
             {
                 return new GooglePlayNotification
                 {
-                    PurchaseToken = Subscription.PurchaseToken,
-                    ProductId = Subscription.SubscriptionId,
-                    EventTime = EventTimeMillis.ToDateTime(),
+                    PurchaseToken = Subscription?.PurchaseToken,
+                    ProductId = Subscription?.SubscriptionId,
+                    EventTime = EventTimeMillis?.ToDateTime(),
                     OriginalData = originalData
                 };
             }
