@@ -109,6 +109,67 @@ All the above providers need to collaborate with a data persistence implementati
 
 Then add the required configuration and files from [this sample app](https://github.com/Geeksltd/Zebble.Billing/tree/master/Billing.Sample).
 
+#### Configuration
+
+This is the sample settings file we included in the project to clearly show you what you need to set your web app up and running. 
+
+```json
+{
+  "ZebbleBilling": {
+    "Catalog": {
+      "Products": [
+        {
+          "Id": "my.app.subscription.yearly",
+          "Platform": "",
+          "Type": "Subscription",
+          "Title": "My Yearly Test Subscription",
+          "Months": 12,
+          "Promo": "7 days free trial",
+          "FreeDays": 7
+        }
+      ]
+    },
+    "DbContext": {
+      "ConnectionString": "Database=Billing.Sample; Server=.; Integrated Security=SSPI; MultipleActiveResultSets=True;"
+    },
+    "AppStore": {
+      "PackageName": "<ios.package.name>",
+      "SharedSecret": "<APP_STORE_SHARED_SECRET>",
+      "Environment": "<Sandbox | Production>",
+      "HookInterceptorUri": "app-store/intercept-hook"
+    },
+    "GooglePlay": {
+      "PackageName": "<play.package.name>",
+      "QueueProcessorUri": "google-play/process-queue",
+      "ProjectId": "<PROJECT_ID>",
+      "PrivateKeyId": "<PRIVATE_KEY_ID>",
+      "PrivateKey": "<PRIVATE_KEY>",
+      "ClientEmail": "<CLIENT_EMAIL>",
+      "ClientId": "<CLIENT_ID>",
+      "SubscriptionId": "<SUBSCRIPTION_ID>"
+    },
+    "CafeBazaar": {
+      "PackageName": "<bazaar.package.name>",
+      "DeveloperApi": {
+        "RedirectUri": "cafe-bazaar/auth-callback",
+        "ClientId": "<CLIENT_ID>",
+        "ClientSecret": "<CLIENT_SECRET>"
+      }
+    },
+    "Voucher": {
+      "CodeApplyUri": "voucher/apply"
+    }
+  }
+}
+```
+
+`Catalog`: This is the sample as the `Catalog.json` file we've talked about it ealier.
+`DbContext`: The connection string used in both `Zebble.Billing.Server.EntityFramework` and `Zebble.Billing.Server.Voucher.EntityFramework` packages.
+`AppStore:PackageName`: Your iOS app package name.
+`AppStore:SharedSecret`: Your App Store connect shared secret. Follow [this article](https://docs.revenuecat.com/docs/itunesconnect-app-specific-shared-secret) to learn how you can create a shared secret.
+`AppStore:Environment`: Use `Sandbox` when you're test-flighting your app, otherwise use `Production`. We do not allow mixed receipt validation. So if you configure it for the production environment, and attempt to validate a sandbox-based receipt, the whole process will be rejected.
+`AppStore:HookInterceptorUri`: The relative path to hook interceptor endpoint. You need to...
+
 ---
 
 
