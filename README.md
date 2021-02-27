@@ -66,9 +66,9 @@ For InAppPurchase products, fill `Type` with `InAppPurchase`, otherwise use `Sub
 
 #### `BillingContextOptions` class
 
-You can create an instance of `BillingContextOptions` and override following properties:
+You can create an instance of `BillingContextOptions` and override the following properties:
 
-`BaseUri`: Assigning a Uri to this prop will specify the base URL for any server invocations. Beer in mind, when you assing a value for this prop, you don't need to add `Billing.Base.Url` to your `Config.xml` file.
+`BaseUri`: Assigning a Uri to this prop will specify the base URL for any server invocations. Bear in mind, when you assign a value for this prop, you don't need to add `Billing.Base.Url` to your `Config.xml` file.
 
 `VerifyPurchasePath`: The relative path to verify purchase endpoint. The default value is "app/verify-purchase".
 
