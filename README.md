@@ -65,9 +65,18 @@ If any of your products are platform-specific, you need to fill `Platform` with 
 For InAppPurchase products, fill `Type` with `InAppPurchase`, otherwise use `Subscription`.
 
 #### `BillingContextOptions` class
+
 You can create an instance of `BillingContextOptions` and override following properties:
 
-`BaseUri`: Assigning a Uri to this prop will specify the base URL for any server invocations. Beer in mind, in this case, you don't need to add anything to your `Config.xml` file.
+`BaseUri`: Assigning a Uri to this prop will specify the base URL for any server invocations. Beer in mind, when you assing a value for this prop, you don't need to add `Billing.Base.Url` to your `Config.xml` file.
+
+`VerifyPurchasePath`: The relative path to verify purchase endpoint. The default value is "app/verify-purchase".
+
+`PurchaseAttemptPath`: The relative path to purchase attempt endpoint. The default value is "app/purchase-attempt".
+
+`SubscriptionStatusPath`: The relative path to subscription status endpoint. The default value is "app/subscription-status".
+
+`CatalogPath`: The path of the catalog file in the client app. The default value is "Catalog.json".
 
 ---
 
