@@ -11,11 +11,56 @@ In the Zebble mobile app, add the appropriate nuget packages:
 - **[Zebble.Billing](https://www.nuget.org/packages/Zebble.Billing/)** add to all projects
 - [Zebble.Billing.CafeBazaar](https://www.nuget.org/packages/Zebble.Billing.CafeBazaar/) add to Android if you need to support CafeBazaar
 
-In `Config.xml` add
+Then you should initialize the plugin in your app's StartUp class like below:
+
+```c#
+public partial class StartUp : Zebble.StartUp
+{
+    public override async Task Run()
+    {
+        // ...
+
+        BillingContext.Initialize();
+
+        // Try to fetch products' prices from the store.
+        Thread.Pool.RunOnNewThread(BillingContext.Current.UpdateProductPrices);
+        
+        // Ask the server for latest subscription status.
+        Thread.Pool.RunOnNewThread(BillingContext.Current.BackgroundRefresh);
+        
+        // ...
+    }
+}
+```
+
+The `BillingContext.Initialize` call (without providing any argument), leads to the default options and you only need to do the followings. First of all, you have to update your `Config.xml` file and add the following line.
 
 ```xml
-???
+<Billing.Base.Url value="http://<YOUR_SERVER_URL>" />
 ```
+
+Then you need to create a JSON file named `Catalog.json` in the Resources directory and add all your `Subscription` and `InAppPurchase` products into it.
+
+```json
+{
+  "Products": [
+    {
+      "Id": "my.app.subscription.yearly",
+      "Platform": "", // For platform-specific products fill this with one of the following values: [AppStore, GooglePlay, CafeBazaar, WindowsStore] or leave it empty
+      "Type": "Subscription", // Is this a Subscription or an InAppPurchase?
+      "Title": "My Yearly Test Subscription",
+      "Months": 12,
+      "Promo": "7 days free trial",
+      "FreeDays": 7,
+      "Price": 0
+    }
+  ]
+}
+
+```
+
+#### Note
+The products needs to be filled according to the products you've defined in your supporting stores, especially `Id`, and `Type`. 
 
 ---
 
