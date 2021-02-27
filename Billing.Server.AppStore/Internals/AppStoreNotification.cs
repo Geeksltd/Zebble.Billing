@@ -15,23 +15,25 @@
         /// <summary>
         /// The environment for which App Store generated the receipt.
         /// </summary>
-        public AppStoreEnvironment Environment => UnifiedReceipt.Environment;
+        public AppStoreEnvironment? Environment => UnifiedReceipt?.Environment;
 
         /// <summary>
         /// The type that describes the in-app purchase event for which the App Store sent the notification.
         /// </summary>
         [JsonPropertyName("notification_type")]
+        [JsonConverter(typeof(EnumConverter<AppStoreNotificationType>))]
         public AppStoreNotificationType Type { get; set; }
 
         /// <summary>
         /// The current renewal status for an auto-renewable subscription product.
         /// </summary>
         [JsonPropertyName("auto_renew_status")]
+        [JsonConverter(typeof(NullableBooleanConverter))]
         public bool? AutoRenewStatus { get; set; }
 
         public string ProductId => CandidateReceiptInfo?.ProductId;
 
-        public string PurchaseToken => UnifiedReceipt.LatestReceipt;
+        public string PurchaseToken => UnifiedReceipt?.LatestReceipt;
 
         public DateTime? PurchaseDate => CandidateReceiptInfo?.PurchaseDate;
 
@@ -60,8 +62,8 @@
             return this;
         }
 
-        AppStoreLatestReceiptInfo CandidateReceiptInfo => UnifiedReceipt.LatestReceiptInfo.FirstOrDefault();
+        AppStoreLatestReceiptInfo CandidateReceiptInfo => UnifiedReceipt?.LatestReceiptInfo?.FirstOrDefault();
 
-        AppStorePendingRenewaInfo CandidateRenewalInfo => UnifiedReceipt.PendingRenewalInfo.FirstOrDefault();
+        AppStorePendingRenewaInfo CandidateRenewalInfo => UnifiedReceipt?.PendingRenewalInfo?.FirstOrDefault();
     }
 }

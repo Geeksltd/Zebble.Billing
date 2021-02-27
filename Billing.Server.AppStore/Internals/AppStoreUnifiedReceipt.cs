@@ -8,6 +8,7 @@
         /// The environment for which App Store generated the receipt.
         /// </summary>
         [JsonPropertyName("environment")]
+        [JsonConverter(typeof(EnumConverter<AppStoreEnvironment>))]
         public AppStoreEnvironment Environment { get; set; }
 
         /// <summary>
