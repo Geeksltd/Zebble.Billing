@@ -64,6 +64,11 @@ The products need to be filled according to the products you've defined in your 
 If any of your products are platform-specific, you need to fill `Platform` with one of the following values: [AppStore, GooglePlay, CafeBazaar, WindowsStore], otherwise leave it empty.
 For InAppPurchase products, fill `Type` with `InAppPurchase`, otherwise use `Subscription`.
 
+#### `BillingContextOptions` class
+You can create an instance of `BillingContextOptions` and override following properties:
+
+`BaseUri`: Assigning a Uri to this prop will specify the base URL for any server invocations. Beer in mind, in this case, you don't need to add anything to your `Config.xml` file.
+
 ---
 
 ### Server side app
