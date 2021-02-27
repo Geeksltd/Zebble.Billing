@@ -25,7 +25,7 @@ public partial class StartUp : Zebble.StartUp
         // Try to fetch products' prices from the store.
         Thread.Pool.RunOnNewThread(BillingContext.Current.UpdateProductPrices);
         
-        // Ask the server for latest subscription status.
+        // Ask the server for the latest subscription status.
         Thread.Pool.RunOnNewThread(BillingContext.Current.BackgroundRefresh);
         
         // ...
@@ -33,7 +33,7 @@ public partial class StartUp : Zebble.StartUp
 }
 ```
 
-The `BillingContext.Initialize` call (without providing any argument), leads to the default options and you only need to do the followings. First of all, you have to update your `Config.xml` file and add the following line.
+The `BillingContext.Initialize` call (without providing any argument), leads to the default options and you only need to add the following line to your `Config.xml` file.
 
 ```xml
 <Billing.Base.Url value="http://<YOUR_SERVER_URL>" />
@@ -46,8 +46,8 @@ Then you need to create a JSON file named `Catalog.json` in the Resources direct
   "Products": [
     {
       "Id": "my.app.subscription.yearly",
-      "Platform": "", // For platform-specific products fill this with one of the following values: [AppStore, GooglePlay, CafeBazaar, WindowsStore] or leave it empty
-      "Type": "Subscription", // Is this a Subscription or an InAppPurchase?
+      "Platform": "",
+      "Type": "Subscription",
       "Title": "My Yearly Test Subscription",
       "Months": 12,
       "Promo": "7 days free trial",
@@ -59,8 +59,10 @@ Then you need to create a JSON file named `Catalog.json` in the Resources direct
 
 ```
 
-#### Note
-The products needs to be filled according to the products you've defined in your supporting stores, especially `Id`, and `Type`. 
+#### Notes
+The products need to be filled according to the products you've defined in your supporting stores, especially `Id`, and `Type`.
+If any of your products are platform-specific, you need to fill `Platform` with one of the following values: [AppStore, GooglePlay, CafeBazaar, WindowsStore], otherwise leave it empty.
+For InAppPurchase products, fill `Type` with `InAppPurchase`, otherwise use `Subscription`.
 
 ---
 
