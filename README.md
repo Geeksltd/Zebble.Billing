@@ -5,11 +5,14 @@ To understand how it all works in different platforms, read [this introduction](
 
 # How to install?
 
-### Zebble App
+### Zebble app
 
-In the Zebble mobile app, add the appropriate nuget packages:
+In the Zebble mobile app, install the appropriate nuget packages on all your supported platforms:
 - **[Zebble.Billing](https://www.nuget.org/packages/Zebble.Billing/)** add to all projects
 - [Zebble.Billing.CafeBazaar](https://www.nuget.org/packages/Zebble.Billing.CafeBazaar/) add to Android if you need to support CafeBazaar
+
+[![Zebble.Billing](https://img.shields.io/nuget/v/Zebble.Billing.svg?label=Zebble.Billing)](https://www.nuget.org/packages/Zebble.Billing/)
+[![Zebble.Billing.CafeBazaar](https://img.shields.io/nuget/v/Zebble.Billing.CafeBazaar.svg?label=Zebble.Billing.CafeBazaar)](https://www.nuget.org/packages/Zebble.Billing.CafeBazaar/)
 
 Then you should initialize the plugin in your app's StartUp class like below:
 
@@ -82,13 +85,27 @@ You can create an instance of `BillingContextOptions` and override the following
 
 ### Server side app
 
-In the server-side asp.net app, add the following:
+In the server-side ASP.NET Core app, install the following packages:
+
+- **[Zebble.Billing.Server](https://www.nuget.org/packages/Zebble.Billing.Server/)** the base package used by all the following providers, so you don't need a direct reference to this package.
+- **[Zebble.Billing.Server.GooglePlay](https://www.nuget.org/packages/Zebble.Billing.Server.GooglePlay/)** to support Google Play store.
+- **[Zebble.Billing.Server.AppStore](https://www.nuget.org/packages/Zebble.Billing.Server.AppStore/)** to support Apple (iOS) via iTunes.
+- [Zebble.Billing.Server.CafeBazaar](https://www.nuget.org/packages/Zebble.Billing.Server.CafeBazaar/) to support Cafe Bazaar store.
+- [Zebble.Billing.Server.Voucher](https://www.nuget.org/packages/Zebble.Billing.Server.Voucher/) to support direct sales (outside of the app stores).
+
+[![Zebble.Billing.Server](https://img.shields.io/nuget/v/Zebble.Billing.Server.svg?label=Zebble.Billing.Server)](https://www.nuget.org/packages/Zebble.Billing.Server/)
+[![Zebble.Billing.Server.GooglePlay](https://img.shields.io/nuget/v/Zebble.Billing.Server.GooglePlay.svg?label=Zebble.Billing.Server.GooglePlay)](https://www.nuget.org/packages/Zebble.Billing.Server.GooglePlay/)
+[![Zebble.Billing.Server.AppStore](https://img.shields.io/nuget/v/Zebble.Billing.Server.AppStore.svg?label=Zebble.Billing.Server.AppStore)](https://www.nuget.org/packages/Zebble.Billing.Server.AppStore/)
+[![Zebble.Billing.Server.CafeBazaar](https://img.shields.io/nuget/v/Zebble.Billing.Server.CafeBazaar.svg?label=Zebble.Billing.Server.CafeBazaar)](https://www.nuget.org/packages/Zebble.Billing.Server.CafeBazaar/)
+[![Zebble.Billing.Server.Voucher](https://img.shields.io/nuget/v/Zebble.Billing.Server.Voucher.svg?label=Zebble.Billing.Server.Voucher)](https://www.nuget.org/packages/Zebble.Billing.Server.Voucher/)
+
+All above providers need to collaborate with a data persistence implementation. At the moment, we're only supporting EntityFramework (Sql Server), but we'll support other options. Also any contribution to add other persisting options are welcome. 
 
 - **[Zebble.Billing.Server.EntityFramework](https://www.nuget.org/packages/Zebble.Billing.Server.EntityFramework/)** to use RDBMS for subscription management
-- **[Zebble.Billing.Server.GooglePlay](https://www.nuget.org/packages/Zebble.Billing.Server.GooglePlay/)** to support Google Play store
-- **[Zebble.Billing.Server.AppStore](https://www.nuget.org/packages/Zebble.Billing.Server.AppStore/)** to support Apple (iOS) via iTunes
-- [Zebble.Billing.Server.CafeBazaar](https://www.nuget.org/packages/Zebble.Billing.Server.CafeBazaar/) to support Cafe Bazaar store
-- [Zebble.Billing.Server.Voucher.EntityFramework](https://www.nuget.org/packages/Zebble.Billing.Server.Voucher.EntityFramework/) if you want to support direct sales (outside of the app stores)
+- - [Zebble.Billing.Server.Voucher.EntityFramework](https://www.nuget.org/packages/Zebble.Billing.Server.Voucher.EntityFramework/) to use RDBMS for voucher management
+
+[![Zebble.Billing.Server.EntityFramework](https://img.shields.io/nuget/v/Zebble.Billing.Server.EntityFramework.svg?label=Zebble.Billing.Server.EntityFramework)](https://www.nuget.org/packages/Zebble.Billing.Server.EntityFramework/)
+[![Zebble.Billing.Server.Voucher.EntityFramework](https://img.shields.io/nuget/v/Zebble.Billing.Server.Voucher.EntityFramework.svg?label=Zebble.Billing.Server.Voucher.EntityFramework)](https://www.nuget.org/packages/Zebble.Billing.Server.Voucher.EntityFramework/)
 
 Then add the required configuration and files from [this sample app](https://github.com/Geeksltd/Zebble.Billing/tree/master/Billing.Sample).
 
