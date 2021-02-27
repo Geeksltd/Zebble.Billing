@@ -1,9 +1,9 @@
 ﻿namespace Zebble.Billing
 {
     using System.IO;
+    using System.Text;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;
-    using Olive;
 
     class AppStoreHookInterceptionMiddleware
     {
@@ -11,20 +11,11 @@
 
         public async Task InvokeAsync(HttpContext context, AppStoreHookInterceptor hookInterceptor)
         {
-            var body = await ReadAsync(context.Request.Body);
+            using var streamReader = new StreamReader(context.Request.Body, Encoding.UTF8);
+            var body = await streamReader.ReadToEndAsync();
 
-            await hookInterceptor.Intercept(body);
+            await hookInterceptor.Intercept(body.ToNotification());
             await context.Response.WriteAsync($"{nameof(AppStoreHookInterceptor)} executed.");
-        }
-
-        async Task<string> ReadAsync(Stream stream)
-        {
-            using var copy = new MemoryStream();
-            await stream.CopyToAsync(copy);
-
-            copy.Seek(0, SeekOrigin.Begin);
-
-            return await copy.ReadAllText();
         }
     }
 }

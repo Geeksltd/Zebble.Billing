@@ -18,14 +18,7 @@
             StoreConnector = storeConnector;
         }
 
-        public async Task Intercept(string body)
-        {
-            var notification = body.ToNotification();
-
-            await ProcessNotification(notification);
-        }
-
-        async Task ProcessNotification(AppStoreNotification notification)
+        public async Task Intercept(AppStoreNotification notification)
         {
             ValidateNotification(notification);
 
