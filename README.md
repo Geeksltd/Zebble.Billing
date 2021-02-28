@@ -168,7 +168,7 @@ This is the sample settings file we included in the project to clearly show you 
 }
 ```
 
-`Catalog`: This is the sample as the `Catalog.json` file we've talked about it ealier.
+`Catalog`: This is the sample as the `Catalog.json` file we've talked about it earlier.
 
 `DbContext`: The connection string used in both `Zebble.Billing.Server.EntityFramework` and `Zebble.Billing.Server.Voucher.EntityFramework` packages.
 
@@ -178,13 +178,13 @@ This is the sample settings file we included in the project to clearly show you 
 
 `AppStore:Environment`: Use `Sandbox` when you're test-flighting your app, otherwise use `Production`. We do not allow mixed receipt validation. So if you configure it for the production environment, and attempt to validate a sandbox-based receipt, the whole process will be rejected.
 
-`AppStore:HookInterceptorUri`: The relative path for hook interceptor middleware. Whatever path you specified for this have to be used in your App Store settings. Follow [this article](https://help.apple.com/app-store-connect/#/dev0067a330b) to learn how you can set a URL for App Store Server Notifications.
+`AppStore:HookInterceptorUri`: The relative path for hook interceptor middleware. Whatever path you specified for this has to be used in your App Store settings. Follow [this article](https://help.apple.com/app-store-connect/#/dev0067a330b) to learn how you can set a URL for App Store Server Notifications.
 
 `GooglePlay:PackageName`: Your Android app package name.
 
-`GooglePlay:QueueProcessorUri`: The relative path for queue processor middleware. You need to call this endpoint periodically, to keep your Google Play purchases in-sync with your database. Read [this article](https://developers.google.com/android/management/notifications) to learn how Google notifications should be configured. Also [this article](https://developer.android.com/google/play/billing/getting-ready#configure-rtdn) will help you configure billing's real-time developer notifications (RTDN).
+`GooglePlay:QueueProcessorUri`: The relative path for queue processor middleware. You need to call this endpoint periodically, to keep your Google Play purchases in-sync with your database. Read [this article](https://developers.google.com/android/management/notifications) to learn how Google notifications should be configured. Also, [this article](https://developer.android.com/google/play/billing/getting-ready#configure-rtdn) will help you configure billing's real-time developer notifications (RTDN).
 
-`GooglePlay:ProjectId`, `GooglePlay:PrivateKeyId`, `GooglePlay:PrivateKey`, `GooglePlay:ClientEmail`, `GooglePlay:ClientId`: First of all, follow [this article](https://cloud.google.com/iam/docs/creating-managing-service-accounts#iam-service-accounts-create-console) to configure a service account with approperiate permissions. After you've created your service account, you need to add a new JSON key by following [this article](https://cloud.google.com/iam/docs/creating-managing-service-account-keys). finally open the provided JSON file with your preferred text-editor of choice, find and copy-paste all required values into their corresponding placeholders. 
+`GooglePlay:ProjectId`, `GooglePlay:PrivateKeyId`, `GooglePlay:PrivateKey`, `GooglePlay:ClientEmail`, `GooglePlay:ClientId`: First of all, follow [this article](https://cloud.google.com/iam/docs/creating-managing-service-accounts#iam-service-accounts-create-console) to configure a service account with appropriate permissions. After you've created your service account, you need to add a new JSON key by following [this article](https://cloud.google.com/iam/docs/creating-managing-service-account-keys). Finally, open the provided JSON file with your preferred text-editor of choice, find and copy-paste all required values into their corresponding placeholders. 
 
 `GooglePlay:SubscriptionId`: Provide the name of the Pub/Sub subscription you've [created](https://developers.google.com/android/management/notifications#3_create_a_subscription) earlier.
 
