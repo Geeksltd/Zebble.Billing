@@ -196,4 +196,48 @@ This is the sample settings file we included in the project to clearly show you 
 
 ![](https://github.com/Geeksltd/Zebble.Billing/raw/master/Architecture.png)
 
+## Purchase a product
+
+To trigger the purchase of a product, you need to call `BillingContext.Current.PurchaseSubscription` and provide the `Id` of a product. It's obvious that the product must be predefined.
+
+```c#
+async Task OnPurchaseTap(string id)
+{
+    var result = await BillingContext.Current.PurchaseSubscription(id);
+
+    if (result == PurchaseResult.Succeeded) { /* Purchase was succeeded */ }
+    else if (result == PurchaseResult.WillBeActivated) { /* Purchase will be activated soon */ }
+    else if (result == PurchaseResult.Cancelled) { /* The purchase was cancelled */ }
+    else await Zebble.Alert.Show("Error", result.ToString());
+}
+```
+
+## `BillingContext` APIs
+
+`GetProducts`: Get the list of the predefined products.
+
+`GetProduct`: Get a product by its `Id`.
+
+`GetPrice`: Get a product's price by its `Id`.
+
+`GetLocalPrice`: Get a product's local price by its `Id`.
+
+`UpdateProductPrices`: Fetch and store the latest prices from the store. *An active internet connection is required.*
+
+`RestoreSubscription`: Restores all already purchased subscriptions. *If you pass the true for `userRequest`, and no active subscription is found, it will throw an exception.*
+
+`Refresh`: Queries the latest subscription status from the server.
+
+`IsStarted`: True if found any subscription and it's started, otherwise False.
+
+`IsExpired`: True if found any subscription and it's expired, otherwise False.
+
+`IsCanceled`: True if found any subscription and it's cancelled, otherwise False.
+
+`IsSubscribed`: True if found any subscription and it's started but not expired and not canceled, otherwise False.
+
+`CurrentProduct`: A product instance if found any subscription with an attached product, otherwise null.
+
+`CurrentProductId`: A product id if found any subscription with an attached product, otherwise null.
+
 ---
