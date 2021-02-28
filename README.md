@@ -36,13 +36,18 @@ public partial class StartUp : Zebble.StartUp
 }
 ```
 
-The `BillingContext.Initialize` call (without providing any argument), leads to the default options and you only need to add the following line to your `Config.xml` file.
+The `BillingContext.Initialize` call (without providing any argument), leads to the default options and you need to add the following line to your `Config.xml` file.
 
 ```xml
 <Billing.Base.Url value="http://<YOUR_SERVER_URL>" />
 ```
 
-Then you need to create a JSON file named `Catalog.json` in the Resources directory and add all your `Subscription` and `InAppPurchase` products into it. Every app will have some products that the user can buy. Products are either one-off or they are recurring payments. Recurring products are called Subscriptions, and one-off products are called InApp-Products. Regardless, each product should be defined in the appropriate app store first (Google Play, Apple iTunes Connect, etc) with the appropriate settings. 
+Then create a JSON file named `Catalog.json` in the Resources directory and set the following properties:
+
+`Build Action`: Embedded resource
+`Copy to Output Directory`: Copy if newer
+
+Thereupon, add all your products into it. Products are either one-off or they are recurring payments. Recurring products are called Subscriptions, and one-off products are called InApp-Products. Regardless, each product should be defined in the appropriate app store first (Google Play, Apple iTunes Connect, etc) with the appropriate settings. 
 
 ```json
 {
