@@ -74,7 +74,7 @@ For InAppPurchase products, fill `Type` with `InAppPurchase`, otherwise use `Sub
 
 #### `BillingContextOptions` class
 
-You can create an instance of `BillingContextOptions` and override the following properties:
+To override defaults, you can create an instance of `BillingContextOptions` and pass it to the `BillingContext.Initialize`. Here are the list of the properties you can provide:
 
 `BaseUri`: Assigning a Uri to this prop will specify the base URL for any server invocations. Bear in mind, when you assign a value for this prop, you don't need to add `Billing.Base.Url` to your `Config.xml` file.
 
