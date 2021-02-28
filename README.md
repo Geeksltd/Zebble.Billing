@@ -228,6 +228,8 @@ async Task OnPurchaseTap(string id)
 
 `Refresh`: Queries the latest subscription status from the server.
 
+`BackgroundRefresh`: Queries the latest subscription status from the server in background. *An active internet connection is required.*
+
 `IsStarted`: True if found any subscription and it's started, otherwise False.
 
 `IsExpired`: True if found any subscription and it's expired, otherwise False.
