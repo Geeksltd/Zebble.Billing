@@ -5,23 +5,13 @@
     using Plugin.InAppBilling;
     using Olive;
 
-    class PurchaseSubscriptionCommand : StoreCommandBase<string>
+    class PurchaseSubscriptionCommand : StoreCommandBase<PurchaseResult>
     {
-        const string NotCompleted = "Purchase was not completed. Please try again.";
-        const string GeneralError = "There seems to be a problem in the subscription system. Please try again later.";
-        const string SuccessMessage = "Thank you. Your subscription will be activated as soon as the payment has been received.";
-        const string BillingUnavailable = "Billing seems to be unavailable, please try again or contact us.";
-        const string PaymentInvalid = "Payment seems to be invalid, please try again.";
-        const string PaymentNotAllowed = "Payment does not seem to be enabled/allowed, please try again.";
-        const string AppStoreUnavailable = "The app store seems to be unavailable. Try again later.";
-        const string Cancelled = "Cancelled";
-        const string OK = "OK";
-
         readonly Product Product;
 
         public PurchaseSubscriptionCommand(Product product) => Product = product;
 
-        protected override async Task<string> DoExecute()
+        protected override async Task<PurchaseResult> DoExecute()
         {
             try
             {
@@ -31,41 +21,41 @@
                 var purchase = await Billing.PurchaseAsync(Product.Id, Product.ItemType, new PurchaseVerificator());
 #endif
 
-                if (purchase == null) return NotCompleted;
+                if (purchase == null) return PurchaseResult.NotCompleted;
 
                 await BillingContext.Current.PurchaseAttempt(purchase.ToEventArgs());
 
                 await BillingContext.Current.Refresh();
 
-                if (BillingContext.Current.IsSubscribed) return OK;
+                if (BillingContext.Current.IsSubscribed) return PurchaseResult.Succeeded;
 
                 if (purchase.State.IsAnyOf(PurchaseState.Restored, PurchaseState.Purchased, PurchaseState.Purchasing, PurchaseState.PaymentPending))
-                    return SuccessMessage;
+                    return PurchaseResult.WillBeActivated;
 
-                if (purchase.State.IsAnyOf(PurchaseState.Failed, PurchaseState.Canceled)) return NotCompleted;
+                if (purchase.State.IsAnyOf(PurchaseState.Failed, PurchaseState.Canceled)) return PurchaseResult.NotCompleted;
 
-                return BillingUnavailable;
+                return PurchaseResult.BillingUnavailable;
             }
             catch (InAppBillingPurchaseException ex)
             {
                 Log.For(this).Error(ex);
 
-                if (await BillingContext.Current.RestoreSubscription()) return OK;
+                if (await BillingContext.Current.RestoreSubscription()) return PurchaseResult.Succeeded;
 
                 return ex.PurchaseError switch
                 {
-                    PurchaseError.AppStoreUnavailable => AppStoreUnavailable,
-                    PurchaseError.BillingUnavailable => BillingUnavailable,
-                    PurchaseError.PaymentInvalid => PaymentInvalid,
-                    PurchaseError.PaymentNotAllowed => PaymentNotAllowed,
-                    PurchaseError.UserCancelled => Cancelled,
-                    _ => GeneralError,
+                    PurchaseError.AppStoreUnavailable => PurchaseResult.AppStoreUnavailable,
+                    PurchaseError.BillingUnavailable => PurchaseResult.BillingUnavailable,
+                    PurchaseError.PaymentInvalid => PurchaseResult.PaymentInvalid,
+                    PurchaseError.PaymentNotAllowed => PurchaseResult.PaymentNotAllowed,
+                    PurchaseError.UserCancelled => PurchaseResult.Cancelled,
+                    _ => PurchaseResult.GeneralError,
                 };
             }
             catch (Exception ex)
             {
                 Log.For(this).Error(ex);
-                return GeneralError;
+                return PurchaseResult.GeneralError;
             }
         }
     }

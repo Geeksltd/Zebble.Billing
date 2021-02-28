@@ -6,12 +6,19 @@
 
     partial class BillingContext
     {
-        public async Task<string> PurchaseSubscription(string productId)
+        /// <summary>
+        /// Triggers a new purchase process.
+        /// </summary>
+        public async Task<PurchaseResult> PurchaseSubscription(string productId)
         {
             var product = await ProductProvider.GetById(productId) ?? throw new Exception($"Product with id '{productId}' not found.");
             return await new PurchaseSubscriptionCommand(product).Execute();
         }
 
+        /// <summary>
+        /// Restores all already purchased subscriptions.
+        /// </summary>
+        /// <remarks>If you pass the true for `userRequest`, and no active subscription is found, it will throw an exception.</remarks>
         public async Task<bool> RestoreSubscription(bool userRequest = false)
         {
             var errorMessage = "";

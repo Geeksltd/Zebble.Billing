@@ -7,6 +7,10 @@
 
     partial class BillingContext
     {
+        /// <summary>
+        /// Queries the latest subscription status from the server in background.
+        /// </summary>
+        /// <remarks>An active internet connection is required.</remarks>
         public async Task BackgroundRefresh()
         {
             while (User == null) await Task.Delay(500);
@@ -17,6 +21,9 @@
             catch { /*Ignore*/ }
         }
 
+        /// <summary>
+        /// Queries the latest subscription status from the server.
+        /// </summary>
         public async Task Refresh()
         {
             try { await DoRefresh(); }
