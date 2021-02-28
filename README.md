@@ -169,11 +169,16 @@ This is the sample settings file we included in the project to clearly show you 
 ```
 
 `Catalog`: This is the sample as the `Catalog.json` file we've talked about it ealier.
+
 `DbContext`: The connection string used in both `Zebble.Billing.Server.EntityFramework` and `Zebble.Billing.Server.Voucher.EntityFramework` packages.
+
 `AppStore:PackageName`: Your iOS app package name.
+
 `AppStore:SharedSecret`: Your App Store connect shared secret. Follow [this article](https://docs.revenuecat.com/docs/itunesconnect-app-specific-shared-secret) to learn how you can create a shared secret.
+
 `AppStore:Environment`: Use `Sandbox` when you're test-flighting your app, otherwise use `Production`. We do not allow mixed receipt validation. So if you configure it for the production environment, and attempt to validate a sandbox-based receipt, the whole process will be rejected.
-`AppStore:HookInterceptorUri`: The relative path to hook interceptor endpoint. You need to...
+
+`AppStore:HookInterceptorUri`: The relative path to hook interceptor endpoint.
 
 ---
 
