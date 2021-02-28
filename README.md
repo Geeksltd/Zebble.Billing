@@ -178,7 +178,7 @@ This is the sample settings file we included in the project to clearly show you 
 
 `AppStore:Environment`: Use `Sandbox` when you're test-flighting your app, otherwise use `Production`. We do not allow mixed receipt validation. So if you configure it for the production environment, and attempt to validate a sandbox-based receipt, the whole process will be rejected.
 
-`AppStore:HookInterceptorUri`: The relative path to hook interceptor endpoint.
+`AppStore:HookInterceptorUri`: The relative path to hook interceptor endpoint. Whatever path you specified for this have to be used in your App Store settings. Follow [this article](https://help.apple.com/app-store-connect/#/dev0067a330b) to learn how you can set a URL for App Store Server Notifications.
 
 ---
 
