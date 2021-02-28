@@ -214,15 +214,15 @@ async Task OnPurchaseTap(string id)
 
 ## `BillingContext` APIs
 
-`GetProducts`: Get the list of the predefined products.
+`GetProducts`: Gets the list of the predefined products.
 
-`GetProduct`: Get a product by its `Id`.
+`GetProduct`: Gets a product by its `Id`.
 
-`GetPrice`: Get a product's price by its `Id`.
+`GetPrice`: Gets a product's price by its `Id`.
 
-`GetLocalPrice`: Get a product's local price by its `Id`.
+`GetLocalPrice`: Gets a product's local price by its `Id`.
 
-`UpdateProductPrices`: Fetch and store the latest prices from the store. *An active internet connection is required.*
+`UpdateProductPrices`: Fetches and stores the latest prices from the store. *An active internet connection is required.*
 
 `RestoreSubscription`: Restores all already purchased subscriptions. *If you pass the true for `userRequest`, and no active subscription is found, it will throw an exception.*
 
@@ -236,8 +236,8 @@ async Task OnPurchaseTap(string id)
 
 `IsSubscribed`: True if found any subscription and it's started but not expired and not canceled, otherwise False.
 
-`CurrentProduct`: A product instance if found any subscription with an attached product, otherwise null.
+`CurrentProduct`: The product instance if found any subscription with an attached product, otherwise null.
 
-`CurrentProductId`: A product id if found any subscription with an attached product, otherwise null.
+`CurrentProductId`: The product's id if found any subscription with an attached product, otherwise null.
 
 ---
