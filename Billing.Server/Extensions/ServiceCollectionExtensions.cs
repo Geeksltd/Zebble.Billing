@@ -12,6 +12,12 @@
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
 
+            services.AddOptions<BillingOptions>()
+                    .Configure<IConfiguration>((opts, config) => config.GetSection("ZebbleBilling")?.Bind(opts))
+                    .Validate(opts => opts.VerifyPurchasePath.HasValue(), $"{nameof(BillingOptions.VerifyPurchasePath)} is empty.")
+                    .Validate(opts => opts.PurchaseAttemptPath is not null, $"{nameof(BillingOptions.PurchaseAttemptPath)} is null.")
+                    .Validate(opts => opts.SubscriptionStatusPath is not null, $"{nameof(BillingOptions.SubscriptionStatusPath)} is null.");
+
             services.AddOptions<CatalogOptions>()
                     .Configure<IConfiguration>((opts, config) => config.GetSection("ZebbleBilling:Catalog")?.Bind(opts))
                     .Validate(opts => opts.Products is not null, $"{nameof(CatalogOptions.Products)} is null.")

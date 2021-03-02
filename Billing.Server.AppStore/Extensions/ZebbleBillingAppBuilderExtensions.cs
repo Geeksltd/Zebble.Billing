@@ -1,7 +1,7 @@
 ﻿namespace Zebble.Billing
 {
     using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Routing;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Options;
 
@@ -9,20 +9,15 @@
     {
         public static ZebbleBillingAppBuilder UseAppStore(this ZebbleBillingAppBuilder builder)
         {
-            builder.App.MapWhen(MatchesHookInterceptorEndpoint, builder => builder.UseMiddleware<AppStoreHookInterceptionMiddleware>());
+            var routes = new RouteBuilder(builder.App);
+
+            var options = builder.App.ApplicationServices.GetService<IOptions<AppStoreOptions>>();
+
+            routes.MapMiddlewarePost(options.Value.HookInterceptorPath, builder => builder.UseMiddleware<AppStoreHookInterceptionMiddleware>());
+
+            builder.App.UseRouter(routes.Build());
 
             return builder;
-        }
-
-        static bool MatchesHookInterceptorEndpoint(HttpContext context)
-        {
-            var options = context.RequestServices.GetService<IOptionsSnapshot<AppStoreOptions>>();
-
-            if (!context.Request.Matches(options.Value.HookInterceptorUri)) return false;
-
-            if (!context.Request.IsPost()) return false;
-
-            return true;
         }
     }
 }

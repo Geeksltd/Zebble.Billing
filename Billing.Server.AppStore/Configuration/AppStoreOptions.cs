@@ -1,13 +1,12 @@
 ﻿namespace Zebble.Billing
 {
-    using System;
     using Apple.Receipt.Verificator.Models;
 
     public class AppStoreOptions : StoreOptionsBase
     {
         public string SharedSecret { get; set; }
         public AppStoreEnvironment Environment { get; set; }
-        public Uri HookInterceptorUri { get; set; }
+        public string HookInterceptorPath { get; set; } = "app-store/intercept-hook";
 
         internal void Apply(AppleReceiptVerificationSettings @that)
         {

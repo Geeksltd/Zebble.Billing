@@ -2,7 +2,6 @@
 {
     using Apple.Receipt.Verificator.Models;
     using Apple.Receipt.Verificator.Modules;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Options;
@@ -16,12 +15,7 @@
                             .Configure<IConfiguration>((opts, config) => config.GetSection(configKey)?.Bind(opts))
                             .Validate(opts => opts.PackageName.HasValue(), $"{nameof(AppStoreOptions.PackageName)} is empty.")
                             .Validate(opts => opts.SharedSecret.HasValue(), $"{nameof(AppStoreOptions.SharedSecret)} is empty.")
-                            .Validate(opts => opts.HookInterceptorUri is not null, $"{nameof(AppStoreOptions.HookInterceptorUri)} is null.")
-                            .PostConfigure<IHttpContextAccessor>((opts, contextAccessor) =>
-                            {
-                                if (opts.HookInterceptorUri.IsAbsoluteUri) return;
-                                opts.HookInterceptorUri = contextAccessor.ToAbsolute(opts.HookInterceptorUri);
-                            });
+                            .Validate(opts => opts.HookInterceptorPath.HasValue(), $"{nameof(AppStoreOptions.HookInterceptorPath)} is empty.");
 
             builder.Services.AddOptions<AppleReceiptVerificationSettings>()
                             .Configure<IOptions<AppStoreOptions>>((settings, options) => options.Value.Apply(settings));

@@ -4,7 +4,7 @@
     using System.Threading.Tasks;
     using Olive;
 
-    public class SubscriptionManager
+    class SubscriptionManager
     {
         readonly ISubscriptionRepository Repository;
         readonly IStoreConnectorResolver StoreConnectorResolver;

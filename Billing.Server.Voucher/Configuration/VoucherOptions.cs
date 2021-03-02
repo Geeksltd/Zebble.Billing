@@ -1,9 +1,7 @@
 ﻿namespace Zebble.Billing
 {
-    using System;
-
     public class VoucherOptions
     {
-        public Uri CodeApplyUri { get; set; }
+        public string CodeApplyPath { get; set; } = "voucher/apply";
     }
 }
