@@ -36,7 +36,7 @@
 
                 subscription = await Repository.AddSubscription(new Subscription
                 {
-                    SubscriptionId = Guid.NewGuid().ToString(),
+                    Id = Guid.NewGuid().ToString(),
                     ProductId = notification.ProductId,
                     UserId = subscriptionInfo.UserId,
                     Platform = "AppStore",
@@ -73,8 +73,8 @@
 
             await Repository.AddTransaction(new Transaction
             {
-                TransactionId = Guid.NewGuid().ToString(),
-                SubscriptionId = subscription.SubscriptionId,
+                Id = Guid.NewGuid().ToString(),
+                SubscriptionId = subscription.Id,
                 Platform = "AppStore",
                 Date = LocalTime.UtcNow,
                 Details = notification.OriginalData

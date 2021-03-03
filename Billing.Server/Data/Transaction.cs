@@ -4,7 +4,7 @@
 
     public class Transaction
     {
-        public string TransactionId { get; set; }
+        public string Id { get; set; }
         public string SubscriptionId { get; set; }
 
         public string Platform { get; set; }

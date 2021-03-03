@@ -61,7 +61,7 @@
 
                 subscription = await Repository.AddSubscription(new Subscription
                 {
-                    SubscriptionId = Guid.NewGuid().ToString(),
+                    Id = Guid.NewGuid().ToString(),
                     ProductId = notification.ProductId,
                     UserId = subscriptionInfo.UserId,
                     Platform = "GooglePlay",
@@ -90,8 +90,8 @@
 
             await Repository.AddTransaction(new Transaction
             {
-                TransactionId = Guid.NewGuid().ToString(),
-                SubscriptionId = subscription.SubscriptionId,
+                Id = Guid.NewGuid().ToString(),
+                SubscriptionId = subscription.Id,
                 Platform = "GooglePlay",
                 Date = notification.EventTime ?? LocalTime.UtcNow,
                 Details = notification.OriginalData

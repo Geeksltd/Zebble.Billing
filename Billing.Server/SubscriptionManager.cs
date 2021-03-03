@@ -43,7 +43,7 @@
 
             await Repository.AddSubscription(new Subscription
             {
-                SubscriptionId = Guid.NewGuid().ToString(),
+                Id = Guid.NewGuid().ToString(),
                 UserId = userId,
                 Platform = platform,
                 ProductId = productId,

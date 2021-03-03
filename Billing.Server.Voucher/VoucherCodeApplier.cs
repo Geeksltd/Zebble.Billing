@@ -57,7 +57,7 @@
 
                 subscription = await SubscriptionRepository.AddSubscription(new Subscription
                 {
-                    SubscriptionId = Guid.NewGuid().ToString(),
+                    Id = Guid.NewGuid().ToString(),
                     ProductId = voucher.ProductId,
                     UserId = subscriptionInfo.UserId,
                     Platform = "Voucher",
@@ -75,8 +75,8 @@
 
             await SubscriptionRepository.AddTransaction(new Transaction
             {
-                TransactionId = Guid.NewGuid().ToString(),
-                SubscriptionId = subscription.SubscriptionId,
+                Id = Guid.NewGuid().ToString(),
+                SubscriptionId = subscription.Id,
                 Platform = "Voucher",
                 Date = LocalTime.UtcNow,
                 Details = voucher.ToJson()
