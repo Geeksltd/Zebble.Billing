@@ -2,9 +2,9 @@
 {
     public enum PurchaseResult
     {
+        BillingUnavailable,
         NotCompleted,
         GeneralError,
-        BillingUnavailable,
         PaymentInvalid,
         PaymentNotAllowed,
         AppStoreUnavailable,
