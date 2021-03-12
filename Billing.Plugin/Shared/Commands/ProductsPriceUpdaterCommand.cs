@@ -13,7 +13,7 @@
             try
             {
                 var productProvider = BillingContext.Current.ProductProvider;
-                var products = await productProvider.GetProducts();
+                var products = await productProvider.GetProducts(BillingContext.PaymentAuthority);
                 var groups = products.GroupBy(x => x.ItemType)
                     .Select(x => new { ItemType = x.Key, ProductIds = x.Select(p => p.Id).ToArray() });
 

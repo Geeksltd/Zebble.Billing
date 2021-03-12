@@ -18,12 +18,15 @@
             Options = JsonConvert.DeserializeObject<CatalogOptions>(File.ReadAllText());
         }
 
-        public Task<Product> GetById(string productId)
+        public Task<Product> GetById(string platform, string productId)
         {
-            return GetProducts().SingleOrDefault(x => x.Id == productId);
+            return GetProducts(platform).SingleOrDefault(x => x.Id == productId);
         }
 
-        public Task<Product[]> GetProducts() => Task.FromResult(Options.Products.ToArray());
+        public Task<Product[]> GetProducts(string platform)
+        {
+            return Task.FromResult(Options.Products.Where(x => x.Platform.IsEmpty() || x.Platform.Equals(platform, false)).ToArray());
+        }
 
         public async Task UpdatePrice(string productId, decimal price)
         {

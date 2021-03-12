@@ -11,7 +11,7 @@
         /// </summary>
         public async Task<PurchaseResult> PurchaseSubscription(string productId)
         {
-            var product = await ProductProvider.GetById(productId) ?? throw new Exception($"Product with id '{productId}' not found.");
+            var product = await GetProduct(productId) ?? throw new Exception($"Product with id '{productId}' not found.");
             return await new PurchaseSubscriptionCommand(product).Execute();
         }
 

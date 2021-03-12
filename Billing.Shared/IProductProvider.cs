@@ -4,7 +4,7 @@
 
     public partial interface IProductProvider
     {
-        Task<Product[]> GetProducts();
-        Task<Product> GetById(string productId);
+        Task<Product[]> GetProducts(string platform);
+        Task<Product> GetById(string platform, string productId);
     }
 }
