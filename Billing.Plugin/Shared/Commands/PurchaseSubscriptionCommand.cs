@@ -40,15 +40,13 @@
             {
                 Log.For(this).Error(ex);
 
-                if (await BillingContext.Current.RestoreSubscription()) return PurchaseResult.Succeeded;
-
                 return ex.PurchaseError switch
                 {
                     PurchaseError.AppStoreUnavailable => PurchaseResult.AppStoreUnavailable,
                     PurchaseError.BillingUnavailable => PurchaseResult.BillingUnavailable,
                     PurchaseError.PaymentInvalid => PurchaseResult.PaymentInvalid,
                     PurchaseError.PaymentNotAllowed => PurchaseResult.PaymentNotAllowed,
-                    PurchaseError.UserCancelled => PurchaseResult.Cancelled,
+                    PurchaseError.UserCancelled => PurchaseResult.UserCancelled,
                     _ => PurchaseResult.GeneralError,
                 };
             }

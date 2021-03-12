@@ -8,7 +8,7 @@
         PaymentInvalid,
         PaymentNotAllowed,
         AppStoreUnavailable,
-        Cancelled,
+        UserCancelled,
         WillBeActivated,
         Succeeded
     }
