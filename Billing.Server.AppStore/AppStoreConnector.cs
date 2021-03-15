@@ -21,22 +21,12 @@
 
         public async Task<bool> VerifyPurchase(VerifyPurchaseArgs args)
         {
-            var result = await ReceiptVerificator.VerifyAppleReceiptAsync(args.ReceiptData);
-
-            if (result == null) return false;
-
-            ValidateVerificationResult(result);
-
-            return true;
+            return await GetVerifiedResult(args.ReceiptData) is not null;
         }
 
         public async Task<SubscriptionInfo> GetSubscriptionInfo(SubscriptionInfoArgs args)
         {
-            var result = await ReceiptVerificator.VerifyAppleReceiptAsync(args.ReceiptData);
-
-            if (result == null) return null;
-
-            ValidateVerificationResult(result);
+            var result = await GetVerifiedResult(args.ReceiptData);
 
             return CreateSubscription(result.AppleVerificationResponse.LatestReceiptInfo.First());
         }
@@ -52,6 +42,15 @@
                 CancellationDate = purchase.CancellationDateDt,
                 AutoRenews = purchase.SubscriptionAutoRenewStatus == AppleSubscriptionAutoRenewStatus.Active
             };
+        }
+
+        async Task<AppleReceiptVerificationResult> GetVerifiedResult(string receiptData)
+        {
+            var result = await ReceiptVerificator.VerifyAppleReceiptAsync(receiptData);
+
+            if (result is not null) ValidateVerificationResult(result);
+
+            return result;
         }
 
         void ValidateVerificationResult(AppleReceiptVerificationResult verificationResult)
