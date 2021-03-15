@@ -243,3 +243,12 @@ async Task OnPurchaseTap(string id)
 `CurrentProductId`: The product's id if found any subscription with an attached product, otherwise null.
 
 ---
+
+### Troubleshooting
+
+We will update this list with common purchase-related issues you might face when testing your app.
+
+#### I'm getting `GeneralError` all the time for a specific tester account
+
+Please ensure you've unchecked "Interrupt Purchases for This Tester" for your tester account. To verify it, go to the [Testers](https://appstoreconnect.apple.com/access/testers) and edit your tester account.
+
