@@ -10,5 +10,6 @@
         Task<Subscription> AddSubscription(Subscription subscription);
         Task UpdateSubscription(Subscription subscription);
         Task<Transaction> AddTransaction(Transaction transaction);
+        Task<string> GetOriginUserOfTransactionIds(string[] transactionIds);
     }
 }

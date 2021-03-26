@@ -8,6 +8,8 @@
         PaymentInvalid,
         PaymentNotAllowed,
         AppStoreUnavailable,
+        UserMismatched,
+        AlreadySubscribed,
         UserCancelled,
         WillBeActivated,
         Succeeded

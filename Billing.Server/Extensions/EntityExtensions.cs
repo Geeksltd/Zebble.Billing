@@ -8,6 +8,7 @@
         {
             return new SubscriptionInfoArgs
             {
+                UserId = @this.UserId,
                 ProductId = @this.ProductId,
                 PurchaseToken = @this.PurchaseToken,
                 ReceiptData = @this.ReceiptData

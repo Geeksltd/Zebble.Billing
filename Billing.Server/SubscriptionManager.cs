@@ -15,19 +15,20 @@
             StoreConnectorResolver = storeConnectorResolver;
         }
 
-        public async Task<bool> VerifyPurchase(string userId, string platform, string productId, string transactionId, string receiptData)
+        public async Task<PurchaseVerificationResult> VerifyPurchase(string userId, string platform, string productId, string transactionId, string receiptData)
         {
             var storeConnector = StoreConnectorResolver.Resolve(platform);
-            var isValid = await storeConnector.VerifyPurchase(new VerifyPurchaseArgs
+            var status = await storeConnector.VerifyPurchase(new VerifyPurchaseArgs
             {
+                UserId = userId,
                 ReceiptData = receiptData
             });
 
-            if (!isValid) return false;
+            if (status != PurchaseVerificationResult.Verified) return status;
 
             var subscription = await Repository.GetByTransactionId(transactionId);
 
-            if (subscription != null)
+            if (subscription is not null)
             {
                 if (subscription.UserId != userId)
                     throw new Exception("Provided purchase token is associated with another user!");
@@ -38,7 +39,7 @@
                 if (subscription.ProductId != productId)
                     throw new Exception("Provided purchase token is associated with another product!");
 
-                return true;
+                return status;
             }
 
             await Repository.AddSubscription(new Subscription
@@ -52,7 +53,7 @@
                 LastUpdate = LocalTime.UtcNow
             });
 
-            return true;
+            return status;
         }
 
         public async Task PurchaseAttempt(string userId, string platform, string productId, string transactionId, DateTime transactionDate, string purchaseToken)

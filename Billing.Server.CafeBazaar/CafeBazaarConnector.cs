@@ -17,9 +17,9 @@
             DeveloperService = developerService;
         }
 
-        public Task<bool> VerifyPurchase(VerifyPurchaseArgs args)
+        public Task<PurchaseVerificationResult> VerifyPurchase(VerifyPurchaseArgs args)
         {
-            return Task.FromResult(true);
+            return Task.FromResult(PurchaseVerificationResult.Verified);
         }
 
         public async Task<SubscriptionInfo> GetSubscriptionInfo(SubscriptionInfoArgs args)

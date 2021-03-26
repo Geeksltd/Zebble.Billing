@@ -28,6 +28,7 @@
             {
                 var subscriptionInfo = await StoreConnector.GetSubscriptionInfo(new SubscriptionInfoArgs
                 {
+                    UserId = null,
                     ProductId = notification.ProductId,
                     ReceiptData = notification.UnifiedReceipt.LatestReceipt
                 });

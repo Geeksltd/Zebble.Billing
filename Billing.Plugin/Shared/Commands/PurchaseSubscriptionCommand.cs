@@ -13,21 +13,34 @@
 
         protected override async Task<PurchaseResult> DoExecute()
         {
+            var context = BillingContext.Current;
+
             try
             {
+                await context.Refresh();
+
+                if (context.IsSubscribed && context.CurrentProductId == Product.Id) return PurchaseResult.AlreadySubscribed;
+
+                var verificator = new PurchaseVerificator();
+
 #if CAFEBAZAAR && ANDROID
-                var purchase = await Billing.PurchaseAsync(Product.Id, Product.ItemType, BillingContext.Current.User.UserId, new PurchaseVerificator());
+                var purchase = await Billing.PurchaseAsync(Product.Id, Product.ItemType, context.User.UserId, verificator);
 #else
-                var purchase = await Billing.PurchaseAsync(Product.Id, Product.ItemType, new PurchaseVerificator());
+                var purchase = await Billing.PurchaseAsync(Product.Id, Product.ItemType, verificator);
 #endif
 
-                if (purchase == null) return PurchaseResult.NotCompleted;
+                if (purchase is null)
+                {
+                    if (verificator.Status != PurchaseVerificationResult.UserMismatched) return PurchaseResult.UserMismatched;
 
-                await BillingContext.Current.PurchaseAttempt(purchase.ToEventArgs());
+                    return PurchaseResult.NotCompleted;
+                }
 
-                await BillingContext.Current.Refresh();
+                await context.PurchaseAttempt(purchase.ToEventArgs());
 
-                if (BillingContext.Current.IsSubscribed) return PurchaseResult.Succeeded;
+                await context.Refresh();
+
+                if (context.IsSubscribed) return PurchaseResult.Succeeded;
 
                 if (purchase.State.IsAnyOf(PurchaseState.Restored, PurchaseState.Purchased, PurchaseState.Purchasing, PurchaseState.PaymentPending))
                     return PurchaseResult.WillBeActivated;
@@ -40,7 +53,7 @@
             {
                 Log.For(this).Error(ex);
 
-                if (await BillingContext.Current.RestoreSubscription()) return PurchaseResult.Succeeded;
+                if (await context.RestoreSubscription()) return PurchaseResult.Succeeded;
 
                 return ex.PurchaseError switch
                 {

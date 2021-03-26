@@ -49,5 +49,12 @@
 
             return transaction;
         }
+
+        public Task<string> GetOriginUserOfTransactionIds(string[] transactionIds)
+        {
+            return Context.Subscriptions.Where(x => transactionIds.Contains(x.TransactionId))
+                                        .Select(x => x.UserId)
+                                        .FirstOrDefaultAsync();
+        }
     }
 }
