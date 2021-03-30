@@ -31,7 +31,7 @@
 
                 if (purchase is null)
                 {
-                    if (verificator.Status != PurchaseVerificationResult.UserMismatched) return PurchaseResult.UserMismatched;
+                    if (verificator.Status == PurchaseVerificationResult.UserMismatched) return PurchaseResult.UserMismatched;
 
                     return PurchaseResult.NotCompleted;
                 }
