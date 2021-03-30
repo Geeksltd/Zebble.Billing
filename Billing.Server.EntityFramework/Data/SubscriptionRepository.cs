@@ -50,11 +50,17 @@
             return transaction;
         }
 
-        public Task<string> GetOriginUserOfTransactionIds(string[] transactionIds)
+        public async Task<string> GetOriginUserOfTransactionIds(string[] transactionIds)
         {
-            return Context.Subscriptions.Where(x => transactionIds.Contains(x.TransactionId))
-                                        .Select(x => x.UserId)
-                                        .FirstOrDefaultAsync();
+            var subscriptions = await Context.Subscriptions.Where(x => transactionIds.Contains(x.TransactionId))
+                                                           .OrderBy(x => x.ExpirationDate)
+                                                           .ToListAsync();
+
+            return subscriptions.Where(x => x.IsStarted())
+                                .Where(x => !x.IsCanceled())
+                                .Where(x => !x.IsExpired())
+                                .Select(x => x.UserId)
+                                .FirstOrDefault();
         }
     }
 }
