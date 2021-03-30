@@ -248,7 +248,10 @@ async Task OnPurchaseTap(string id)
 
 We will update this list with common purchase-related issues you might face when testing your app.
 
-#### I'm getting `GeneralError` all the time for a specific tester account
+#### In iOS, I'm getting `GeneralError` all the time for a specific tester account
 
 Please ensure you've unchecked "Interrupt Purchases for This Tester" for your tester account. To verify it, go to the [Testers](https://appstoreconnect.apple.com/access/testers) and edit your tester account.
 
+#### In Android, I'm getting `BillingUnavailable` all the time when trying to purchase a subscription
+
+Try to disable your Play Store app. Disabling it will remove its associated data. Then reopen it and it'll automatically updates itself. Then try to test again.
