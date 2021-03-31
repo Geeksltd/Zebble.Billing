@@ -4,11 +4,11 @@
     {
         BillingUnavailable,
         NotCompleted,
-        GeneralError,
         PaymentInvalid,
         PaymentNotAllowed,
         AppStoreUnavailable,
         UserMismatched,
+        Unknown,
         AlreadySubscribed,
         UserCancelled,
         WillBeActivated,

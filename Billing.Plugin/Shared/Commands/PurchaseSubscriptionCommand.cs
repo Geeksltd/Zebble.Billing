@@ -47,7 +47,7 @@
 
                 if (purchase.State.IsAnyOf(PurchaseState.Failed, PurchaseState.Canceled)) return PurchaseResult.NotCompleted;
 
-                return PurchaseResult.BillingUnavailable;
+                return PurchaseResult.Unknown;
             }
             catch (InAppBillingPurchaseException ex)
             {
@@ -62,13 +62,13 @@
                     PurchaseError.PaymentInvalid => PurchaseResult.PaymentInvalid,
                     PurchaseError.PaymentNotAllowed => PurchaseResult.PaymentNotAllowed,
                     PurchaseError.UserCancelled => PurchaseResult.UserCancelled,
-                    _ => PurchaseResult.GeneralError,
+                    _ => PurchaseResult.Unknown,
                 };
             }
             catch (Exception ex)
             {
                 Log.For(this).Error(ex);
-                return PurchaseResult.GeneralError;
+                return PurchaseResult.Unknown;
             }
         }
     }

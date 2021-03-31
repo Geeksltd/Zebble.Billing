@@ -20,7 +20,13 @@
                 if (purchases.None()) return false;
 
                 foreach (var purchase in purchases.Distinct(x => x.Id))
+                {
+                    if (purchase.State != PurchaseState.Purchased) continue;
+                    if (purchase.IsAcknowledged) continue;
+
                     await BillingContext.Current.PurchaseAttempt(purchase.ToEventArgs());
+                    await Billing.AcknowledgePurchaseAsync(purchase.PurchaseToken);
+                }
 
                 return true;
             }
