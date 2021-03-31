@@ -31,12 +31,16 @@
 
                 if (purchase is null)
                 {
+                    // In iOS, we get this error when we try to purchase an item that is already associated with another app-specific account
                     if (verificator.Status == PurchaseVerificationResult.UserMismatched) return PurchaseResult.UserMismatched;
 
                     return PurchaseResult.NotCompleted;
                 }
 
                 await context.PurchaseAttempt(purchase.ToEventArgs());
+
+                if (purchase.State == PurchaseState.Purchased)
+                    await Billing.AcknowledgePurchaseAsync(purchase.PurchaseToken);
 
                 await context.Refresh();
 
@@ -52,6 +56,9 @@
             catch (InAppBillingPurchaseException ex)
             {
                 Log.For(this).Error(ex);
+
+                // In Android, plugin reports already owned purchases this way. So we consider it as a similar situation to iOS
+                if (ex.PurchaseError == PurchaseError.AlreadyOwned) return PurchaseResult.UserMismatched;
 
                 if (await context.RestoreSubscription()) return PurchaseResult.Succeeded;
 
