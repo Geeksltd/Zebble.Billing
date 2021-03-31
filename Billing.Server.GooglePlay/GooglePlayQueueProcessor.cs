@@ -35,8 +35,7 @@
 
                 Interlocked.Increment(ref messageCount);
 
-                if (notification.IsTest == false && !await ProccessNotification(notification))
-                    return SubscriberClient.Reply.Nack;
+                if (!notification.IsTest) await ProccessNotification(notification);
 
                 return SubscriberClient.Reply.Ack;
             });
@@ -49,15 +48,14 @@
             return messageCount;
         }
 
-        async Task<bool> ProccessNotification(GooglePlayNotification notification)
+        async Task ProccessNotification(GooglePlayNotification notification)
         {
             var subscription = await Repository.GetByPurchaseToken(notification.PurchaseToken);
 
             if (subscription == null)
             {
                 var subscriptionInfo = await StoreConnector.GetSubscriptionInfo(notification.ToArgs());
-
-                if (subscriptionInfo == null) return false;
+                if (subscriptionInfo == null) return;
 
                 subscription = await Repository.AddSubscription(new Subscription
                 {
@@ -96,8 +94,6 @@
                 Date = notification.EventTime ?? LocalTime.UtcNow,
                 Details = notification.OriginalData
             });
-
-            return true;
         }
 
         SubscriberClient.ClientCreationSettings GetSettings()
