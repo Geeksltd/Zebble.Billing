@@ -47,6 +47,7 @@
                         UserId = subscriptionInfo.UserId,
                         Platform = "AppStore",
                         TransactionId = subscriptionInfo.TransactionId,
+                        ReceiptData = notification.UnifiedReceipt.LatestReceipt,
                         PurchaseToken = notification.PurchaseToken,
                         TransactionDate = notification.PurchaseDate,
                         SubscriptionDate = subscriptionInfo.SubscriptionDate,
