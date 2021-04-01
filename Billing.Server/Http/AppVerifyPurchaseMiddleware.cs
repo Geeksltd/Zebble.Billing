@@ -13,7 +13,7 @@
 
             var status = await manager.VerifyPurchase(model.UserId, model.Platform, model.ProductId, model.TransactionId, model.ReceiptData);
 
-            await context.Response.WriteAsync(status.ToString());
+            await context.Response.WriteAsync(status.ToJson());
         }
     }
 
