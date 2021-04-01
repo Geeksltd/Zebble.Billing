@@ -4,7 +4,7 @@
 
     public interface IStoreConnector
     {
-        Task<PurchaseVerificationResult> VerifyPurchase(VerifyPurchaseArgs args);
+        Task<PurchaseVerificationStatus> VerifyPurchase(VerifyPurchaseArgs args);
         Task<SubscriptionInfo> GetSubscriptionInfo(SubscriptionInfoArgs args);
     }
 }

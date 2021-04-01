@@ -4,5 +4,5 @@
 
     public enum ProductType { Subscription, InAppPurchase }
 
-    public enum PurchaseVerificationResult { Failed, UserMismatched, Verified }
+    public enum PurchaseVerificationStatus { Failed, UserMismatched, Verified }
 }

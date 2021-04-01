@@ -15,7 +15,7 @@
             StoreConnectorResolver = storeConnectorResolver;
         }
 
-        public async Task<PurchaseVerificationResult> VerifyPurchase(string userId, string platform, string productId, string transactionId, string receiptData)
+        public async Task<VerifyPurchaseResult> VerifyPurchase(string userId, string platform, string productId, string transactionId, string receiptData)
         {
             var storeConnector = StoreConnectorResolver.Resolve(platform);
             var status = await storeConnector.VerifyPurchase(new VerifyPurchaseArgs
@@ -24,7 +24,7 @@
                 ReceiptData = receiptData
             });
 
-            if (status != PurchaseVerificationResult.Verified) return status;
+            if (status != PurchaseVerificationStatus.Verified) return VerifyPurchaseResult.From(status);
 
             var subscription = await Repository.GetByTransactionId(transactionId);
 
@@ -38,22 +38,20 @@
 
                 if (subscription.ProductId != productId)
                     throw new Exception("Provided purchase token is associated with another product!");
-
-                return status;
             }
+            else
+                await Repository.AddSubscription(new Subscription
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    UserId = userId,
+                    Platform = platform,
+                    ProductId = productId,
+                    TransactionId = transactionId,
+                    ReceiptData = receiptData,
+                    LastUpdate = LocalTime.UtcNow
+                });
 
-            await Repository.AddSubscription(new Subscription
-            {
-                Id = Guid.NewGuid().ToString(),
-                UserId = userId,
-                Platform = platform,
-                ProductId = productId,
-                TransactionId = transactionId,
-                ReceiptData = receiptData,
-                LastUpdate = LocalTime.UtcNow
-            });
-
-            return status;
+            return VerifyPurchaseResult.Succeeded();
         }
 
         public async Task PurchaseAttempt(string userId, string platform, string productId, string transactionId, DateTime transactionDate, string purchaseToken)

@@ -32,7 +32,7 @@
                 if (purchase is null)
                 {
                     // In iOS, we get this error when we try to purchase an item that is already associated with another app-specific account
-                    if (verificator.Status == PurchaseVerificationResult.UserMismatched) return PurchaseResult.UserMismatched;
+                    if (verificator.Status == PurchaseVerificationStatus.UserMismatched) return PurchaseResult.UserMismatched;
 
                     return PurchaseResult.NotCompleted;
                 }

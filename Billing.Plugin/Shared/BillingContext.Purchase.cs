@@ -47,7 +47,7 @@
             return successful;
         }
 
-        internal async Task<PurchaseVerificationResult> VerifyPurchase(VerifyPurchaseEventArgs args)
+        internal async Task<VerifyPurchaseResult> VerifyPurchase(VerifyPurchaseEventArgs args)
         {
             if (await UIContext.IsOffline()) throw new Exception("Network connection is not available.");
 
@@ -56,7 +56,7 @@
             var url = new Uri(Options.BaseUri, Options.VerifyPurchasePath).ToString();
             var @params = new { User.Ticket, User.UserId, Platform = PaymentAuthority, args.ProductId, args.TransactionId, args.ReceiptData };
 
-            return await BaseApi.Post<PurchaseVerificationResult>(url, @params, OnError.Ignore, showWaiting: false);
+            return await BaseApi.Post<VerifyPurchaseResult>(url, @params, OnError.Ignore, showWaiting: false);
         }
 
         internal async Task PurchaseAttempt(SubscriptionPurchasedEventArgs args)

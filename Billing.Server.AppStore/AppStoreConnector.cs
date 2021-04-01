@@ -24,7 +24,7 @@
             Repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
-        public async Task<PurchaseVerificationResult> VerifyPurchase(VerifyPurchaseArgs args)
+        public async Task<PurchaseVerificationStatus> VerifyPurchase(VerifyPurchaseArgs args)
         {
             var (_, status) = await GetVerifiedResult(args.UserId, args.ReceiptData);
 
@@ -51,47 +51,47 @@
             };
         }
 
-        async Task<(AppleReceiptVerificationResult, PurchaseVerificationResult)> GetVerifiedResult(string userId, string receiptData)
+        async Task<(AppleReceiptVerificationResult, PurchaseVerificationStatus)> GetVerifiedResult(string userId, string receiptData)
         {
             var result = await ReceiptVerificator.VerifyAppleReceiptAsync(receiptData);
 
-            if (result is null) return (null, PurchaseVerificationResult.Failed);
+            if (result is null) return (null, PurchaseVerificationStatus.Failed);
 
             return (result, await ValidateVerificationResult(userId, result));
         }
 
-        async Task<PurchaseVerificationResult> ValidateVerificationResult(string userId, AppleReceiptVerificationResult verificationResult)
+        async Task<PurchaseVerificationStatus> ValidateVerificationResult(string userId, AppleReceiptVerificationResult verificationResult)
         {
             if (verificationResult.AppleVerificationResponse is null)
             {
                 Logger.LogWarning($"{verificationResult.Message}.");
-                return PurchaseVerificationResult.Failed;
+                return PurchaseVerificationStatus.Failed;
             }
 
             if (verificationResult.AppleVerificationResponse.StatusCode != IAPVerificationResponseStatus.Ok)
             {
                 Logger.LogWarning($"{verificationResult.Message} [{verificationResult.AppleVerificationResponse.Status} - {verificationResult.AppleVerificationResponse.StatusCode}]");
-                return PurchaseVerificationResult.Failed;
+                return PurchaseVerificationStatus.Failed;
             }
 
-            if (userId.IsEmpty()) return PurchaseVerificationResult.Verified;
+            if (userId.IsEmpty()) return PurchaseVerificationStatus.Verified;
 
             var transactionIds = verificationResult.AppleVerificationResponse
                 .LatestReceiptInfo
                 .Select(x => x.TransactionId)
                 .ToArray();
-            if (transactionIds.None()) return PurchaseVerificationResult.Verified;
+            if (transactionIds.None()) return PurchaseVerificationStatus.Verified;
 
             var originUserId = await Repository.GetOriginUserOfTransactionIds(transactionIds);
-            if (originUserId.IsEmpty()) return PurchaseVerificationResult.Verified;
+            if (originUserId.IsEmpty()) return PurchaseVerificationStatus.Verified;
 
             if (!userId.Equals(originUserId, caseSensitive: false))
             {
                 Logger.LogWarning($"This receipt is associated to {originUserId} and can't be used for {userId}.");
-                return PurchaseVerificationResult.UserMismatched;
+                return PurchaseVerificationStatus.UserMismatched;
             }
 
-            return PurchaseVerificationResult.Verified;
+            return PurchaseVerificationStatus.Verified;
         }
     }
 }

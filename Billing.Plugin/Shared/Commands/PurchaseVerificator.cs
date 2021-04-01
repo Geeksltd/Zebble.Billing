@@ -5,18 +5,20 @@
 
     class PurchaseVerificator : IInAppBillingVerifyPurchase
     {
-        public PurchaseVerificationResult Status { get; set; }
+        public PurchaseVerificationStatus Status { get; set; }
 
         public async Task<bool> VerifyPurchase(string signedData, string signature, string productId = null, string transactionId = null)
         {
-            Status = await BillingContext.Current.VerifyPurchase(new VerifyPurchaseEventArgs
+            var result = await BillingContext.Current.VerifyPurchase(new VerifyPurchaseEventArgs
             {
                 ProductId = productId,
                 TransactionId = transactionId,
                 ReceiptData = signedData
             });
 
-            return Status == PurchaseVerificationResult.Verified;
+            Status = result.Status;
+
+            return Status == PurchaseVerificationStatus.Verified;
         }
     }
 }

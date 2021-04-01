@@ -20,9 +20,9 @@
             Options = options.Value;
         }
 
-        public Task<PurchaseVerificationResult> VerifyPurchase(VerifyPurchaseArgs args)
+        public Task<PurchaseVerificationStatus> VerifyPurchase(VerifyPurchaseArgs args)
         {
-            return Task.FromResult(PurchaseVerificationResult.Verified);
+            return Task.FromResult(PurchaseVerificationStatus.Verified);
         }
 
         public async Task<SubscriptionInfo> GetSubscriptionInfo(SubscriptionInfoArgs args)
