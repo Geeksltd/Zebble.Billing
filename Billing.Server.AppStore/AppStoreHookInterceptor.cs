@@ -43,7 +43,8 @@
 
                     subscription = await Repository.GetByTransactionId(subscriptionInfo.TransactionId);
                 }
-                else
+
+                if (subscription is not null)
                 {
                     if (notification.Type.IsAnyOf(AppStoreNotificationType.InitialBuy, AppStoreNotificationType.InteractivelyRenewed))
                     {
@@ -63,8 +64,7 @@
 
                     await Repository.UpdateSubscription(subscription);
                 }
-
-                if (subscriptionInfo is not null)
+                else
                     subscription = await Repository.AddSubscription(new Subscription
                     {
                         Id = Guid.NewGuid().ToString(),

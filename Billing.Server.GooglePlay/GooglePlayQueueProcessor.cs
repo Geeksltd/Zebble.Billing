@@ -71,7 +71,8 @@
 
                     subscription = await repository.GetByTransactionId(subscriptionInfo.TransactionId);
                 }
-                else
+
+                if (subscription is not null)
                 {
                     if (notification.State.IsAnyOf(GooglePlaySubscriptionState.Purchased, GooglePlaySubscriptionState.Renewed))
                         subscription.SubscriptionDate = notification.EventTime;
@@ -82,8 +83,7 @@
 
                     await repository.UpdateSubscription(subscription);
                 }
-
-                if (subscriptionInfo is not null)
+                else
                     subscription = await repository.AddSubscription(new Subscription
                     {
                         Id = Guid.NewGuid().ToString(),
