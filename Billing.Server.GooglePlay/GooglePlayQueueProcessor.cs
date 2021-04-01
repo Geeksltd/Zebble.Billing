@@ -9,24 +9,28 @@
     using Google.Cloud.PubSub.V1;
     using Grpc.Auth;
     using Olive;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
 
     class GooglePlayQueueProcessor
     {
+        readonly ILogger<GooglePlayQueueProcessor> Logger;
         readonly GooglePlayOptions Options;
-        readonly ISubscriptionRepository Repository;
+        readonly IServiceProvider Services;
         readonly GooglePlayConnector StoreConnector;
 
-        public GooglePlayQueueProcessor(IOptionsSnapshot<GooglePlayOptions> options, ISubscriptionRepository repository, GooglePlayConnector storeConnector)
+        public GooglePlayQueueProcessor(ILogger<GooglePlayQueueProcessor> logger, IOptionsSnapshot<GooglePlayOptions> options, IServiceProvider services, GooglePlayConnector storeConnector)
         {
+            Logger = logger;
             Options = options.Value;
-            Repository = repository;
+            Services = services;
             StoreConnector = storeConnector;
         }
 
         public async Task<int> Process()
         {
             var name = new SubscriptionName(Options.ProjectId, Options.SubscriptionId);
-            var client = await SubscriberClient.CreateAsync(name, GetSettings());
+            var client = await SubscriberClient.CreateAsync(name, GetSettings(), new SubscriberClient.Settings { });
             var messageCount = 0;
 
             var startTask = client.StartAsync(async (message, _) =>
@@ -41,59 +45,71 @@
             });
 
             await Task.Delay(5.Seconds());
-            await client.StopAsync(10.Seconds());
+            await client.StopAsync(CancellationToken.None);
 
             await startTask;
+
+            Logger.Debug($"{messageCount} queue messages are processed.");
 
             return messageCount;
         }
 
         async Task ProccessNotification(GooglePlayNotification notification)
         {
-            var subscription = await Repository.GetByPurchaseToken(notification.PurchaseToken);
-
-            if (subscription == null)
+            try
             {
-                var subscriptionInfo = await StoreConnector.GetSubscriptionInfo(notification.ToArgs());
-                if (subscriptionInfo == null) return;
+                using var scope = Services.CreateScope();
+                var repository = scope.ServiceProvider.GetRequiredService<ISubscriptionRepository>();
 
-                subscription = await Repository.AddSubscription(new Subscription
+                var subscription = await repository.GetByPurchaseToken(notification.PurchaseToken);
+
+                if (subscription == null)
+                {
+                    var subscriptionInfo = await StoreConnector.GetSubscriptionInfo(notification.ToArgs());
+                    if (subscriptionInfo == null) return;
+
+                    subscription = await repository.AddSubscription(new Subscription
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        ProductId = notification.ProductId,
+                        UserId = subscriptionInfo.UserId.Or("<NOT_PROVIDED>"),
+                        Platform = "GooglePlay",
+                        TransactionId = subscriptionInfo.TransactionId,
+                        ReceiptData = "<NOT_PROVIDED>",
+                        TransactionDate = notification.EventTime,
+                        PurchaseToken = notification.PurchaseToken,
+                        SubscriptionDate = subscriptionInfo.SubscriptionDate,
+                        ExpirationDate = subscriptionInfo.ExpirationDate,
+                        CancellationDate = subscriptionInfo.CancellationDate,
+                        LastUpdate = LocalTime.UtcNow,
+                        AutoRenews = subscriptionInfo.AutoRenews
+                    });
+                }
+                else
+                {
+                    if (notification.State.IsAnyOf(GooglePlaySubscriptionState.Purchased, GooglePlaySubscriptionState.Renewed))
+                        subscription.SubscriptionDate = notification.EventTime;
+                    else if (notification.State == GooglePlaySubscriptionState.Canceled)
+                        subscription.CancellationDate = notification.EventTime;
+                    else if (notification.State.IsAnyOf(GooglePlaySubscriptionState.Expired, GooglePlaySubscriptionState.Revoked))
+                        subscription.ExpirationDate = notification.EventTime;
+
+                    await repository.UpdateSubscription(subscription);
+                }
+
+                await repository.AddTransaction(new Transaction
                 {
                     Id = Guid.NewGuid().ToString(),
-                    ProductId = notification.ProductId,
-                    UserId = subscriptionInfo.UserId,
+                    SubscriptionId = subscription.Id,
                     Platform = "GooglePlay",
-                    TransactionId = subscriptionInfo.TransactionId,
-                    ReceiptData = null,
-                    TransactionDate = notification.EventTime,
-                    PurchaseToken = notification.PurchaseToken,
-                    SubscriptionDate = subscriptionInfo.SubscriptionDate,
-                    ExpirationDate = subscriptionInfo.ExpirationDate,
-                    CancellationDate = subscriptionInfo.CancellationDate,
-                    LastUpdate = LocalTime.UtcNow,
-                    AutoRenews = subscriptionInfo.AutoRenews
+                    Date = notification.EventTime ?? LocalTime.UtcNow,
+                    Details = notification.OriginalData
                 });
             }
-            else
+            catch (Exception ex)
             {
-                if (notification.State.IsAnyOf(GooglePlaySubscriptionState.Purchased, GooglePlaySubscriptionState.Renewed))
-                    subscription.SubscriptionDate = notification.EventTime;
-                else if (notification.State == GooglePlaySubscriptionState.Canceled)
-                    subscription.CancellationDate = notification.EventTime;
-                else if (notification.State.IsAnyOf(GooglePlaySubscriptionState.Expired, GooglePlaySubscriptionState.Revoked))
-                    subscription.ExpirationDate = notification.EventTime;
-
-                await Repository.UpdateSubscription(subscription);
+                Logger.LogError(ex, $"Failed to process following notification. {notification.OriginalData}");
             }
-
-            await Repository.AddTransaction(new Transaction
-            {
-                Id = Guid.NewGuid().ToString(),
-                SubscriptionId = subscription.Id,
-                Platform = "GooglePlay",
-                Date = notification.EventTime ?? LocalTime.UtcNow,
-                Details = notification.OriginalData
-            });
         }
 
         SubscriberClient.ClientCreationSettings GetSettings()

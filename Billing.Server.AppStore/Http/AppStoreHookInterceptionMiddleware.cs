@@ -15,7 +15,6 @@
             var body = await streamReader.ReadToEndAsync();
 
             await hookInterceptor.Intercept(body.ToNotification());
-            await context.Response.WriteAsync($"{nameof(AppStoreHookInterceptor)} executed.");
         }
     }
 }
