@@ -57,9 +57,6 @@
             {
                 Log.For(this).Error(ex);
 
-                // In Android, plugin reports already owned purchases this way. So we consider it as a similar situation to iOS
-                if (ex.PurchaseError == PurchaseError.AlreadyOwned) return PurchaseResult.UserMismatched;
-
                 if (await context.RestoreSubscription()) return PurchaseResult.Succeeded;
 
                 return ex.PurchaseError switch
@@ -68,6 +65,7 @@
                     PurchaseError.BillingUnavailable => PurchaseResult.BillingUnavailable,
                     PurchaseError.PaymentInvalid => PurchaseResult.PaymentInvalid,
                     PurchaseError.PaymentNotAllowed => PurchaseResult.PaymentNotAllowed,
+                    PurchaseError.AlreadyOwned => PurchaseResult.AlreadySubscribed,
                     PurchaseError.UserCancelled => PurchaseResult.UserCancelled,
                     _ => PurchaseResult.Unknown,
                 };
