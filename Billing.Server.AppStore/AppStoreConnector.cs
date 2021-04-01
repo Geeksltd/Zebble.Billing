@@ -62,7 +62,7 @@
 
         async Task<PurchaseVerificationResult> ValidateVerificationResult(string userId, AppleReceiptVerificationResult verificationResult)
         {
-            if (verificationResult.AppleVerificationResponse == null)
+            if (verificationResult.AppleVerificationResponse is null)
             {
                 Logger.LogWarning($"{verificationResult.Message}.");
                 return PurchaseVerificationResult.Failed;

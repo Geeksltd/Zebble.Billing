@@ -21,8 +21,7 @@
         {
             var result = await Repository.GetByCode(args.PurchaseToken);
 
-            if (result == null)
-                return null;
+            if (result is null) return null;
 
             return CreateSubscription(result);
         }

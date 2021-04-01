@@ -6,7 +6,7 @@
     {
         public static DateTime? ToDateTime(this long? @this)
         {
-            if (@this == null) return null;
+            if (@this is null) return null;
 
             return @this.Value.ToDateTime();
         }

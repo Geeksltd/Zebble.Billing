@@ -31,8 +31,7 @@
 
             var result = await publisher.Purchases.Subscriptions.Get(Options.PackageName, args.ProductId, args.PurchaseToken).ExecuteAsync();
 
-            if (result == null)
-                return null;
+            if (result is null) return null;
 
             return CreateSubscription(result);
         }

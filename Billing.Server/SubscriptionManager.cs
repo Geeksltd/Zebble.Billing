@@ -101,7 +101,7 @@
             var storeConnector = StoreConnectorResolver.Resolve(subscription.Platform);
             var updatedSubscription = await storeConnector.GetSubscriptionInfo(subscription.ToArgs());
 
-            if (updatedSubscription == null) return;
+            if (updatedSubscription is null) return;
 
             subscription.SubscriptionDate = updatedSubscription.SubscriptionDate;
             subscription.ExpirationDate = updatedSubscription.ExpirationDate;

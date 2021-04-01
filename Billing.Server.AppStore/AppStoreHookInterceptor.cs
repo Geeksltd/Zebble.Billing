@@ -28,34 +28,20 @@
                 ValidateNotification(notification);
 
                 var subscription = await Repository.GetByPurchaseToken(notification.PurchaseToken);
+                SubscriptionInfo subscriptionInfo = null;
 
-                if (subscription == null)
+                if (subscription is null)
                 {
-                    var subscriptionInfo = await StoreConnector.GetSubscriptionInfo(new SubscriptionInfoArgs
+                    subscriptionInfo = await StoreConnector.GetSubscriptionInfo(new SubscriptionInfoArgs
                     {
                         UserId = null,
                         ProductId = notification.ProductId,
                         ReceiptData = notification.UnifiedReceipt.LatestReceipt
                     });
 
-                    if (subscriptionInfo == null) throw new Exception("Couldn't find receipt info.");
+                    if (subscriptionInfo is null) return;
 
-                    subscription = await Repository.AddSubscription(new Subscription
-                    {
-                        Id = Guid.NewGuid().ToString(),
-                        ProductId = notification.ProductId,
-                        UserId = subscriptionInfo.UserId,
-                        Platform = "AppStore",
-                        TransactionId = subscriptionInfo.TransactionId,
-                        ReceiptData = notification.UnifiedReceipt.LatestReceipt,
-                        PurchaseToken = notification.PurchaseToken,
-                        TransactionDate = notification.PurchaseDate,
-                        SubscriptionDate = subscriptionInfo.SubscriptionDate,
-                        ExpirationDate = subscriptionInfo.ExpirationDate,
-                        CancellationDate = subscriptionInfo.CancellationDate,
-                        LastUpdate = LocalTime.UtcNow,
-                        AutoRenews = subscriptionInfo.AutoRenews
-                    });
+                    subscription = await Repository.GetByTransactionId(subscriptionInfo.TransactionId);
                 }
                 else
                 {
@@ -77,6 +63,24 @@
 
                     await Repository.UpdateSubscription(subscription);
                 }
+
+                if (subscriptionInfo is not null)
+                    subscription = await Repository.AddSubscription(new Subscription
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        ProductId = notification.ProductId,
+                        UserId = subscriptionInfo.UserId.Or("<NOT_PROVIDED>"),
+                        Platform = "AppStore",
+                        TransactionId = subscriptionInfo.TransactionId,
+                        ReceiptData = notification.UnifiedReceipt.LatestReceipt,
+                        PurchaseToken = notification.PurchaseToken,
+                        TransactionDate = notification.PurchaseDate,
+                        SubscriptionDate = subscriptionInfo.SubscriptionDate,
+                        ExpirationDate = subscriptionInfo.ExpirationDate,
+                        CancellationDate = subscriptionInfo.CancellationDate,
+                        LastUpdate = LocalTime.UtcNow,
+                        AutoRenews = subscriptionInfo.AutoRenews
+                    });
 
                 await Repository.AddTransaction(new Transaction
                 {

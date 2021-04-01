@@ -31,8 +31,7 @@
                 PurchaseToken = args.PurchaseToken
             });
 
-            if (purchaseResult == null)
-                return null;
+            if (purchaseResult is null) return null;
 
             var subscriptionResult = await DeveloperService.ValidateSubscription(new CafeBazaarValidateSubscriptionRequest
             {
@@ -41,8 +40,7 @@
                 PurchaseToken = args.PurchaseToken
             });
 
-            if (subscriptionResult == null)
-                return null;
+            if (subscriptionResult is null) return null;
 
             return CreateSubscription(purchaseResult, subscriptionResult);
         }

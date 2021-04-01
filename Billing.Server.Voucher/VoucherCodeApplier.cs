@@ -40,7 +40,7 @@
 
         void ValidateVoucher(Voucher voucher, string userId)
         {
-            if (voucher == null) throw new Exception("No voucher found.");
+            if (voucher is null) throw new Exception("No voucher found.");
 
             if (voucher.ActivationDate.HasValue && voucher.UserId != userId) throw new Exception("This voucher is already applied.");
         }
@@ -49,11 +49,11 @@
         {
             var subscription = await SubscriptionRepository.GetByPurchaseToken(voucher.Code);
 
-            if (subscription == null)
+            if (subscription is null)
             {
                 var subscriptionInfo = await StoreConnector.GetSubscriptionInfo(voucher.ToArgs());
 
-                if (subscriptionInfo == null) throw new Exception("Couldn't find voucher info.");
+                if (subscriptionInfo is null) throw new Exception("Couldn't find voucher info.");
 
                 subscription = await SubscriptionRepository.AddSubscription(new Subscription
                 {

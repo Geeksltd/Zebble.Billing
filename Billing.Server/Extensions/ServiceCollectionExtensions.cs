@@ -10,7 +10,7 @@
     {
         public static IServiceCollection AddZebbleBilling(this IServiceCollection services, Action<ZebbleBillingServicesBuilder> builder = null)
         {
-            if (services == null) throw new ArgumentNullException(nameof(services));
+            if (services is null) throw new ArgumentNullException(nameof(services));
 
             services.AddOptions<BillingOptions>()
                     .Configure<IConfiguration>((opts, config) => config.GetSection("ZebbleBilling")?.Bind(opts))
@@ -36,7 +36,7 @@
 
         public static IServiceCollection AddStoreConnector<TType>(this IServiceCollection services, string name) where TType : class, IStoreConnector
         {
-            if (services == null) throw new ArgumentNullException(nameof(services));
+            if (services is null) throw new ArgumentNullException(nameof(services));
 
             if (name.IsEmpty()) throw new ArgumentNullException(nameof(name));
 
