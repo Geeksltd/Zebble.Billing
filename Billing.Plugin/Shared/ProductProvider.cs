@@ -14,8 +14,16 @@
 
         public ProductProvider(string catalogPath)
         {
-            File = catalogPath.IsEmpty() ? throw new ArgumentNullException(nameof(catalogPath)) : Device.IO.File(catalogPath);
-            Options = JsonConvert.DeserializeObject<CatalogOptions>(File.ReadAllText());
+            if (catalogPath.IsEmpty())
+                throw new ArgumentNullException(nameof(catalogPath));
+
+            File = Device.IO.File(catalogPath).ExistsOrThrow();
+
+            var text = File.ReadAllText();
+
+            Options = JsonConvert.DeserializeObject<CatalogOptions>(text);
+
+            if (Options.Products is null) throw new Exception("Products is null in: " + File.Name);
         }
 
         public Task<Product> GetById(string platform, string productId)
