@@ -11,8 +11,12 @@
         /// </summary>
         public async Task<PurchaseResult> PurchaseSubscription(string productId)
         {
+#if MVVM || UWP
+            return PurchaseResult.AppStoreUnavailable;
+#else
             var product = await GetProduct(productId) ?? throw new Exception($"Product with id '{productId}' not found.");
             return await new PurchaseSubscriptionCommand(product).Execute();
+#endif
         }
 
         /// <summary>
@@ -21,6 +25,9 @@
         /// <remarks>If you pass the true for `userRequest`, and no active subscription is found, it will throw an exception.</remarks>
         public async Task<bool> RestoreSubscription(bool userRequest = false)
         {
+#if MVVM || UWP
+            return false;
+#else
             var errorMessage = "";
             try { await new RestoreSubscriptionCommand().Execute(); }
             catch (Exception ex)
@@ -45,6 +52,7 @@
                 throw new Exception(errorMessage.Or("Unable to find an active subscription."));
 
             return successful;
+#endif
         }
 
         internal async Task<VerifyPurchaseResult> VerifyPurchase(VerifyPurchaseEventArgs args)

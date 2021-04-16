@@ -22,10 +22,14 @@
                 foreach (var purchase in purchases.Distinct(x => x.Id))
                 {
                     if (purchase.State != PurchaseState.Purchased) continue;
+#if !(CAFEBAZAAR && ANDROID)
                     if (purchase.IsAcknowledged) continue;
+#endif
 
                     await BillingContext.Current.PurchaseAttempt(purchase.ToEventArgs());
+#if !(CAFEBAZAAR && ANDROID)
                     await Billing.AcknowledgePurchaseAsync(purchase.PurchaseToken);
+#endif
                 }
 
                 return true;

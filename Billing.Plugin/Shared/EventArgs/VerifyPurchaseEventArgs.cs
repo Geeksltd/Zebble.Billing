@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class VerifyPurchaseEventArgs : EventArgs
+    class VerifyPurchaseEventArgs : EventArgs
     {
         public string ProductId { get; set; }
         public string TransactionId { get; set; }

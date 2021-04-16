@@ -39,8 +39,10 @@
 
                 await context.PurchaseAttempt(purchase.ToEventArgs());
 
+#if !(CAFEBAZAAR && ANDROID)
                 if (purchase.State == PurchaseState.Purchased)
                     await Billing.AcknowledgePurchaseAsync(purchase.PurchaseToken);
+#endif
 
                 await context.Refresh();
 
@@ -65,7 +67,9 @@
                     PurchaseError.BillingUnavailable => PurchaseResult.BillingUnavailable,
                     PurchaseError.PaymentInvalid => PurchaseResult.PaymentInvalid,
                     PurchaseError.PaymentNotAllowed => PurchaseResult.PaymentNotAllowed,
+#if !(CAFEBAZAAR && ANDROID)
                     PurchaseError.AlreadyOwned => PurchaseResult.AlreadySubscribed,
+#endif
                     PurchaseError.UserCancelled => PurchaseResult.UserCancelled,
                     _ => PurchaseResult.Unknown,
                 };

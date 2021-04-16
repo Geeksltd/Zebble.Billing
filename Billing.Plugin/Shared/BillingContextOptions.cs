@@ -42,9 +42,16 @@
         /// </remarks>
         public string CatalogPath { get; set; } = @"Catalog.json";
 
+        public BillingContextOptions()
+        {
+            BaseUri = Config.Get("Billing.Base.Url", Config.Get("Api.Base.Url")).To<Uri>();
+        }
+
         internal void Validate()
         {
-            if (BaseUri == null) throw new ArgumentNullException(nameof(BaseUri));
+            if (BaseUri == null)
+                throw new ArgumentNullException(nameof(BaseUri), "Add Billing.Base.Url or Api.Base.Url to your Config.xml");
+
             if (!BaseUri.IsAbsoluteUri) throw new ArgumentException($"{nameof(BaseUri)} should be absolute.");
 
             if (PurchaseAttemptPath.IsEmpty()) throw new ArgumentNullException(nameof(PurchaseAttemptPath));

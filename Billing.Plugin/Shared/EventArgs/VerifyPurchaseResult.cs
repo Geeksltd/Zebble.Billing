@@ -1,6 +1,6 @@
 ﻿namespace Zebble.Billing
 {
-    public class VerifyPurchaseResult
+    class VerifyPurchaseResult
     {
         public PurchaseVerificationStatus Status { get; set; }
     }

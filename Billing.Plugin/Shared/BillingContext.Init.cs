@@ -1,13 +1,13 @@
 ﻿namespace Zebble.Billing
 {
     using System;
-    using Olive;
 
     public partial class BillingContext
     {
         static BillingContextOptions Options;
 
-        internal IBillingUser User { get; private set; }
+        Func<IBillingUser> UserAccessor;
+        internal IBillingUser User => UserAccessor();
         internal Subscription Subscription { get; private set; }
         internal IProductProvider ProductProvider { get; private set; }
 
@@ -15,23 +15,27 @@
         public static AsyncEvent<SubscriptionPurchasedEventArgs> SubscriptionPurchased = new();
         public static AsyncEvent<SubscriptionRestoredEventArgs> SubscriptionRestored = new();
 
-        public static void Initialize(BillingContextOptions options = null)
+        public static void Initialize(Func<IBillingUser> userAccessor)
+        {
+            Initialize(new BillingContextOptions(), userAccessor);
+        }
+
+        public static void Initialize(BillingContextOptions options, Func<IBillingUser> userAccessor)
         {
             if (Current != null) throw new InvalidOperationException($"{nameof(BillingContext)} is already initialized.");
 
-            Options = options ?? new BillingContextOptions
-            {
-                BaseUri = new Uri(Config.Get("Billing.Base.Url").OrNullIfEmpty() ?? throw new Exception("Add Billing.Base.Url to your Config.xml."))
-            };
+            if (options is null) throw new ArgumentNullException(nameof(options));
+            if (userAccessor is null) throw new ArgumentNullException(nameof(userAccessor));
+
+            Options = options;
 
             Options.Validate();
 
             Current = new BillingContext
             {
+                UserAccessor = userAccessor,
                 ProductProvider = new ProductProvider(Options.CatalogPath)
             };
         }
-
-        public void SetUser(IBillingUser user) => User = user;
     }
 }
