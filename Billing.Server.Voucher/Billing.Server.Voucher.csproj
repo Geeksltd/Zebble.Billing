@@ -41,4 +41,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Billing.Server\Billing.Server.csproj" />
   </ItemGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="update-local-nuget-cache" />
+  </Target>
 </Project>

@@ -40,4 +40,7 @@
     <PackageReference Include="Apple.Receipt.Verificator" Version="2.1.0" />
     <ProjectReference Include="..\Billing.Server\Billing.Server.csproj" />
   </ItemGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="update-local-nuget-cache" />
+  </Target>
 </Project>
