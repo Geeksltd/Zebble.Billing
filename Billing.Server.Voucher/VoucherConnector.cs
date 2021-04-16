@@ -1,7 +1,6 @@
 ﻿namespace Zebble.Billing
 {
     using System.Threading.Tasks;
-    using Olive;
 
     class VoucherConnector : IStoreConnector
     {
@@ -32,7 +31,7 @@
             {
                 UserId = voucher.UserId,
                 TransactionId = voucher.Id,
-                SubscriptionDate = voucher.ActivationDate ?? LocalTime.UtcNow,
+                SubscriptionDate = voucher.ActivationDate,
                 ExpirationDate = voucher.ExpirationDate(),
                 CancellationDate = null,
                 AutoRenews = false
