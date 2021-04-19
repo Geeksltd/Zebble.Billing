@@ -128,17 +128,16 @@ This is the sample settings file we included in the project to clearly show you 
       "Products": [
         {
           "Id": "my.app.subscription.yearly",
-          "Platform": "",
-          "Type": "Subscription",
-          "Title": "My Yearly Test Subscription",
-          "Months": 12,
-          "Promo": "7 days free trial",
-          "FreeDays": 7
+          "Platform": ""
         }
       ]
     },
-    "DbContext": {
+    "EntityFramework": {
       "ConnectionString": "Database=Billing.Sample; Server=.; Integrated Security=SSPI; MultipleActiveResultSets=True;"
+    },
+    "DynamoDb": {
+      "AccessKey": "<ACCESS_KEY>",
+      "SecretKey": "<SECRET_KEY>"
     },
     "AppStore": {
       "PackageName": "<ios.package.name>",
@@ -173,7 +172,9 @@ This is the sample settings file we included in the project to clearly show you 
 
 `Catalog`: This is the sample as the `Catalog.json` file we've talked about it earlier.
 
-`DbContext`: The connection string used in both `Zebble.Billing.Server.EntityFramework` and `Zebble.Billing.Server.Voucher.EntityFramework` packages.
+`EntityFramework`: The connection string used in both `Zebble.Billing.Server.EntityFramework` and `Zebble.Billing.Server.Voucher.EntityFramework` packages.
+
+`DynamoDb`: The AWS credentials used in both `Zebble.Billing.Server.DynamoDb` and `Zebble.Billing.Server.Voucher.DynamoDb` packages.
 
 `AppStore:PackageName`: Your iOS app package name.
 
