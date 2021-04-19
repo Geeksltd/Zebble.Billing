@@ -55,12 +55,7 @@ Thereupon, add all your products into it. Products are either one-off or they ar
     {
       "Id": "my.app.subscription.yearly",
       "Platform": "",
-      "Type": "Subscription",
-      "Title": "My Yearly Test Subscription",
-      "Months": 12,
-      "Promo": "7 days free trial",
-      "FreeDays": 7,
-      "Price": 0
+      "Type": "Subscription"
     }
   ]
 }
