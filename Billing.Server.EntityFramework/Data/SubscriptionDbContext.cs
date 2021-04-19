@@ -5,12 +5,12 @@
 
     class SubscriptionDbContext : DbContext
     {
-        readonly DbContextOptions Options;
+        readonly EntityFrameworkOptions Options;
 
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
 
-        public SubscriptionDbContext(IOptionsSnapshot<DbContextOptions> options)
+        public SubscriptionDbContext(IOptionsSnapshot<EntityFrameworkOptions> options)
         {
             Options = options.Value;
         }

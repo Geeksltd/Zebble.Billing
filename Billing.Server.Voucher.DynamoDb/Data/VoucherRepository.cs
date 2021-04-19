@@ -1,8 +1,8 @@
 ﻿namespace Zebble.Billing
 {
     using System.Threading.Tasks;
-    using Microsoft.EntityFrameworkCore;
-    using Olive;
+    using Amazon.DynamoDBv2.DataModel;
+    using Amazon.DynamoDBv2.DocumentModel;
 
     class VoucherRepository : IVoucherRepository
     {
@@ -12,13 +12,13 @@
 
         public Task<Voucher> GetByCode(string code)
         {
-            return Context.Vouchers.SingleOrDefaultAsync(x => x.Code == code);
+            var condition = new ScanCondition(nameof(Voucher.Code), ScanOperator.Equal, code);
+            return Context.FirstOrDefault<Voucher>(condition);
         }
 
         public async Task Update(Voucher voucher)
         {
-            Context.Vouchers.Update(voucher);
-            await Context.SaveChangesAsync();
+            await Context.UpdateAsync(x => x.Id, voucher);
         }
     }
 }

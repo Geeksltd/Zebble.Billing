@@ -6,11 +6,11 @@
 
     public static partial class ZebbleBillingServicesBuilderExtensions
     {
-        public static ZebbleBillingServicesBuilder AddEntityFramework(this ZebbleBillingServicesBuilder builder, string configKey = "ZebbleBilling:DbContext")
+        public static ZebbleBillingServicesBuilder AddEntityFramework(this ZebbleBillingServicesBuilder builder, string configKey = "ZebbleBilling:EntityFramework")
         {
-            builder.Services.AddOptions<DbContextOptions>()
+            builder.Services.AddOptions<EntityFrameworkOptions>()
                             .Configure<IConfiguration>((opts, config) => config.GetSection(configKey)?.Bind(opts))
-                            .Validate(opts => opts.ConnectionString.HasValue(), $"{nameof(DbContextOptions.ConnectionString)} is empty.");
+                            .Validate(opts => opts.ConnectionString.HasValue(), $"{nameof(EntityFrameworkOptions.ConnectionString)} is empty.");
 
             builder.Services.AddDbContext<SubscriptionDbContext>();
 

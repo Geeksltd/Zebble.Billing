@@ -5,6 +5,6 @@
     public interface IVoucherRepository
     {
         Task<Voucher> GetByCode(string code);
-        Task<Voucher> Update(Voucher voucher);
+        Task Update(Voucher voucher);
     }
 }

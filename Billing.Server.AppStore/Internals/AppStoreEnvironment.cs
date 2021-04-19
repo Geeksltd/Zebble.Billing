@@ -1,13 +1,15 @@
 ﻿namespace Zebble.Billing
 {
+    using System.Runtime.Serialization;
     using System.Text.Json.Serialization;
 
+    [JsonConverter(typeof(JsonStringEnumMemberConverter))]
     public enum AppStoreEnvironment
     {
-        [JsonPropertyName("Sandbox")]
+        [EnumMember(Value = "Sandbox")]
         Sandbox,
 
-        [JsonPropertyName("Production")]
+        [EnumMember(Value = "Production")]
         Production
     }
 }

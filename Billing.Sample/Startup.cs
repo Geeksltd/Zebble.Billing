@@ -4,6 +4,7 @@ namespace Zebble.Billing.Sample
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
 
     public class Startup : Olive.Mvc.Startup
@@ -18,11 +19,22 @@ namespace Zebble.Billing.Sample
 
             services.AddZebbleBilling(builder =>
             {
-                builder.AddEntityFramework();
+                if (Environment.IsDevelopment())
+                    builder.AddEntityFramework();
+                else
+                    builder.AddDynamoDb();
+
                 builder.AddAppStore();
                 builder.AddGooglePlay();
                 builder.AddCafeBazaar();
-                builder.AddVoucher(builder => builder.AddEntityFramework());
+
+                builder.AddVoucher(builder =>
+                {
+                    if (Environment.IsDevelopment())
+                        builder.AddEntityFramework();
+                    else
+                        builder.AddDynamoDb();
+                });
             });
         }
 
@@ -40,11 +52,22 @@ namespace Zebble.Billing.Sample
 
             app.UseZebbleBilling(builder =>
             {
-                builder.UseEntityFramework();
+                if (Environment.IsDevelopment())
+                    builder.UseEntityFramework();
+                else
+                    builder.UseDynamoDb();
+
                 builder.UseAppStore();
                 builder.UseGooglePlay();
                 builder.UseCafeBazaar();
-                builder.UseVoucher(builder => builder.UseEntityFramework());
+
+                builder.UseVoucher(builder =>
+                {
+                    if (Environment.IsDevelopment())
+                        builder.UseEntityFramework();
+                    else
+                        builder.UseDynamoDb();
+                });
             });
         }
     }

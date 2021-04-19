@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>Zebble.Billing.Server.Voucher.EntityFramework</AssemblyName>
+    <AssemblyName>Zebble.Billing.Server.Voucher.DynamoDb</AssemblyName>
     <RootNamespace>Zebble</RootNamespace>
-    <PackageId>Zebble.Billing.Server.Voucher.EntityFramework</PackageId>
+    <PackageId>Zebble.Billing.Server.Voucher.DynamoDb</PackageId>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
-    <Version>1.0.12.0</Version>
+    <Version>1.0.0.0</Version>
     <PackOnBuild>true</PackOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
     <DefineConstants>$(DefineConstants)</DefineConstants>
@@ -13,12 +13,12 @@
     <LangVersion>latest</LangVersion>
     <DebugType>portable</DebugType>
     <PackageLicenseUrl>https://raw.githubusercontent.com/Geeksltd/Zebble.Billing/master/Zebble-LicenseAgreement.txt</PackageLicenseUrl>
-    <PackageProjectUrl>https://nuget.org/packages/Zebble.Billing.Server.Voucher.EntityFramework/</PackageProjectUrl>
+    <PackageProjectUrl>https://nuget.org/packages/Zebble.Billing.Server.Voucher.DynamoDb/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Geeksltd/Zebble.Billing/</RepositoryUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/Geeksltd/Zebble.Billing/master/icon.png</PackageIconUrl>
     <PackageTags>xamarin, windows, ios, android, zebble</PackageTags>
-    <Title>Zebble.Billing.Server.Voucher.EntityFramework</Title>
-    <Description>Zebble IAP voucher's EntityFramework implementation.</Description>
+    <Title>Zebble.Billing.Server.Voucher.DynamoDb</Title>
+    <Description>Zebble IAP voucher's DynamoDb implementation.</Description>
     <PackageReleaseNotes>Minor fixes</PackageReleaseNotes>
     <Owners>Geeks Ltd</Owners>
     <Authors>Geeks Ltd</Authors>
@@ -39,7 +39,7 @@
     <None Remove="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Billing.Server.EntityFramework\Billing.Server.EntityFramework.csproj" />
+    <ProjectReference Include="..\Billing.Server.DynamoDb\Billing.Server.DynamoDb.csproj" />
     <ProjectReference Include="..\Billing.Server.Voucher\Billing.Server.Voucher.csproj" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

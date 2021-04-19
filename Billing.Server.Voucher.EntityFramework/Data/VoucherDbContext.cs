@@ -5,11 +5,11 @@
 
     class VoucherDbContext : DbContext
     {
-        readonly DbContextOptions Options;
+        readonly EntityFrameworkOptions Options;
 
         public DbSet<Voucher> Vouchers { get; set; }
 
-        public VoucherDbContext(IOptionsSnapshot<DbContextOptions> options)
+        public VoucherDbContext(IOptionsSnapshot<EntityFrameworkOptions> options)
         {
             Options = options.Value;
         }

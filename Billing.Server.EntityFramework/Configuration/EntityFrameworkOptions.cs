@@ -1,6 +1,6 @@
 ﻿namespace Zebble.Billing
 {
-    public class DbContextOptions
+    public class EntityFrameworkOptions
     {
         public string ConnectionString { get; set; }
     }
