@@ -103,13 +103,17 @@ In the server-side ASP.NET Core app, install the following packages:
 [![Zebble.Billing.Server.CafeBazaar](https://img.shields.io/nuget/v/Zebble.Billing.Server.CafeBazaar.svg?label=Zebble.Billing.Server.CafeBazaar)](https://www.nuget.org/packages/Zebble.Billing.Server.CafeBazaar/)
 [![Zebble.Billing.Server.Voucher](https://img.shields.io/nuget/v/Zebble.Billing.Server.Voucher.svg?label=Zebble.Billing.Server.Voucher)](https://www.nuget.org/packages/Zebble.Billing.Server.Voucher/)
 
-All the above providers need to collaborate with a data persistence implementation. At the moment, we're only supporting EntityFramework (Sql Server), but we'll add the support to other options soon. Also any contribution to add other persisting options is welcome. 
+All the above providers need to collaborate with a data persistence implementation. At the moment, we're supporting EntityFramework (Sql Server) and Amazon's DynamoDb, and we'll try to add built-in support for other options soon. Also any contribution to add other persisting options are welcome. 
 
 - **[Zebble.Billing.Server.EntityFramework](https://www.nuget.org/packages/Zebble.Billing.Server.EntityFramework/)** to use RDBMS for subscription management
 - [Zebble.Billing.Server.Voucher.EntityFramework](https://www.nuget.org/packages/Zebble.Billing.Server.Voucher.EntityFramework/) to use RDBMS for voucher management
+- **[Zebble.Billing.Server.DynamoDb](https://www.nuget.org/packages/Zebble.Billing.Server.DynamoDb/)** to use Amazon's DynamoDb for subscription management
+- [Zebble.Billing.Server.Voucher.DynamoDb](https://www.nuget.org/packages/Zebble.Billing.Server.Voucher.DynamoDb/) to use Amazon's DynamoDb for voucher management
 
 [![Zebble.Billing.Server.EntityFramework](https://img.shields.io/nuget/v/Zebble.Billing.Server.EntityFramework.svg?label=Zebble.Billing.Server.EntityFramework)](https://www.nuget.org/packages/Zebble.Billing.Server.EntityFramework/)
 [![Zebble.Billing.Server.Voucher.EntityFramework](https://img.shields.io/nuget/v/Zebble.Billing.Server.Voucher.EntityFramework.svg?label=Zebble.Billing.Server.Voucher.EntityFramework)](https://www.nuget.org/packages/Zebble.Billing.Server.Voucher.EntityFramework/)
+[![Zebble.Billing.Server.DynamoDb](https://img.shields.io/nuget/v/Zebble.Billing.Server.DynamoDb.svg?label=Zebble.Billing.Server.DynamoDb)](https://www.nuget.org/packages/Zebble.Billing.Server.DynamoDb/)
+[![Zebble.Billing.Server.Voucher.DynamoDb](https://img.shields.io/nuget/v/Zebble.Billing.Server.Voucher.DynamoDb.svg?label=Zebble.Billing.Server.Voucher.DynamoDb)](https://www.nuget.org/packages/Zebble.Billing.Server.Voucher.DynamoDb/)
 
 Then add the required configuration and files from [this sample app](https://github.com/Geeksltd/Zebble.Billing/tree/master/Billing.Sample).
 
