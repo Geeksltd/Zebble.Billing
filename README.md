@@ -36,10 +36,14 @@ public partial class StartUp : Zebble.StartUp
 }
 ```
 
-The `BillingContext.Initialize` call (without providing any argument), leads to the default options and you need to add the following line to your `Config.xml` file.
+The `BillingContext.Initialize` call (without providing any argument), leads to the default options and you need to add on of the following lines to your `Config.xml` file.
 
 ```xml
+<!-- This line has higher precedence -->
 <Billing.Base.Url value="http://<YOUR_SERVER_URL>" />
+
+<!-- This will be used as the fallback url -->
+<Api.Base.Url value="http://<YOUR_SERVER_URL>" />
 ```
 
 Then create a JSON file named `Catalog.json` in the Resources directory and set the following properties:
