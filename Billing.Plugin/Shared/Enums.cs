@@ -14,4 +14,6 @@
         WillBeActivated,
         Succeeded
     }
+
+    public enum ProductType { Subscription, InAppPurchase }
 }

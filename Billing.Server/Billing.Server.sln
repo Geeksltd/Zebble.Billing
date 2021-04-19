@@ -21,6 +21,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Billing.Server.Voucher", ".
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Billing.Server.Voucher.EntityFramework", "..\Billing.Server.Voucher.EntityFramework\Billing.Server.Voucher.EntityFramework.csproj", "{2864C639-1877-47EA-8B51-DEE0E67DC647}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Billing.Server.DynamoDb", "..\Billing.Server.DynamoDb\Billing.Server.DynamoDb.csproj", "{3C8BB882-246C-416C-9933-3CD12EFB80AC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Billing.Server.Voucher.DynamoDb", "..\Billing.Server.Voucher.DynamoDb\Billing.Server.Voucher.DynamoDb.csproj", "{D652EA28-635E-4E50-AD08-FC61BDF37773}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		..\Billing.Shared\Billing.Shared.projitems*{83f3a04d-1d45-4c29-b877-ed89c4f05ae5}*SharedItemsImports = 5
@@ -63,6 +67,14 @@ Global
 		{2864C639-1877-47EA-8B51-DEE0E67DC647}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2864C639-1877-47EA-8B51-DEE0E67DC647}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2864C639-1877-47EA-8B51-DEE0E67DC647}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C8BB882-246C-416C-9933-3CD12EFB80AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C8BB882-246C-416C-9933-3CD12EFB80AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C8BB882-246C-416C-9933-3CD12EFB80AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C8BB882-246C-416C-9933-3CD12EFB80AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D652EA28-635E-4E50-AD08-FC61BDF37773}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D652EA28-635E-4E50-AD08-FC61BDF37773}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D652EA28-635E-4E50-AD08-FC61BDF37773}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D652EA28-635E-4E50-AD08-FC61BDF37773}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
