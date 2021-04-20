@@ -36,10 +36,14 @@ public partial class StartUp : Zebble.StartUp
 }
 ```
 
-The `BillingContext.Initialize` call (without providing any argument), leads to the default options and you need to add the following line to your `Config.xml` file.
+The `BillingContext.Initialize` call (without providing any argument), leads to the default options and you need to add on of the following lines to your `Config.xml` file.
 
 ```xml
+<!-- This line has higher precedence -->
 <Billing.Base.Url value="http://<YOUR_SERVER_URL>" />
+
+<!-- This will be used as the fallback url -->
+<Api.Base.Url value="http://<YOUR_SERVER_URL>" />
 ```
 
 Then create a JSON file named `Catalog.json` in the Resources directory and set the following properties:
@@ -55,12 +59,7 @@ Thereupon, add all your products into it. Products are either one-off or they ar
     {
       "Id": "my.app.subscription.yearly",
       "Platform": "",
-      "Type": "Subscription",
-      "Title": "My Yearly Test Subscription",
-      "Months": 12,
-      "Promo": "7 days free trial",
-      "FreeDays": 7,
-      "Price": 0
+      "Type": "Subscription"
     }
   ]
 }
@@ -104,13 +103,17 @@ In the server-side ASP.NET Core app, install the following packages:
 [![Zebble.Billing.Server.CafeBazaar](https://img.shields.io/nuget/v/Zebble.Billing.Server.CafeBazaar.svg?label=Zebble.Billing.Server.CafeBazaar)](https://www.nuget.org/packages/Zebble.Billing.Server.CafeBazaar/)
 [![Zebble.Billing.Server.Voucher](https://img.shields.io/nuget/v/Zebble.Billing.Server.Voucher.svg?label=Zebble.Billing.Server.Voucher)](https://www.nuget.org/packages/Zebble.Billing.Server.Voucher/)
 
-All the above providers need to collaborate with a data persistence implementation. At the moment, we're only supporting EntityFramework (Sql Server), but we'll add the support to other options soon. Also any contribution to add other persisting options is welcome. 
+All the above providers need to collaborate with a data persistence implementation. At the moment, we're supporting EntityFramework (Sql Server) and Amazon's DynamoDb, and we'll try to add built-in support for other options soon. Also any contribution to add other persisting options are welcome. 
 
 - **[Zebble.Billing.Server.EntityFramework](https://www.nuget.org/packages/Zebble.Billing.Server.EntityFramework/)** to use RDBMS for subscription management
 - [Zebble.Billing.Server.Voucher.EntityFramework](https://www.nuget.org/packages/Zebble.Billing.Server.Voucher.EntityFramework/) to use RDBMS for voucher management
+- **[Zebble.Billing.Server.DynamoDb](https://www.nuget.org/packages/Zebble.Billing.Server.DynamoDb/)** to use Amazon's DynamoDb for subscription management
+- [Zebble.Billing.Server.Voucher.DynamoDb](https://www.nuget.org/packages/Zebble.Billing.Server.Voucher.DynamoDb/) to use Amazon's DynamoDb for voucher management
 
 [![Zebble.Billing.Server.EntityFramework](https://img.shields.io/nuget/v/Zebble.Billing.Server.EntityFramework.svg?label=Zebble.Billing.Server.EntityFramework)](https://www.nuget.org/packages/Zebble.Billing.Server.EntityFramework/)
 [![Zebble.Billing.Server.Voucher.EntityFramework](https://img.shields.io/nuget/v/Zebble.Billing.Server.Voucher.EntityFramework.svg?label=Zebble.Billing.Server.Voucher.EntityFramework)](https://www.nuget.org/packages/Zebble.Billing.Server.Voucher.EntityFramework/)
+[![Zebble.Billing.Server.DynamoDb](https://img.shields.io/nuget/v/Zebble.Billing.Server.DynamoDb.svg?label=Zebble.Billing.Server.DynamoDb)](https://www.nuget.org/packages/Zebble.Billing.Server.DynamoDb/)
+[![Zebble.Billing.Server.Voucher.DynamoDb](https://img.shields.io/nuget/v/Zebble.Billing.Server.Voucher.DynamoDb.svg?label=Zebble.Billing.Server.Voucher.DynamoDb)](https://www.nuget.org/packages/Zebble.Billing.Server.Voucher.DynamoDb/)
 
 Then add the required configuration and files from [this sample app](https://github.com/Geeksltd/Zebble.Billing/tree/master/Billing.Sample).
 
@@ -125,17 +128,16 @@ This is the sample settings file we included in the project to clearly show you 
       "Products": [
         {
           "Id": "my.app.subscription.yearly",
-          "Platform": "",
-          "Type": "Subscription",
-          "Title": "My Yearly Test Subscription",
-          "Months": 12,
-          "Promo": "7 days free trial",
-          "FreeDays": 7
+          "Platform": ""
         }
       ]
     },
-    "DbContext": {
+    "EntityFramework": {
       "ConnectionString": "Database=Billing.Sample; Server=.; Integrated Security=SSPI; MultipleActiveResultSets=True;"
+    },
+    "DynamoDb": {
+      "AccessKey": "<ACCESS_KEY>",
+      "SecretKey": "<SECRET_KEY>"
     },
     "AppStore": {
       "PackageName": "<ios.package.name>",
@@ -170,7 +172,9 @@ This is the sample settings file we included in the project to clearly show you 
 
 `Catalog`: This is the sample as the `Catalog.json` file we've talked about it earlier.
 
-`DbContext`: The connection string used in both `Zebble.Billing.Server.EntityFramework` and `Zebble.Billing.Server.Voucher.EntityFramework` packages.
+`EntityFramework`: The connection string used in both `Zebble.Billing.Server.EntityFramework` and `Zebble.Billing.Server.Voucher.EntityFramework` packages.
+
+`DynamoDb`: The AWS credentials used in both `Zebble.Billing.Server.DynamoDb` and `Zebble.Billing.Server.Voucher.DynamoDb` packages.
 
 `AppStore:PackageName`: Your iOS app package name.
 
