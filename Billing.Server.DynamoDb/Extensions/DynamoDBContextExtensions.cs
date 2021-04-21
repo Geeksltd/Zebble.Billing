@@ -6,7 +6,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
-    using System.Reflection;
     using System.Threading.Tasks;
     using Expression = System.Linq.Expressions.Expression;
 
@@ -29,17 +28,9 @@
 
             var dbRecord = await db.LoadAsync<T>(hasKey);
 
-            CopyProperties(dbRecord, updatedRecord, hasKeyName);
+            ReflectionExtensions.CopyPropertiesFrom(dbRecord, updatedRecord, hasKeyName);
 
             await db.SaveAsync(dbRecord);
-        }
-
-        static void CopyProperties<T>(T dbSubscription, T subscription, params string[] excludedProps)
-        {
-            typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                     .Where(x => x.CanRead && x.CanWrite)
-                     .Where(x => !excludedProps.Contains(x.Name))
-                     .Do(p => p.SetValue(dbSubscription, p.GetValue(subscription)));
         }
     }
 }

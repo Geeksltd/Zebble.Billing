@@ -4,8 +4,8 @@
 
     public class Transaction
     {
-        public string Id { get; set; }
-        public string SubscriptionId { get; set; }
+        public virtual string Id { get; set; }
+        public virtual string SubscriptionId { get; set; }
 
         public string Platform { get; set; }
 
