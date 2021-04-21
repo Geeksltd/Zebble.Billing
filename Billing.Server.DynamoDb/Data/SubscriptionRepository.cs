@@ -14,37 +14,35 @@
 
         public async Task<Subscription> GetByTransactionId(string transactionId)
         {
-            var condition = new ScanCondition(nameof(Subscription.TransactionId), ScanOperator.Equal, transactionId);
-            return await Context.FirstOrDefault<SubscriptionProxy>(condition);
+            return await Context.SubscriptionTransactions.FirstOrDefault(transactionId);
         }
 
         public async Task<Subscription> GetByPurchaseToken(string purchaseToken)
         {
-            var condition = new ScanCondition(nameof(Subscription.PurchaseToken), ScanOperator.Equal, purchaseToken);
-            return await Context.FirstOrDefault<SubscriptionProxy>(condition);
+            return await Context.SubscriptionPurchaseTokens.FirstOrDefault(purchaseToken);
         }
 
         public async Task<Subscription> GetMostUpdatedByUserId(string userId)
         {
-            var condition = new ScanCondition(nameof(Subscription.UserId), ScanOperator.Equal, userId);
-            return (await Context.Where<SubscriptionProxy>(condition)).OrderBy(x => x.ExpirationDate).LastOrDefault();
+            // UserId-index should be ordered by ExpirationDate
+            return (await Context.SubscriptionUsers.All(userId)).OrderBy(x => x.ExpirationDate).LastOrDefault();
         }
 
         public async Task<Subscription> AddSubscription(Subscription subscription)
         {
-            await Context.SaveAsync(new SubscriptionProxy(subscription));
+            await Context.Subscriptions.AddAsync(new SubscriptionProxy(subscription));
 
             return subscription;
         }
 
         public Task UpdateSubscription(Subscription subscription)
         {
-            return Context.UpdateAsync(x => x.Id, new SubscriptionProxy(subscription));
+            return Context.Subscriptions.UpdateAsync(x => x.Id, new SubscriptionProxy(subscription));
         }
 
         public async Task<Transaction> AddTransaction(Transaction transaction)
         {
-            await Context.SaveAsync(new TransactionProxy(transaction));
+            await Context.Transactions.AddAsync(new TransactionProxy(transaction));
 
             return transaction;
         }
@@ -52,7 +50,7 @@
         public async Task<string> GetOriginUserOfTransactionIds(string[] transactionIds)
         {
             var conditions = transactionIds.Select(x => new ScanCondition(nameof(Subscription.TransactionId), ScanOperator.Equal, x)).ToArray();
-            var subscriptions = (await Context.Where<SubscriptionProxy>(conditions)).OrderBy(x => x.ExpirationDate);
+            var subscriptions = (await Context.Subscriptions.All(conditions)).OrderBy(x => x.ExpirationDate);
 
             return subscriptions.Where(x => x.IsStarted())
                                 .Where(x => !x.IsCanceled())

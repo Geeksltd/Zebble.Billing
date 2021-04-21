@@ -5,9 +5,14 @@
     using System.Linq;
     using System.Reflection;
 
-    static class ReflectionExtensions
+    public static class ReflectionExtensions
     {
-        public static void CopyPropertiesFrom<T>(this T @this, T that, params string[] excludedProps)
+        public static void CopyPropertiesFrom<TProxy, T>(this TProxy @this, T that) where TProxy : IBillingDynamoDbProxy, T
+        {
+            @this.CopyPropertiesFrom<T>(that);
+        }
+
+        internal static void CopyPropertiesFrom<T>(this T @this, T that, params string[] excludedProps)
         {
             typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
                            .Where(x => x.CanRead && x.CanWrite)

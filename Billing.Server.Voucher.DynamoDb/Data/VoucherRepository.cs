@@ -1,8 +1,6 @@
 ﻿namespace Zebble.Billing
 {
     using System.Threading.Tasks;
-    using Amazon.DynamoDBv2.DataModel;
-    using Amazon.DynamoDBv2.DocumentModel;
 
     class VoucherRepository : IVoucherRepository
     {
@@ -10,15 +8,14 @@
 
         public VoucherRepository(VoucherDbContext context) => Context = context;
 
-        public Task<Voucher> GetByCode(string code)
+        public async Task<Voucher> GetByCode(string code)
         {
-            var condition = new ScanCondition(nameof(Voucher.Code), ScanOperator.Equal, code);
-            return Context.FirstOrDefault<Voucher>(condition);
+            return await Context.VoucherCodes.FirstOrDefault(code);
         }
 
         public async Task Update(Voucher voucher)
         {
-            await Context.UpdateAsync(x => x.Id, voucher);
+            await Context.Vouchers.UpdateAsync(x => x.Id, new VoucherProxy(voucher));
         }
     }
 }
