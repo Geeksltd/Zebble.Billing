@@ -135,10 +135,6 @@ This is the sample settings file we included in the project to clearly show you 
     "EntityFramework": {
       "ConnectionString": "Database=Billing.Sample; Server=.; Integrated Security=SSPI; MultipleActiveResultSets=True;"
     },
-    "DynamoDb": {
-      "AccessKey": "<ACCESS_KEY>",
-      "SecretKey": "<SECRET_KEY>"
-    },
     "AppStore": {
       "PackageName": "<ios.package.name>",
       "SharedSecret": "<APP_STORE_SHARED_SECRET>",
@@ -174,8 +170,6 @@ This is the sample settings file we included in the project to clearly show you 
 
 `EntityFramework`: The connection string used in both `Zebble.Billing.Server.EntityFramework` and `Zebble.Billing.Server.Voucher.EntityFramework` packages.
 
-`DynamoDb`: The AWS credentials used in both `Zebble.Billing.Server.DynamoDb` and `Zebble.Billing.Server.Voucher.DynamoDb` packages.
-
 `AppStore:PackageName`: Your iOS app package name.
 
 `AppStore:SharedSecret`: Your App Store connect shared secret. Follow [this article](https://docs.revenuecat.com/docs/itunesconnect-app-specific-shared-secret) to learn how you can create a shared secret.
@@ -191,6 +185,10 @@ This is the sample settings file we included in the project to clearly show you 
 `GooglePlay:ProjectId`, `GooglePlay:PrivateKeyId`, `GooglePlay:PrivateKey`, `GooglePlay:ClientEmail`, `GooglePlay:ClientId`: First of all, follow [this article](https://cloud.google.com/iam/docs/creating-managing-service-accounts#iam-service-accounts-create-console) to configure a service account with appropriate permissions. After you've created your service account, you need to add a new JSON key by following [this article](https://cloud.google.com/iam/docs/creating-managing-service-account-keys). Finally, open the provided JSON file with your preferred text-editor of choice, find and copy-paste all required values into their corresponding placeholders. 
 
 `GooglePlay:SubscriptionId`: Provide the name of the Pub/Sub subscription you've [created](https://developers.google.com/android/management/notifications#3_create_a_subscription) earlier.
+
+##### Local DynamoDb Setup
+
+The DynamoDb providers are utilizing `AWSSDK.Extensions.NETCore.Setup` package to set the required AWS DynamoDb stuff up and configured. This means you have to follow Amazon's best practices to [configure credentials](https://docs.aws.amazon.com/sdk-for-net/v2/developer-guide/net-dg-config-creds.html) to be able to use the live version of the DynamoDb. But there is an easy-to-setup solution for local testing. Please follow this [blog post](https://www.stevejgordon.co.uk/running-aws-dynamodb-locally-for-net-core-developers) to find how you can bootstrap a local instance of DynamoDb on your development machine.
 
 ---
 
