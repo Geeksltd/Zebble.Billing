@@ -44,13 +44,11 @@
 
         public BillingContextOptions()
         {
-            BaseUri = Config.Get("Billing.Base.Url", Config.Get("Api.Base.Url")).To<Uri>();
-        }
+            var baseUrl = Config.Get("Billing.Base.Url", Config.Get("Api.Base.Url"));
 
-        internal void Validate()
-        {
-            if (BaseUri == null)
-                throw new ArgumentNullException(nameof(BaseUri), "Add Billing.Base.Url or Api.Base.Url to your Config.xml");
+            if (baseUrl.HasValue()) BaseUri = new Uri(baseUrl);
+
+            if (BaseUri == null) throw new ArgumentNullException(nameof(BaseUri), "Add Billing.Base.Url or Api.Base.Url to your Config.xml");
 
             if (!BaseUri.IsAbsoluteUri) throw new ArgumentException($"{nameof(BaseUri)} should be absolute.");
 

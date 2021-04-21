@@ -29,8 +29,6 @@
 
             Options = options;
 
-            Options.Validate();
-
             Current = new BillingContext
             {
                 UserAccessor = userAccessor,
