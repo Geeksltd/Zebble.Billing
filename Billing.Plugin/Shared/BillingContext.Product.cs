@@ -9,12 +9,12 @@
         /// <summary>
         /// Gets the list of the predefined products.
         /// </summary>
-        public Task<Product[]> GetProducts() => ProductProvider.GetProducts(PaymentAuthority);
+        public Task<Product[]> GetProducts() => ProductProvider.GetProducts();
 
         /// <summary>
         /// Gets a product by its Id.
         /// </summary>
-        public Task<Product> GetProduct(string productId) => ProductProvider.GetById(PaymentAuthority, productId);
+        public Task<Product> GetProduct(string productId) => ProductProvider.GetById(productId);
 
         /// <summary>
         /// Gets a product's price by its Id.

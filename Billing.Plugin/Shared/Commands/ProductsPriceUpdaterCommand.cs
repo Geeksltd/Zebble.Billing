@@ -13,7 +13,7 @@
             try
             {
                 var productProvider = BillingContext.Current.ProductProvider;
-                var products = await productProvider.GetProducts(BillingContext.PaymentAuthority);
+                var products = await productProvider.GetProducts();
                 var groups = products.GroupBy(x => x.ItemType)
                     .Select(x => new { ItemType = x.Key, ProductIds = x.Select(p => p.Id).ToArray() });
 
@@ -24,7 +24,7 @@
                         throw new Exception($"No product info was retrieved for {group.ProductIds.ToString(", ")} ({group.ItemType})");
 
                     foreach (var item in items)
-                        await productProvider.UpdatePrice(item.ProductId, item.MicrosPrice / 1000000m);
+                        await productProvider.UpdatePrice(item.ProductId, item.MicrosPrice);
                 }
 
                 return true;
