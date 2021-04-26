@@ -1,25 +1,47 @@
 ﻿namespace Zebble.Billing
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using Olive;
 
-    class VoucherCodeApplier
+    class VoucherManager : IVoucherManager
     {
         readonly IVoucherRepository VoucherRepository;
         readonly ISubscriptionRepository SubscriptionRepository;
         readonly VoucherConnector StoreConnector;
 
-        public VoucherCodeApplier(IVoucherRepository voucherRepository, ISubscriptionRepository subscriptionRepository, VoucherConnector storeConnector)
+        public VoucherManager(IVoucherRepository voucherRepository, ISubscriptionRepository subscriptionRepository, VoucherConnector storeConnector)
         {
             VoucherRepository = voucherRepository;
             SubscriptionRepository = subscriptionRepository;
             StoreConnector = storeConnector;
         }
 
+        public async Task<string> Generate(TimeSpan duration, string productId, string comments)
+        {
+            const string UNAMBIGUOUS_LETTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+            var code = Enumerable.Range(0, 12).Select(x => UNAMBIGUOUS_LETTERS.PickRandom()).ToString("");
+
+            if (await VoucherRepository.GetByCode(code) is not null) return await Generate(duration, productId, comments);
+
+            await VoucherRepository.Add(new Voucher
+            {
+                Id = Guid.NewGuid().ToString(),
+                Code = code,
+                Duration = duration,
+                ProductId = productId,
+                Comments = comments
+            });
+
+            return code;
+        }
+
         public async Task Apply(string userId, string code)
         {
-            var voucher = await FindVoucher(userId, code);
+            var voucher = await FindVoucher(code);
+
+            ValidateVoucher(voucher, userId);
 
             voucher.UserId = userId;
             voucher.ActivationDate ??= LocalTime.UtcNow;
@@ -29,20 +51,18 @@
             await CreateSubscription(voucher);
         }
 
-        async Task<Voucher> FindVoucher(string userId, string code)
+        async Task<Voucher> FindVoucher(string code)
         {
-            var voucher = await VoucherRepository.GetByCode(code);
-
-            ValidateVoucher(voucher, userId);
-
-            return voucher;
+            return await VoucherRepository.GetByCode(code) ?? throw new Exception($"No voucher found with code '{code}'.");
         }
 
         void ValidateVoucher(Voucher voucher, string userId)
         {
-            if (voucher is null) throw new Exception("No voucher found.");
+            if (voucher.UserId == userId) return;
 
-            if (voucher.ActivationDate.HasValue && voucher.UserId != userId) throw new Exception("This voucher is already applied.");
+            if (!voucher.ActivationDate.HasValue) return;
+
+            throw new Exception($"Voucher with code '{voucher.Code}' is already applied for another user.");
         }
 
         async Task CreateSubscription(Voucher voucher)

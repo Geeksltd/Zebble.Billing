@@ -13,6 +13,13 @@
             return await Context.VoucherCodes.FirstOrDefault(code);
         }
 
+        public async Task<Voucher> Add(Voucher voucher)
+        {
+            await Context.Vouchers.AddAsync(new VoucherProxy(voucher));
+            
+            return voucher;
+        }
+
         public async Task Update(Voucher voucher)
         {
             await Context.Vouchers.UpdateAsync(x => x.Id, new VoucherProxy(voucher));

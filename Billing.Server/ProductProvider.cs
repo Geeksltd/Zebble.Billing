@@ -14,14 +14,14 @@
             Options = options.Value;
         }
 
-        public Task<Product[]> GetProducts(string platform)
+        public Task<Product[]> GetProducts()
         {
-            return Task.FromResult(Options.Products.Where(x => x.Platform.IsEmpty() || x.Platform.Equals(platform, false)).ToArray());
+            return Task.FromResult(Options.Products.ToArray());
         }
 
-        public Task<Product> GetById(string platform, string productId)
+        public Task<Product> GetById(string productId)
         {
-            return GetProducts(platform).FirstOrDefault(x => x.Id == productId);
+            return GetProducts().FirstOrDefault(x => x.Id == productId);
         }
     }
 }

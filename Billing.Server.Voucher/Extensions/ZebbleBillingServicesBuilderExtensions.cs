@@ -14,7 +14,7 @@
                             .Validate(opts => opts.CodeApplyPath.HasValue(), $"{nameof(VoucherOptions.CodeApplyPath)} is empty.");
 
             builder.Services.AddStoreConnector<VoucherConnector>("Voucher");
-            builder.Services.AddScoped<VoucherCodeApplier>();
+            builder.Services.AddScoped<IVoucherManager, VoucherManager>();
 
             voucherBuilder?.Invoke(new ZebbleBillingVoucherServicesBuilder(builder.Services));
 

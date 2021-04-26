@@ -8,11 +8,11 @@
     {
         public VoucherCodeApplyingMiddleware(RequestDelegate _) { }
 
-        public async Task InvokeAsync(HttpContext context, VoucherCodeApplier codeApplier)
+        public async Task InvokeAsync(HttpContext context, IVoucherManager voucherManager)
         {
             var (userId, code) = ParseRouteValues(context.Request.Path);
 
-            await codeApplier.Apply(userId, code);
+            await voucherManager.Apply(userId, code);
             await context.Response.WriteAsync("Voucher is applied.");
         }
 
