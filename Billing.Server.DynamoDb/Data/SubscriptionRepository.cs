@@ -22,6 +22,11 @@
             return await Context.SubscriptionPurchaseTokens.FirstOrDefault(purchaseToken);
         }
 
+        public async Task<Subscription[]> GetAll(string userId)
+        {
+            return await Context.SubscriptionUsers.All(userId);
+        }
+
         public async Task<Subscription> GetMostUpdatedByUserId(string userId)
         {
             // UserId-index should be ordered by ExpirationDate

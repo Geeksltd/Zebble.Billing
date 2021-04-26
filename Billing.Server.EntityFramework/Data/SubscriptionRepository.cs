@@ -21,6 +21,12 @@
             return Context.Subscriptions.SingleOrDefaultAsync(x => x.PurchaseToken == purchaseToken);
         }
 
+        public Task<Subscription[]> GetAll(string userId)
+        {
+            return Context.Subscriptions.Where(x => x.UserId == userId)
+                                        .ToArrayAsync();
+        }
+
         public Task<Subscription> GetMostUpdatedByUserId(string userId)
         {
             return Context.Subscriptions.Where(x => x.UserId == userId)
