@@ -13,7 +13,7 @@
 
         public static DateTime ToDateTime(this long @this)
         {
-            return DateTime.UnixEpoch.AddMilliseconds(@this);
+            return DateTimeOffset.FromUnixTimeMilliseconds(@this).DateTime;
         }
     }
 }
