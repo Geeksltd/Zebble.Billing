@@ -37,11 +37,15 @@
             return code;
         }
 
-        public async Task Apply(string userId, string code)
+        public async Task<ApplyVoucherResult> Apply(string userId, string code)
         {
-            var voucher = await FindVoucher(code);
+            var voucher = await VoucherRepository.GetByCode(code);
 
-            ValidateVoucher(voucher, userId);
+            if (voucher is null) return ApplyVoucherResult.From(VoucherApplyStatus.InvalidCode);
+
+            if (voucher.UserId.Or(userId) != userId) return ApplyVoucherResult.From(VoucherApplyStatus.InvalidCode);
+
+            if (voucher.IsExpired()) return ApplyVoucherResult.From(VoucherApplyStatus.Expired);
 
             voucher.UserId = userId;
             voucher.ActivationDate ??= LocalTime.UtcNow;
@@ -49,20 +53,8 @@
             await VoucherRepository.Update(voucher);
 
             await CreateSubscription(voucher);
-        }
 
-        async Task<Voucher> FindVoucher(string code)
-        {
-            return await VoucherRepository.GetByCode(code) ?? throw new Exception($"No voucher found with code '{code}'.");
-        }
-
-        void ValidateVoucher(Voucher voucher, string userId)
-        {
-            if (voucher.UserId == userId) return;
-
-            if (!voucher.ActivationDate.HasValue) return;
-
-            throw new Exception($"Voucher with code '{voucher.Code}' is already applied for another user.");
+            return ApplyVoucherResult.Succeeded();
         }
 
         async Task CreateSubscription(Voucher voucher)

@@ -11,7 +11,9 @@
         {
             var model = await context.Request.Body.ConvertTo<VocuherApplyModel>();
 
-            await voucherManager.Apply(model.UserId, model.Code);
+            var result = await voucherManager.Apply(model.UserId, model.Code);
+
+            await context.Response.WriteAsync(result.ToJson());
         }
     }
 

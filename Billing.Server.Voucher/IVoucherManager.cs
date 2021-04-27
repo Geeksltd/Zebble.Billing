@@ -6,6 +6,6 @@
     public interface IVoucherManager
     {
         Task<string> Generate(TimeSpan duration, string productId, string comments);
-        Task Apply(string userId, string code);
+        Task<ApplyVoucherResult> Apply(string userId, string code);
     }
 }

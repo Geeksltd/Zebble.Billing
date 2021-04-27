@@ -11,9 +11,9 @@
         {
             var model = await context.Request.Body.ConvertTo<AppVerifyPurchaseModel>();
 
-            var status = await manager.VerifyPurchase(model.UserId, model.Platform, model.ProductId, model.TransactionId, model.ReceiptData);
+            var result = await manager.VerifyPurchase(model.UserId, model.Platform, model.ProductId, model.TransactionId, model.ReceiptData);
 
-            await context.Response.WriteAsync(status.ToJson());
+            await context.Response.WriteAsync(result.ToJson());
         }
     }
 
