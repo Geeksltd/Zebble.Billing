@@ -81,6 +81,8 @@ To override defaults, you can create an instance of `BillingContextOptions` and 
 
 `PurchaseAttemptPath`: The relative path to purchase attempt endpoint. *The default value is "app/purchase-attempt"*.
 
+`VoucherApplyPath`: The relative path to voucher apply endpoint. *The default value is "voucher/apply"*.
+
 `SubscriptionStatusPath`: The relative path to subscription status endpoint. *The default value is "app/subscription-status"*.
 
 `CatalogPath`: The path of the catalog file in the client app. *The default value is "Catalog.json"*.
@@ -158,9 +160,6 @@ This is the sample settings file we included in the project to clearly show you 
         "ClientId": "<CLIENT_ID>",
         "ClientSecret": "<CLIENT_SECRET>"
       }
-    },
-    "Voucher": {
-      "CodeApplyUri": "voucher/apply"
     }
   }
 }
