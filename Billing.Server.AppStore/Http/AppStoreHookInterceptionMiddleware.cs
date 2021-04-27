@@ -1,7 +1,5 @@
 ﻿namespace Zebble.Billing
 {
-    using System.IO;
-    using System.Text;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;
 
@@ -11,10 +9,9 @@
 
         public async Task InvokeAsync(HttpContext context, AppStoreHookInterceptor hookInterceptor)
         {
-            using var streamReader = new StreamReader(context.Request.Body, Encoding.UTF8);
-            var body = await streamReader.ReadToEndAsync();
+            var notification = await context.Request.Body.ConvertTo<AppStoreNotification>();
 
-            await hookInterceptor.Intercept(body.ToNotification());
+            await hookInterceptor.Intercept(notification);
         }
     }
 }

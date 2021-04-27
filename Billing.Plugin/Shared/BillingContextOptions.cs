@@ -27,6 +27,14 @@
         public string PurchaseAttemptPath { get; set; } = "app/purchase-attempt";
 
         /// <summary>
+        /// The relative path to voucher apply endpoint. 
+        /// </summary>
+        /// <remarks>
+        /// The default value is "voucher/apply".
+        /// </remarks>
+        public string VoucherApplyPath { get; set; } = "voucher/apply";
+
+        /// <summary>
         /// The relative path to subscription status endpoint. 
         /// </summary>
         /// <remarks>
@@ -53,6 +61,8 @@
             if (!BaseUri.IsAbsoluteUri) throw new ArgumentException($"{nameof(BaseUri)} should be absolute.");
 
             if (PurchaseAttemptPath.IsEmpty()) throw new ArgumentNullException(nameof(PurchaseAttemptPath));
+
+            if (VoucherApplyPath.IsEmpty()) throw new ArgumentNullException(nameof(VoucherApplyPath));
 
             if (SubscriptionStatusPath.IsEmpty()) throw new ArgumentNullException(nameof(SubscriptionStatusPath));
 

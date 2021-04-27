@@ -14,7 +14,7 @@
 
             var options = builder.App.ApplicationServices.GetService<IOptions<VoucherOptions>>();
 
-            routes.MapMiddlewarePost(options.Value.CodeApplyPath, builder => builder.UseMiddleware<VoucherCodeApplyingMiddleware>());
+            routes.MapMiddlewarePost(options.Value.VoucherApplyPath, builder => builder.UseMiddleware<VoucherApplyingMiddleware>());
 
             builder.App.UseRouter(routes.Build());
 

@@ -2,6 +2,6 @@
 {
     public class VoucherOptions
     {
-        public string CodeApplyPath { get; set; } = "voucher/apply";
+        public string VoucherApplyPath { get; set; } = "voucher/apply";
     }
 }
