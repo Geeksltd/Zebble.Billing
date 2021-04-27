@@ -7,7 +7,7 @@
         public virtual string Id { get; set; }
 
         public virtual string Code { get; set; }
-        public TimeSpan Duration { get; set; }
+        public virtual TimeSpan Duration { get; set; }
         public string ProductId { get; set; }
         public string Comments { get; set; }
 
