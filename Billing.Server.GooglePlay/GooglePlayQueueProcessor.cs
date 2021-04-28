@@ -88,10 +88,10 @@
                     {
                         Id = Guid.NewGuid().ToString(),
                         ProductId = notification.ProductId,
-                        UserId = subscriptionInfo.UserId.Or("<NOT_PROVIDED>"),
+                        UserId = subscriptionInfo.UserId,
                         Platform = "GooglePlay",
                         TransactionId = subscriptionInfo.TransactionId,
-                        ReceiptData = "<NOT_PROVIDED>",
+                        ReceiptData = null,
                         TransactionDate = notification.EventTime,
                         PurchaseToken = notification.PurchaseToken,
                         SubscriptionDate = subscriptionInfo.SubscriptionDate,
