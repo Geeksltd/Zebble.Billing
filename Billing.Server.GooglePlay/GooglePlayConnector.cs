@@ -42,7 +42,7 @@
         {
             return new SubscriptionInfo
             {
-                UserId = purchase.EmailAddress,
+                UserId = purchase.DeveloperPayload.Or(purchase.EmailAddress),
                 TransactionId = purchase.OrderId,
                 SubscriptionDate = purchase.StartTimeMillis.ToDateTime(),
                 ExpirationDate = purchase.ExpiryTimeMillis.ToDateTime(),
