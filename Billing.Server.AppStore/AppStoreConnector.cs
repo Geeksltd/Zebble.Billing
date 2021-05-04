@@ -33,7 +33,9 @@
 
         public async Task<SubscriptionInfo> GetSubscriptionInfo(SubscriptionInfoArgs args)
         {
-            var (result, _) = await GetVerifiedResult(args.UserId, args.ReceiptData);
+            var (result, status) = await GetVerifiedResult(args.UserId, args.ReceiptData);
+
+            if (status != PurchaseVerificationStatus.Verified) return null;
 
             return CreateSubscription(result.AppleVerificationResponse.LatestReceiptInfo.First());
         }
