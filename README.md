@@ -137,6 +137,10 @@ This is the sample settings file we included in the project to clearly show you 
     "EntityFramework": {
       "ConnectionString": "Database=Billing.Sample; Server=.; Integrated Security=SSPI; MultipleActiveResultSets=True;"
     },
+    "DynamoDb": {
+      "Profile": "<AWS_PROFILE_NAME>",
+      "Region": "<AWS_REGION>"
+    },
     "AppStore": {
       "PackageName": "<ios.package.name>",
       "SharedSecret": "<APP_STORE_SHARED_SECRET>",
@@ -168,6 +172,8 @@ This is the sample settings file we included in the project to clearly show you 
 `Catalog`: This is the sample as the `Catalog.json` file we've talked about it earlier.
 
 `EntityFramework`: The connection string used in both `Zebble.Billing.Server.EntityFramework` and `Zebble.Billing.Server.Voucher.EntityFramework` packages.
+
+`DynamoDb`: [Possible AWS options](https://docs.aws.amazon.com/sdk-for-net/v3/developer-guide/net-dg-config-netcore.html) used in both `Zebble.Billing.Server.DynamoDb` and `Zebble.Billing.Server.Voucher.DynamoDb` packages.
 
 `AppStore:PackageName`: Your iOS app package name.
 
