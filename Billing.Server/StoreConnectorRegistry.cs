@@ -10,7 +10,7 @@
 
         public StoreConnectorRegistry(string name, Type type)
         {
-            Name = name.IsEmpty() ? throw new ArgumentNullException(nameof(name)) : name;
+            Name = name.OrNullIfEmpty() ?? throw new ArgumentNullException(nameof(name));
             Type = type ?? throw new ArgumentNullException(nameof(type));
         }
     }

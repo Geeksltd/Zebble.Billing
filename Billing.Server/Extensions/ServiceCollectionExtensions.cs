@@ -6,7 +6,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using Olive;
 
-    public static partial class ServiceCollectionExtensions
+    public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddZebbleBilling(this IServiceCollection services, Action<ZebbleBillingServicesBuilder> builder = null)
         {
