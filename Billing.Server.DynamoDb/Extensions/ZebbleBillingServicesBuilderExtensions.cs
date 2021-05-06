@@ -6,9 +6,10 @@
 
     public static partial class ZebbleBillingServicesBuilderExtensions
     {
-        public static ZebbleBillingServicesBuilder AddDynamoDb(this ZebbleBillingServicesBuilder builder, string configKey = "ZebbleBilling:DynamoDb")
+        public static ZebbleBillingServicesBuilder AddDynamoDb(this ZebbleBillingServicesBuilder builder, bool registerClient = false, string configKey = "ZebbleBilling:DynamoDb")
         {
-            builder.Services.AddScoped(sp => sp.GetRequiredService<IConfiguration>().GetAWSOptions(configKey).CreateServiceClient<IAmazonDynamoDB>());
+            if (registerClient)
+                builder.Services.AddScoped(sp => sp.GetRequiredService<IConfiguration>().GetAWSOptions(configKey).CreateServiceClient<IAmazonDynamoDB>());
 
             builder.Services.AddScoped<SubscriptionDbContext>();
 
