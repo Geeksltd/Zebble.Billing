@@ -14,7 +14,18 @@
         /// <summary>
         /// Gets a product by its Id.
         /// </summary>
-        public Task<Product> GetProduct(string productId) => ProductProvider.GetById(productId);
+        public async Task<Product> GetProduct(string productId)
+        {
+            if (productId.IsEmpty()) return null;
+
+            var product = await ProductProvider.GetById(productId) ?? new Product
+            {
+                Id = productId,
+                Type = ProductType.Voucher
+            };
+
+            return product;
+        }
 
         /// <summary>
         /// Gets a product's price by its Id.

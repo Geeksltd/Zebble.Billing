@@ -6,8 +6,6 @@
     {
         public ProductType Type { get; set; }
 
-        internal ItemType ItemType => Type.ToItemType();
-
         public decimal Price { get; set; }
 
         public override string ToString() => Id;

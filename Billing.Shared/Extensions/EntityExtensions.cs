@@ -5,17 +5,6 @@
 
     public static partial class EntityExtensions
     {
-        internal static SubscriptionStatus GetStatus(this Subscription @this)
-        {
-            if (@this.IsCanceled()) return SubscriptionStatus.Canceled;
-
-            if (@this.IsExpired()) return SubscriptionStatus.Expired;
-
-            if (@this.IsStarted()) return SubscriptionStatus.Subscribed;
-
-            return SubscriptionStatus.None;
-        }
-
         public static bool IsStarted(this Subscription @this) => IsInThePast(@this?.SubscriptionDate);
 
         public static bool IsExpired(this Subscription @this) => IsInThePast(@this?.ExpirationDate);

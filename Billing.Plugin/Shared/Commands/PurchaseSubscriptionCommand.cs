@@ -19,14 +19,14 @@
             {
                 await context.Refresh();
 
-                if (context.IsSubscribed && context.CurrentProductId == Product.Id) return PurchaseResult.AlreadySubscribed;
+                if (context.IsSubscribed && (await context.CurrentProduct)?.Id == Product.Id) return PurchaseResult.AlreadySubscribed;
 
                 var verificator = new PurchaseVerificator();
 
 #if CAFEBAZAAR && ANDROID
-                var purchase = await Billing.PurchaseAsync(Product.Id, Product.ItemType, context.User.UserId, verificator);
+                var purchase = await Billing.PurchaseAsync(Product.Id, Product.GetItemType(), context.User.UserId, verificator);
 #else
-                var purchase = await Billing.PurchaseAsync(Product.Id, Product.ItemType, verificator);
+                var purchase = await Billing.PurchaseAsync(Product.Id, Product.GetItemType(), verificator);
 #endif
 
                 if (purchase is null)

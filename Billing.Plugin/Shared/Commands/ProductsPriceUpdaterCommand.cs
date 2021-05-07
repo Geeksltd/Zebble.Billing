@@ -14,7 +14,7 @@
             {
                 var productProvider = BillingContext.Current.ProductProvider;
                 var products = await productProvider.GetProducts();
-                var groups = products.GroupBy(x => x.ItemType)
+                var groups = products.GroupBy(x => x.GetItemType())
                     .Select(x => new { ItemType = x.Key, ProductIds = x.Select(p => p.Id).ToArray() });
 
                 foreach (var group in groups)

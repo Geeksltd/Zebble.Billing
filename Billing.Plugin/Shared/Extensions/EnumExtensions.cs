@@ -5,13 +5,13 @@
 
     static class EnumExtensions
     {
-        public static ItemType ToItemType(this ProductType type)
+        public static ItemType GetItemType(this Product @this)
         {
-            return type switch
+            return @this.Type switch
             {
                 ProductType.Subscription => ItemType.Subscription,
                 ProductType.InAppPurchase => ItemType.InAppPurchase,
-                _ => throw new ArgumentOutOfRangeException(nameof(type)),
+                _ => throw new ArgumentOutOfRangeException(nameof(@this.Type)),
             };
         }
     }

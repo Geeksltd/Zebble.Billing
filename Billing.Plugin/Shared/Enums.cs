@@ -15,5 +15,5 @@
         Succeeded
     }
 
-    public enum ProductType { Subscription, InAppPurchase }
+    public enum ProductType { Subscription, InAppPurchase, Voucher }
 }
