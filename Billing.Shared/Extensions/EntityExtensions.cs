@@ -22,6 +22,6 @@
 
         public static bool IsCanceled(this Subscription @this) => IsInThePast(@this?.CancellationDate);
 
-        static bool IsInThePast(DateTime? @this) => @this?.ToLocal().IsInThePast() ?? false;
+        static bool IsInThePast(DateTime? @this) => @this?.IsInThePast() ?? false;
     }
 }
