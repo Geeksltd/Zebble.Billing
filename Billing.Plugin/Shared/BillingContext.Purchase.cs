@@ -25,16 +25,16 @@
         /// <remarks>If you pass the true for `userRequest`, and no active subscription is found, it will throw an exception.</remarks>
         public async Task<bool> RestoreSubscription(bool userRequest = false)
         {
-#if MVVM || UWP
-            return false;
-#else
             var errorMessage = "";
+
+#if !MVVM && !UWP
             try { await new RestoreSubscriptionCommand().Execute(); }
             catch (Exception ex)
             {
                 errorMessage = ex.Message;
                 Log.For(typeof(BillingContext)).Error(ex);
             }
+#endif
 
             var successful = false;
             try
@@ -52,7 +52,6 @@
                 throw new Exception(errorMessage.Or("Unable to find an active subscription."));
 
             return successful;
-#endif
         }
 
         internal async Task<VerifyPurchaseResult> VerifyPurchase(VerifyPurchaseEventArgs args)
