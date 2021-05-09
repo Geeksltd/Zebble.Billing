@@ -1,7 +1,6 @@
 ﻿namespace Zebble.Billing
 {
     using System;
-    using System.Threading.Tasks;
 
     public partial class BillingContext
     {
