@@ -1,12 +1,17 @@
 ﻿namespace Zebble.Billing
 {
     using System;
+    using System.Threading.Tasks;
 
     public partial class BillingContext
     {
         static BillingContextOptions Options;
 
         Func<IBillingUser> UserAccessor;
+        TaskCompletionSource<bool> SubscriptionSource;
+
+        public Task Initialization => SubscriptionSource?.Task;
+
         internal IBillingUser User => UserAccessor();
         internal Subscription Subscription { get; set; }
         internal IProductProvider ProductProvider { get; private set; }
@@ -35,7 +40,12 @@
                 ProductProvider = new ProductProvider(Options.CatalogPath)
             };
 
-            Thread.Pool.RunOnNewThread(SubscriptionFileStore.Load);
+            Current.SubscriptionSource = new TaskCompletionSource<bool>();
+            Thread.Pool.RunOnNewThread(async () =>
+            {
+                await SubscriptionFileStore.Load();
+                Current.SubscriptionSource.SetResult(true);
+            });
         }
     }
 }
