@@ -39,6 +39,8 @@
             var current = await BaseApi.Post<Subscription>(url, @params, errorAction: OnError.Ignore);
 
             Subscription = current;
+            await SubscriptionFileStore.Save();
+
             if (current is null) return;
 
             await SubscriptionRestored.Raise(current.ToEventArgs());

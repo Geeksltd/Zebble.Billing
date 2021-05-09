@@ -9,16 +9,16 @@
 
         public Task<Product> CurrentProduct => GetProduct(Subscription?.ProductId);
 
-        public DateTime? SubscriptionDate => Subscription.SubscriptionDate;
+        public DateTime? SubscriptionDate => Subscription?.SubscriptionDate;
 
-        public DateTime? ExpirationDate => Subscription.ExpirationDate;
+        public DateTime? ExpirationDate => Subscription?.ExpirationDate;
 
-        public DateTime? CancellationDate => Subscription.CancellationDate;
+        public DateTime? CancellationDate => Subscription?.CancellationDate;
 
-        public bool IsStarted => Subscription.IsStarted();
+        public bool IsStarted => Subscription?.IsStarted() ?? false;
 
-        public bool IsExpired => Subscription.IsExpired();
+        public bool IsExpired => Subscription?.IsExpired() ?? false;
 
-        public bool IsCanceled => Subscription.IsCanceled();
+        public bool IsCanceled => Subscription?.IsCanceled() ?? false;
     }
 }
