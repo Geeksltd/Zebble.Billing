@@ -8,10 +8,10 @@
         {
             return new SubscriptionRestoredEventArgs
             {
-                ProductId = subscription.ProductId,
-                SubscriptionDate = subscription.SubscriptionDate,
-                ExpirationDate = subscription.ExpirationDate,
-                CancellationDate = subscription.CancellationDate
+                ProductId = subscription?.ProductId,
+                SubscriptionDate = subscription?.SubscriptionDate,
+                ExpirationDate = subscription?.ExpirationDate,
+                CancellationDate = subscription?.CancellationDate
             };
         }
 

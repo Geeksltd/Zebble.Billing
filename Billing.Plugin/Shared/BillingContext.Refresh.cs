@@ -41,8 +41,6 @@
             Subscription = current;
             await SubscriptionFileStore.Save();
 
-            if (current is null) return;
-
             await SubscriptionRestored.Raise(current.ToEventArgs());
         }
     }
