@@ -5,6 +5,8 @@
 
     public static partial class EntityExtensions
     {
+        public static bool IsActive(this Subscription @this) => @this.IsStarted() && !@this.IsExpired() && !@this.IsCanceled();
+
         public static bool IsStarted(this Subscription @this) => IsInThePast(@this?.SubscriptionDate);
 
         public static bool IsExpired(this Subscription @this) => IsInThePast(@this?.ExpirationDate);

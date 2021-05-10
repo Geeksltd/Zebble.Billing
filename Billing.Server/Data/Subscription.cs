@@ -13,7 +13,7 @@
         public virtual string TransactionId { get; set; }
         public string ReceiptData { get; set; }
         public DateTime? TransactionDate { get; set; }
-        public virtual string PurchaseToken { get; set; }
+        public string PurchaseToken { get; set; }
 
         public DateTime? LastUpdate { get; set; }
 

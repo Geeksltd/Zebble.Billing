@@ -1,6 +1,7 @@
 ﻿namespace Zebble.Billing
 {
     using Amazon.DynamoDBv2.DataModel;
+    using Olive;
 
     [DynamoDBTable("Subscriptions")]
     public sealed class SubscriptionProxy : Subscription, IBillingDynamoDbProxy
@@ -14,11 +15,15 @@
         [DynamoDBGlobalSecondaryIndexHashKey("TransactionId-index")]
         public override string TransactionId { get; set; }
 
-        [DynamoDBGlobalSecondaryIndexHashKey("PurchaseToken-index")]
-        public override string PurchaseToken { get; set; }
+        [DynamoDBGlobalSecondaryIndexHashKey("PurchaseTokenHash-index")]
+        public string PurchaseTokenHash { get; set; }
 
         public SubscriptionProxy() { }
 
-        internal SubscriptionProxy(Subscription that) => this.CopyPropertiesFrom(that);
+        internal SubscriptionProxy(Subscription that)
+        {
+            this.CopyPropertiesFrom(that);
+            PurchaseTokenHash = PurchaseToken?.ToSimplifiedSHA1Hash();
+        }
     }
 }

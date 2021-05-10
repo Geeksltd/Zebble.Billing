@@ -19,18 +19,13 @@
 
         public async Task<Subscription> GetByPurchaseToken(string purchaseToken)
         {
-            return await Context.SubscriptionPurchaseTokens.FirstOrDefault(purchaseToken);
+            var hash = purchaseToken.ToSimplifiedSHA1Hash();
+            return await Context.SubscriptionPurchaseTokenHashes.FirstOrDefault(hash);
         }
 
         public async Task<Subscription[]> GetAll(string userId)
         {
             return await Context.SubscriptionUsers.All(userId);
-        }
-
-        public async Task<Subscription> GetMostUpdatedByUserId(string userId)
-        {
-            // UserId-index should be ordered by ExpirationDate
-            return (await Context.SubscriptionUsers.All(userId)).OrderBy(x => x.ExpirationDate).LastOrDefault();
         }
 
         public async Task<Subscription> AddSubscription(Subscription subscription)

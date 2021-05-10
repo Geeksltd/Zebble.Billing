@@ -27,13 +27,6 @@
                                         .ToArrayAsync();
         }
 
-        public Task<Subscription> GetMostUpdatedByUserId(string userId)
-        {
-            return Context.Subscriptions.Where(x => x.UserId == userId)
-                                        .OrderBy(x => x.ExpirationDate)
-                                        .LastOrDefaultAsync();
-        }
-
         public async Task<Subscription> AddSubscription(Subscription subscription)
         {
             await Context.Subscriptions.AddAsync(subscription);

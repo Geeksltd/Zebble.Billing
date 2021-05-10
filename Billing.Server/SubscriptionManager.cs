@@ -1,6 +1,7 @@
 ﻿namespace Zebble.Billing
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using Olive;
 
@@ -86,7 +87,12 @@
 
         public async Task<Subscription> GetSubscriptionStatus(string userId)
         {
-            var subscription = await Repository.GetMostUpdatedByUserId(userId);
+            var subscriptions = await Repository.GetAll(userId);
+
+            var subscription = subscriptions.OrderBy(x => x.SubscriptionDate).LastOrDefault();
+
+            if (subscription?.IsActive() == false)
+                subscription = subscriptions.OrderBy(x => x.ExpirationDate).LastOrDefault();
 
             if (subscription?.RequiresStoreUpdate() == true)
                 await TryToUpdateSubscription(subscription);
