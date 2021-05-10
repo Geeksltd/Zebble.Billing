@@ -29,7 +29,7 @@
             if (User is null) throw new System.Exception("User is unknown.");
 
             var fileContents = Subscription is null ? null : JsonConvert.SerializeObject(Subscription);
-            await CacheFile.WriteAllTextAsync(fileContents);
+            await CacheFile.WriteAllTextAsync(fileContents ?? "");
         }
     }
 }
