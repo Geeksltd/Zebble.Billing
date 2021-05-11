@@ -53,7 +53,7 @@
                 TransactionId = null,
                 SubscriptionDate = subscription.InitiationTime.DateTime,
                 ExpirationDate = subscription.ValidUntil.DateTime,
-                CancellationDate = purchase.PurchaseState == CafeBazaarPurchaseState.Refunded ? (DateTime?)LocalTime.UtcNow : null,
+                CancellationDate = purchase.PurchaseState == CafeBazaarPurchaseState.Refunded ? LocalTime.UtcNow : null,
                 AutoRenews = subscription.AutoRenewing
             };
         }

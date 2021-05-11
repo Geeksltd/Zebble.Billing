@@ -46,9 +46,9 @@
             {
                 UserId = null,
                 TransactionId = purchase.OriginalTransactionId,
-                SubscriptionDate = purchase.PurchaseDateDt,
-                ExpirationDate = purchase.ExpirationDateDt,
-                CancellationDate = purchase.CancellationDateDt,
+                SubscriptionDate = purchase.PurchaseDateDt?.ToUniversal(),
+                ExpirationDate = purchase.ExpirationDateDt?.ToUniversal(),
+                CancellationDate = purchase.CancellationDateDt?.ToUniversal(),
                 AutoRenews = purchase.SubscriptionAutoRenewStatus == AppleSubscriptionAutoRenewStatus.Active
             };
         }
