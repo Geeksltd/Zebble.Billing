@@ -15,10 +15,10 @@
 
         public AppStoreHookInterceptor(ILogger<AppStoreHookInterceptor> logger, IOptionsSnapshot<AppStoreOptions> options, ISubscriptionRepository repository, AppStoreConnector storeConnector)
         {
-            Logger = logger;
-            Options = options.Value;
-            Repository = repository;
-            StoreConnector = storeConnector;
+            Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            Options = options.Value ?? throw new ArgumentNullException(nameof(options));
+            Repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            StoreConnector = storeConnector ?? throw new ArgumentNullException(nameof(storeConnector));
         }
 
         public async Task Intercept(AppStoreNotification notification)

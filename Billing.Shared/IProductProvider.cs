@@ -2,7 +2,7 @@
 {
     using System.Threading.Tasks;
 
-    public partial interface IProductProvider
+    public interface IProductProvider
     {
         Task<Product[]> GetProducts();
         Task<Product> GetById(string productId);

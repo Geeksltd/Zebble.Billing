@@ -13,14 +13,11 @@
 
         public CafeBazaarConnector(IOptionsSnapshot<CafeBazaarOptions> options, CafeBazaarDeveloperService developerService)
         {
-            Options = options.Value;
-            DeveloperService = developerService;
+            Options = options.Value ?? throw new ArgumentNullException(nameof(options));
+            DeveloperService = developerService ?? throw new ArgumentNullException(nameof(developerService));
         }
 
-        public Task<PurchaseVerificationStatus> VerifyPurchase(VerifyPurchaseArgs args)
-        {
-            return Task.FromResult(PurchaseVerificationStatus.Verified);
-        }
+        public Task<PurchaseVerificationStatus> VerifyPurchase(VerifyPurchaseArgs args) => Task.FromResult(PurchaseVerificationStatus.Verified);
 
         public async Task<SubscriptionInfo> GetSubscriptionInfo(SubscriptionInfoArgs args)
         {

@@ -14,13 +14,13 @@
     class AppStoreConnector : IStoreConnector
     {
         readonly ILogger<AppStoreConnector> Logger;
-        readonly IAppleReceiptVerificatorService ReceiptVerificator;
+        readonly IAppleReceiptVerificatorService Verificator;
         readonly ISubscriptionRepository Repository;
 
-        public AppStoreConnector(ILogger<AppStoreConnector> logger, IAppleReceiptVerificatorService receiptVerificator, ISubscriptionRepository repository)
+        public AppStoreConnector(ILogger<AppStoreConnector> logger, IAppleReceiptVerificatorService verificator, ISubscriptionRepository repository)
         {
-            Logger = logger;
-            ReceiptVerificator = receiptVerificator ?? throw new ArgumentNullException(nameof(receiptVerificator));
+            Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            Verificator = verificator ?? throw new ArgumentNullException(nameof(verificator));
             Repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
@@ -55,7 +55,7 @@
 
         async Task<(AppleReceiptVerificationResult, PurchaseVerificationStatus)> GetVerifiedResult(string userId, string receiptData)
         {
-            var result = await ReceiptVerificator.VerifyAppleReceiptAsync(receiptData);
+            var result = await Verificator.VerifyAppleReceiptAsync(receiptData);
 
             if (result is null) return (null, PurchaseVerificationStatus.Failed);
 

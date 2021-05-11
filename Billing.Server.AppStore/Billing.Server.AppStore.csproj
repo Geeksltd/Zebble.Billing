@@ -5,7 +5,7 @@
     <RootNamespace>Zebble</RootNamespace>
     <PackageId>Zebble.Billing.Server.AppStore</PackageId>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
-    <Version>1.0.21.0</Version>
+    <Version>1.0.22.0</Version>
     <PackOnBuild>true</PackOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
     <DefineConstants>$(DefineConstants)</DefineConstants>
@@ -37,7 +37,7 @@
     <None Remove=".gitignore" />
     <None Remove="icon.png" />
     <None Remove="README.md" />
-    <PackageReference Include="Apple.Receipt.Verificator" Version="2.1.1" />
+    <PackageReference Include="Apple.Receipt.Verificator" Version="2.2.0" />
     <PackageReference Include="Macross.Json.Extensions" Version="2.1.0-beta2" />
     <ProjectReference Include="..\Billing.Server\Billing.Server.csproj" />
   </ItemGroup>

@@ -1,42 +1,44 @@
 ﻿namespace Zebble.Billing
 {
-    using System;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Options;
-    using Google.Apis.Auth.OAuth2;
     using Google.Apis.AndroidPublisher.v3;
-    using Google.Apis.Services;
-    using Google.Apis.Http;
     using Google.Apis.AndroidPublisher.v3.Data;
     using Olive;
+    using System;
 
-    class GooglePlayConnector : IStoreConnector, IDisposable
+    class GooglePlayConnector : IStoreConnector
     {
         readonly GooglePlayOptions Options;
-        AndroidPublisherService Instance;
+        readonly IProductProvider Provider;
+        readonly AndroidPublisherService Publisher;
 
-        public GooglePlayConnector(IOptionsSnapshot<GooglePlayOptions> options)
+        public GooglePlayConnector(IOptionsSnapshot<GooglePlayOptions> options, IProductProvider provider, AndroidPublisherService publisher)
         {
-            Options = options.Value;
+            Options = options.Value ?? throw new ArgumentNullException(nameof(options));
+            Provider = provider ?? throw new ArgumentNullException(nameof(provider));
+            Publisher = publisher ?? throw new ArgumentNullException(nameof(publisher));
         }
 
-        public Task<PurchaseVerificationStatus> VerifyPurchase(VerifyPurchaseArgs args)
-        {
-            return Task.FromResult(PurchaseVerificationStatus.Verified);
-        }
+        public Task<PurchaseVerificationStatus> VerifyPurchase(VerifyPurchaseArgs args) => Task.FromResult(PurchaseVerificationStatus.Verified);
 
         public async Task<SubscriptionInfo> GetSubscriptionInfo(SubscriptionInfoArgs args)
         {
-            var publisher = GetPublisherService();
+            var product = await Provider.GetById(args.ProductId);
 
-            var result = await publisher.Purchases.Subscriptions.Get(Options.PackageName, args.ProductId, args.PurchaseToken).ExecuteAsync();
+            if (product.Type == ProductType.Subscription)
+            {
+                var subscriptionResult = await Publisher.Purchases.Subscriptions.Get(Options.PackageName, args.ProductId, args.PurchaseToken).ExecuteAsync();
 
-            if (result is null) return null;
+                if (subscriptionResult is null) return null;
+                return CreateSubscription(subscriptionResult);
+            }
 
-            return CreateSubscription(result);
+            var productResult = await Publisher.Purchases.Products.Get(Options.PackageName, args.ProductId, args.PurchaseToken).ExecuteAsync();
+
+            if (productResult is null) return null;
+            return CreateSubscription(productResult);
         }
-
-        public void Dispose() => Instance?.Dispose();
 
         SubscriptionInfo CreateSubscription(SubscriptionPurchase purchase)
         {
@@ -51,25 +53,17 @@
             };
         }
 
-        AndroidPublisherService GetPublisherService()
+        SubscriptionInfo CreateSubscription(ProductPurchase purchase)
         {
-            if (Instance != null) return Instance;
-
-            var initializer = new BaseClientService.Initializer
+            return new SubscriptionInfo
             {
-                HttpClientInitializer = CreateClientInitializer()
+                UserId = purchase.DeveloperPayload,
+                TransactionId = purchase.OrderId,
+                SubscriptionDate = purchase.PurchaseTimeMillis.ToDateTime(),
+                ExpirationDate = null,
+                CancellationDate = purchase.PurchaseState == 1 ? LocalTime.UtcNow : null,
+                AutoRenews = false
             };
-
-            return Instance = new AndroidPublisherService(initializer);
-        }
-
-        IConfigurableHttpClientInitializer CreateClientInitializer()
-        {
-            return new ServiceAccountCredential(new ServiceAccountCredential.Initializer(Options.ClientEmail)
-            {
-                ProjectId = Options.ProjectId,
-                Scopes = new[] { AndroidPublisherService.ScopeConstants.Androidpublisher }
-            }.FromPrivateKey(Options.PrivateKey));
         }
     }
 }
