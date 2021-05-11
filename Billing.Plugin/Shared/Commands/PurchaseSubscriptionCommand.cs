@@ -59,8 +59,6 @@
             {
                 Log.For(this).Error(ex);
 
-                if (await context.RestoreSubscription()) return PurchaseResult.Succeeded;
-
                 return ex.PurchaseError switch
                 {
                     PurchaseError.AppStoreUnavailable => PurchaseResult.AppStoreUnavailable,
