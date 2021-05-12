@@ -37,7 +37,8 @@
 
             if (status != PurchaseVerificationStatus.Verified) return null;
 
-            return CreateSubscription(result.AppleVerificationResponse.LatestReceiptInfo.First());
+            var purchase = result.AppleVerificationResponse.LatestReceiptInfo.OrderBy(x => x.PurchaseDateDt).Last(x => x.ProductId == args.ProductId);
+            return CreateSubscription(purchase);
         }
 
         SubscriptionInfo CreateSubscription(AppleInAppPurchaseReceipt purchase)
@@ -46,9 +47,9 @@
             {
                 UserId = null,
                 TransactionId = purchase.OriginalTransactionId,
-                SubscriptionDate = purchase.PurchaseDateDt?.ToUniversal(),
-                ExpirationDate = purchase.ExpirationDateDt?.ToUniversal(),
-                CancellationDate = purchase.CancellationDateDt?.ToUniversal(),
+                SubscriptionDate = purchase.PurchaseDateDt,
+                ExpirationDate = purchase.ExpirationDateDt,
+                CancellationDate = purchase.CancellationDateDt,
                 AutoRenews = purchase.SubscriptionAutoRenewStatus == AppleSubscriptionAutoRenewStatus.Active
             };
         }
