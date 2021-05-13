@@ -77,8 +77,6 @@ To override defaults, you can create an instance of `BillingContextOptions` and 
 
 `BaseUri`: Assigning a Uri to this prop will specify the base URL for any server invocations. Bear in mind, when you assign a value for this prop, you don't need to add `Billing.Base.Url` to your `Config.xml` file.
 
-`VerifyPurchasePath`: The relative path to verify purchase endpoint. *The default value is "app/verify-purchase"*.
-
 `PurchaseAttemptPath`: The relative path to purchase attempt endpoint. *The default value is "app/purchase-attempt"*.
 
 `VoucherApplyPath`: The relative path to voucher apply endpoint. *The default value is "voucher/apply"*.
