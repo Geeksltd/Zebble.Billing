@@ -65,5 +65,11 @@
         AppStoreLatestReceiptInfo CandidateReceiptInfo => UnifiedReceipt?.LatestReceiptInfo?.FirstOrDefault();
 
         AppStorePendingRenewaInfo CandidateRenewalInfo => UnifiedReceipt?.PendingRenewalInfo?.FirstOrDefault();
+
+        public SubscriptionInfoArgs ToArgs() => new()
+        {
+            ProductId = ProductId,
+            PurchaseToken = PurchaseToken
+        };
     }
 }

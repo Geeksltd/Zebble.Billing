@@ -2,7 +2,7 @@
 {
     public enum ProductType { Subscription, InAppPurchase, Voucher }
 
-    public enum PurchaseVerificationStatus { Failed, UserMismatched, Verified }
+    public enum PurchaseAttemptStatus { Failed, UserMismatched, Succeeded }
 
     public enum VoucherApplyStatus { InvalidCode, Expired, Succeeded }
 }

@@ -28,43 +28,12 @@
                 ValidateNotification(notification);
 
                 var subscription = await Repository.GetByPurchaseToken(notification.PurchaseToken);
-                SubscriptionInfo subscriptionInfo = null;
 
                 if (subscription is null)
                 {
-                    subscriptionInfo = await StoreConnector.GetSubscriptionInfo(new SubscriptionInfoArgs
-                    {
-                        UserId = null,
-                        ProductId = notification.ProductId,
-                        ReceiptData = notification.UnifiedReceipt.LatestReceipt
-                    });
+                    var subscriptionInfo = await StoreConnector.GetSubscriptionInfo(notification.ToArgs());
+                    if (subscriptionInfo.Status != SubscriptionQueryStatus.Succeeded) return;
 
-                    if (subscriptionInfo is null) return;
-
-                    subscription = await Repository.GetByTransactionId(subscriptionInfo.TransactionId);
-                }
-
-                if (subscription is not null)
-                {
-                    if (notification.Type.IsAnyOf(AppStoreNotificationType.InitialBuy, AppStoreNotificationType.InteractivelyRenewed))
-                    {
-                        subscription.SubscriptionDate = notification.PurchaseDate;
-                        subscription.ExpirationDate = notification.ExpirationDate;
-                        subscription.CancellationDate = notification.CancellationDate;
-                        subscription.AutoRenews = notification.AutoRenewStatus;
-                    }
-                    else if (notification.Type.IsAnyOf(AppStoreNotificationType.CanceledOrUpgraded, AppStoreNotificationType.Refunded, AppStoreNotificationType.FamilySharingRevoked))
-                        subscription.CancellationDate = notification.CancellationDate;
-                    else if (notification.Type.IsAnyOf(AppStoreNotificationType.AutoRenewed, AppStoreNotificationType.AutoRecovered))
-                        subscription.ExpirationDate = notification.ExpirationDate;
-                    else if (notification.Type == AppStoreNotificationType.AutoRenewFailed)
-                        subscription.ExpirationDate = notification.IsInBillingRetryPeriod == true ? notification.GracePeriodExpirationDate : LocalTime.UtcNow;
-                    else if (notification.Type == AppStoreNotificationType.RenewalStatusChanged)
-                        subscription.AutoRenews = notification.AutoRenewStatus;
-
-                    await Repository.UpdateSubscription(subscription);
-                }
-                else
                     subscription = await Repository.AddSubscription(new Subscription
                     {
                         Id = Guid.NewGuid().ToString(),
@@ -72,7 +41,6 @@
                         UserId = subscriptionInfo.UserId.Or("<NOT_PROVIDED>"),
                         Platform = "AppStore",
                         TransactionId = subscriptionInfo.TransactionId,
-                        ReceiptData = notification.UnifiedReceipt.LatestReceipt,
                         PurchaseToken = notification.PurchaseToken,
                         TransactionDate = notification.PurchaseDate,
                         SubscriptionDate = subscriptionInfo.SubscriptionDate,
@@ -81,6 +49,25 @@
                         LastUpdate = LocalTime.UtcNow,
                         AutoRenews = subscriptionInfo.AutoRenews
                     });
+                }
+
+                if (notification.Type.IsAnyOf(AppStoreNotificationType.InitialBuy, AppStoreNotificationType.InteractivelyRenewed))
+                {
+                    subscription.SubscriptionDate = notification.PurchaseDate;
+                    subscription.ExpirationDate = notification.ExpirationDate;
+                    subscription.CancellationDate = notification.CancellationDate;
+                    subscription.AutoRenews = notification.AutoRenewStatus;
+                }
+                else if (notification.Type.IsAnyOf(AppStoreNotificationType.CanceledOrUpgraded, AppStoreNotificationType.Refunded, AppStoreNotificationType.FamilySharingRevoked))
+                    subscription.CancellationDate = notification.CancellationDate;
+                else if (notification.Type.IsAnyOf(AppStoreNotificationType.AutoRenewed, AppStoreNotificationType.AutoRecovered))
+                    subscription.ExpirationDate = notification.ExpirationDate;
+                else if (notification.Type == AppStoreNotificationType.AutoRenewFailed)
+                    subscription.ExpirationDate = notification.IsInBillingRetryPeriod == true ? notification.GracePeriodExpirationDate : LocalTime.UtcNow;
+                else if (notification.Type == AppStoreNotificationType.RenewalStatusChanged)
+                    subscription.AutoRenews = notification.AutoRenewStatus;
+
+                await Repository.UpdateSubscription(subscription);
 
                 await Repository.AddTransaction(new Transaction
                 {

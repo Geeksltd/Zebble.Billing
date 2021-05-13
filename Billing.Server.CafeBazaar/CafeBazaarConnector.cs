@@ -17,8 +17,6 @@
             DeveloperService = developerService ?? throw new ArgumentNullException(nameof(developerService));
         }
 
-        public Task<PurchaseVerificationStatus> VerifyPurchase(VerifyPurchaseArgs args) => Task.FromResult(PurchaseVerificationStatus.Verified);
-
         public async Task<SubscriptionInfo> GetSubscriptionInfo(SubscriptionInfoArgs args)
         {
             var purchaseResult = await DeveloperService.ValidatePurchase(new CafeBazaarValidatePurchaseRequest
@@ -47,7 +45,7 @@
             return new SubscriptionInfo
             {
                 UserId = purchase.DeveloperPayload,
-                TransactionId = null,
+                TransactionId = Guid.NewGuid().ToString(),
                 SubscriptionDate = subscription.InitiationTime.DateTime,
                 ExpirationDate = subscription.ValidUntil.DateTime,
                 CancellationDate = purchase.PurchaseState == CafeBazaarPurchaseState.Refunded ? LocalTime.UtcNow : null,

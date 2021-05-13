@@ -11,7 +11,6 @@
         public string Platform { get; set; }
 
         public virtual string TransactionId { get; set; }
-        public string ReceiptData { get; set; }
         public DateTime? TransactionDate { get; set; }
         public string PurchaseToken { get; set; }
 

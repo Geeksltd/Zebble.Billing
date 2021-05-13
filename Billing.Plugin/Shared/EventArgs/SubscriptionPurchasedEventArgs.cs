@@ -6,7 +6,7 @@
     {
         public string ProductId { get; set; }
         public string TransactionId { get; set; }
-        public DateTime TransactionDateUtc { get; set; }
+        public DateTime TransactionDate { get; set; }
         public string PurchaseToken { get; set; }
     }
 }

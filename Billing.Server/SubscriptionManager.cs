@@ -5,7 +5,7 @@
     using System.Threading.Tasks;
     using Olive;
 
-    class SubscriptionManager
+    public class SubscriptionManager
     {
         readonly ISubscriptionRepository Repository;
         readonly IStoreConnectorResolver StoreConnectorResolver;
@@ -16,73 +16,44 @@
             StoreConnectorResolver = storeConnectorResolver;
         }
 
-        public async Task<VerifyPurchaseResult> VerifyPurchase(string userId, string platform, string productId, string transactionId, string receiptData)
+        public async Task<PurchaseAttemptResult> PurchaseAttempt(string userId, string platform, string productId, string purchaseToken)
         {
+            var subscription = await Repository.GetByPurchaseToken(purchaseToken);
+            if (subscription is not null)
+                throw new Exception($"An existing subscription found for token '{purchaseToken}'.");
+
             var storeConnector = StoreConnectorResolver.Resolve(platform);
-            var status = await storeConnector.VerifyPurchase(new VerifyPurchaseArgs
+            var subscriptionInfo = await storeConnector.GetSubscriptionInfo(new SubscriptionInfoArgs
             {
                 UserId = userId,
-                ReceiptData = receiptData
+                ProductId = productId,
+                PurchaseToken = purchaseToken
             });
 
-            if (status != PurchaseVerificationStatus.Verified) return VerifyPurchaseResult.From(status);
+            if (subscriptionInfo.Status == SubscriptionQueryStatus.NotFound) return PurchaseAttemptResult.Failed;
+            if (subscriptionInfo.Status == SubscriptionQueryStatus.UserMismatched) return PurchaseAttemptResult.UserMismatched;
 
-            var subscription = await Repository.GetByTransactionId(transactionId);
-
+            subscription = await Repository.GetByTransactionId(subscriptionInfo.TransactionId);
             if (subscription is not null)
+                throw new Exception($"An existing subscription found for transaction '{subscriptionInfo.TransactionId}'.");
+
+            await Repository.AddSubscription(new Subscription
             {
-                if (subscription.UserId != userId)
-                    throw new Exception("Provided purchase token is associated with another user!");
+                Id = Guid.NewGuid().ToString(),
+                UserId = userId,
+                Platform = platform,
+                ProductId = productId,
+                TransactionId = subscriptionInfo.TransactionId,
+                TransactionDate = subscriptionInfo.SubscriptionDate,
+                PurchaseToken = purchaseToken,
+                LastUpdate = LocalTime.UtcNow,
+                SubscriptionDate = subscriptionInfo.SubscriptionDate,
+                ExpirationDate = subscriptionInfo.ExpirationDate,
+                CancellationDate = subscriptionInfo.CancellationDate,
+                AutoRenews = subscriptionInfo.AutoRenews
+            });
 
-                if (subscription.Platform != platform)
-                    throw new Exception("Provided purchase token is associated with another platform!");
-
-                if (subscription.ProductId != productId)
-                    throw new Exception("Provided purchase token is associated with another product!");
-            }
-            else
-                await Repository.AddSubscription(new Subscription
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    UserId = userId,
-                    Platform = platform,
-                    ProductId = productId,
-                    TransactionId = transactionId,
-                    ReceiptData = receiptData,
-                    LastUpdate = LocalTime.UtcNow
-                });
-
-            return VerifyPurchaseResult.Succeeded();
-        }
-
-        public async Task PurchaseAttempt(string userId, string platform, string productId, string transactionId, DateTime transactionDate, string purchaseToken)
-        {
-            var subscription = await Repository.GetByTransactionId(transactionId);
-
-            if (subscription is null) throw new Exception($"No subscription found for transaction '{transactionId}'.");
-
-            if (subscription.UserId != userId)
-                throw new Exception("Provided purchase token is associated with another user!");
-
-            if (subscription.Platform != platform)
-                throw new Exception("Provided purchase token is associated with another platform!");
-
-            if (subscription.ProductId != productId)
-                throw new Exception("Provided purchase token is associated with another product!");
-
-            subscription.TransactionDate = transactionDate;
-            subscription.PurchaseToken = purchaseToken;
-            subscription.LastUpdate = LocalTime.UtcNow;
-
-            var storeConnector = StoreConnectorResolver.Resolve(platform);
-            var subscriptionInfo = await storeConnector.GetSubscriptionInfo(subscription.ToArgs());
-
-            subscription.SubscriptionDate = subscriptionInfo?.SubscriptionDate;
-            subscription.ExpirationDate = subscriptionInfo?.ExpirationDate;
-            subscription.CancellationDate = subscriptionInfo?.CancellationDate;
-            subscription.AutoRenews = subscriptionInfo?.AutoRenews;
-
-            await Repository.UpdateSubscription(subscription);
+            return PurchaseAttemptResult.Succeeded;
         }
 
         public async Task<Subscription> GetSubscriptionStatus(string userId)
@@ -103,14 +74,14 @@
         async Task TryToUpdateSubscription(Subscription subscription)
         {
             var storeConnector = StoreConnectorResolver.Resolve(subscription.Platform);
-            var updatedSubscription = await storeConnector.GetSubscriptionInfo(subscription.ToArgs());
+            var subscriptionInfo = await storeConnector.GetSubscriptionInfo(subscription.ToArgs());
 
-            if (updatedSubscription is null) return;
+            if (subscriptionInfo.Status != SubscriptionQueryStatus.Succeeded) return;
 
-            subscription.SubscriptionDate = updatedSubscription.SubscriptionDate;
-            subscription.ExpirationDate = updatedSubscription.ExpirationDate;
-            subscription.CancellationDate = updatedSubscription.CancellationDate;
-            subscription.AutoRenews = updatedSubscription.AutoRenews;
+            subscription.SubscriptionDate = subscriptionInfo.SubscriptionDate;
+            subscription.ExpirationDate = subscriptionInfo.ExpirationDate;
+            subscription.CancellationDate = subscriptionInfo.CancellationDate;
+            subscription.AutoRenews = subscriptionInfo.AutoRenews;
 
             await Repository.UpdateSubscription(subscription);
         }

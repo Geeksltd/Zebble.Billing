@@ -53,7 +53,6 @@
         {
             return new SubscriptionInfoArgs
             {
-                UserId = null,
                 ProductId = ProductId,
                 PurchaseToken = PurchaseToken
             };

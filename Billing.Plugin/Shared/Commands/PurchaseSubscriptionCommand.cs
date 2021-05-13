@@ -21,23 +21,20 @@
 
                 if (context.IsSubscribed && (await context.CurrentProduct)?.Id == Product.Id) return PurchaseResult.AlreadySubscribed;
 
-                var verificator = new PurchaseVerificator();
-
 #if CAFEBAZAAR && ANDROID
-                var purchase = await Billing.PurchaseAsync(Product.Id, Product.GetItemType(), context.User.UserId, verificator);
+                var purchase = await Billing.PurchaseAsync(Product.Id, Product.GetItemType(), context.User.UserId);
 #else
-                var purchase = await Billing.PurchaseAsync(Product.Id, Product.GetItemType(), verificator);
+                var purchase = await Billing.PurchaseAsync(Product.Id, Product.GetItemType());
 #endif
 
-                if (purchase is null)
+                var result = await context.PurchaseAttempt(purchase.ToEventArgs());
+                if (result?.Status != PurchaseAttemptStatus.Succeeded)
                 {
                     // In iOS, we get this error when we try to purchase an item that is already associated with another app-specific account
-                    if (verificator.Status == PurchaseVerificationStatus.UserMismatched) return PurchaseResult.UserMismatched;
+                    if (result?.Status == PurchaseAttemptStatus.UserMismatched) return PurchaseResult.UserMismatched;
 
                     return PurchaseResult.NotCompleted;
                 }
-
-                await context.PurchaseAttempt(purchase.ToEventArgs());
 
 #if !(CAFEBAZAAR && ANDROID)
                 if (purchase.State == PurchaseState.Purchased)

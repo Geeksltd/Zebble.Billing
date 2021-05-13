@@ -20,8 +20,6 @@
             Publisher = publisher ?? throw new ArgumentNullException(nameof(publisher));
         }
 
-        public Task<PurchaseVerificationStatus> VerifyPurchase(VerifyPurchaseArgs args) => Task.FromResult(PurchaseVerificationStatus.Verified);
-
         public async Task<SubscriptionInfo> GetSubscriptionInfo(SubscriptionInfoArgs args)
         {
             var product = await Provider.GetById(args.ProductId);
@@ -60,9 +58,7 @@
                 UserId = purchase.DeveloperPayload,
                 TransactionId = purchase.OrderId,
                 SubscriptionDate = purchase.PurchaseTimeMillis.ToDateTime(),
-                ExpirationDate = null,
-                CancellationDate = purchase.PurchaseState == 1 ? LocalTime.UtcNow : null,
-                AutoRenews = false
+                CancellationDate = purchase.PurchaseState == 1 ? LocalTime.UtcNow : null
             };
         }
     }

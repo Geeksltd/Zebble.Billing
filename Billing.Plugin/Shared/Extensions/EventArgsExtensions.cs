@@ -21,7 +21,7 @@
             {
                 ProductId = purchase.ProductId,
                 TransactionId = purchase.Id,
-                TransactionDateUtc = purchase.TransactionDateUtc,
+                TransactionDate = purchase.TransactionDateUtc,
                 PurchaseToken = purchase.PurchaseToken
             };
         }

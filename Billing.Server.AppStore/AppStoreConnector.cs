@@ -3,7 +3,6 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-    using Apple.Receipt.Models;
     using Apple.Receipt.Models.Enums;
     using Apple.Receipt.Verificator.Models;
     using Apple.Receipt.Verificator.Models.IAPVerification;
@@ -24,28 +23,25 @@
             Repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
-        public async Task<PurchaseVerificationStatus> VerifyPurchase(VerifyPurchaseArgs args)
-        {
-            var (_, status) = await GetVerifiedResult(args.UserId, args.ReceiptData);
-
-            return status;
-        }
-
         public async Task<SubscriptionInfo> GetSubscriptionInfo(SubscriptionInfoArgs args)
         {
-            var (result, status) = await GetVerifiedResult(args.UserId, args.ReceiptData);
+            var (result, status) = await GetVerifiedResult(args.UserId, args.PurchaseToken);
 
-            if (status != PurchaseVerificationStatus.Verified) return null;
-
-            var purchase = result.AppleVerificationResponse.LatestReceiptInfo.OrderBy(x => x.PurchaseDateDt).Last(x => x.ProductId == args.ProductId);
-            return CreateSubscription(purchase);
+            return status switch
+            {
+                SubscriptionQueryStatus.NotFound => SubscriptionInfo.NotFound,
+                SubscriptionQueryStatus.UserMismatched => SubscriptionInfo.UserMismatched,
+                _ => CreateSubscription(args.ProductId, result.AppleVerificationResponse)
+            };
         }
 
-        SubscriptionInfo CreateSubscription(AppleInAppPurchaseReceipt purchase)
+        static SubscriptionInfo CreateSubscription(string productId, IAPVerificationResponse response)
         {
+            var purchase = response?.LatestReceiptInfo.OrderBy(x => x.PurchaseDateDt).LastOrDefault(x => x.ProductId == productId);
+            if (purchase is null) return SubscriptionInfo.NotFound;
+
             return new SubscriptionInfo
             {
-                UserId = null,
                 TransactionId = purchase.OriginalTransactionId,
                 SubscriptionDate = purchase.PurchaseDateDt,
                 ExpirationDate = purchase.ExpirationDateDt,
@@ -54,47 +50,42 @@
             };
         }
 
-        async Task<(AppleReceiptVerificationResult, PurchaseVerificationStatus)> GetVerifiedResult(string userId, string receiptData)
+        async Task<(AppleReceiptVerificationResult, SubscriptionQueryStatus)> GetVerifiedResult(string userId, string purchaseToken)
         {
-            var result = await Verificator.VerifyAppleReceiptAsync(receiptData);
+            var result = await Verificator.VerifyAppleReceiptAsync(purchaseToken);
 
-            if (result is null) return (null, PurchaseVerificationStatus.Failed);
+            if (result is null) return (null, SubscriptionQueryStatus.NotFound);
 
             return (result, await ValidateVerificationResult(userId, result));
         }
 
-        async Task<PurchaseVerificationStatus> ValidateVerificationResult(string userId, AppleReceiptVerificationResult verificationResult)
+        async Task<SubscriptionQueryStatus> ValidateVerificationResult(string userId, AppleReceiptVerificationResult verificationResult)
         {
             if (verificationResult.AppleVerificationResponse is null)
             {
                 Logger.LogWarning($"{verificationResult.Message}.");
-                return PurchaseVerificationStatus.Failed;
+                return SubscriptionQueryStatus.NotFound;
             }
 
             if (verificationResult.AppleVerificationResponse.StatusCode != IAPVerificationResponseStatus.Ok)
             {
                 Logger.LogWarning($"{verificationResult.Message} [{verificationResult.AppleVerificationResponse.Status} - {verificationResult.AppleVerificationResponse.StatusCode}]");
-                return PurchaseVerificationStatus.Failed;
+                return SubscriptionQueryStatus.NotFound;
             }
 
-            if (userId.IsEmpty()) return PurchaseVerificationStatus.Verified;
+            if (userId.IsEmpty()) return SubscriptionQueryStatus.Succeeded;
 
             var transactionIds = verificationResult.AppleVerificationResponse
                 .LatestReceiptInfo
                 .Select(x => x.TransactionId)
                 .ToArray();
-            if (transactionIds.None()) return PurchaseVerificationStatus.Verified;
+            if (transactionIds.None()) return SubscriptionQueryStatus.Succeeded;
 
             var originUserId = await Repository.GetOriginUserOfTransactionIds(transactionIds);
-            if (originUserId.IsEmpty()) return PurchaseVerificationStatus.Verified;
+            if (userId?.Equals(originUserId, caseSensitive: false) ?? true) return SubscriptionQueryStatus.Succeeded;
 
-            if (!userId.Equals(originUserId, caseSensitive: false))
-            {
-                Logger.LogWarning($"This receipt is associated to {originUserId} and can't be used for {userId}.");
-                return PurchaseVerificationStatus.UserMismatched;
-            }
-
-            return PurchaseVerificationStatus.Verified;
+            Logger.LogWarning($"This receipt is associated to {originUserId} and can't be used for {userId}.");
+            return SubscriptionQueryStatus.UserMismatched;
         }
     }
 }

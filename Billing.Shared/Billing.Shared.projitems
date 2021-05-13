@@ -14,6 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Enums.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\EntityExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Product.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PurchaseAttemptResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Subscription.cs" />
   </ItemGroup>
 </Project>

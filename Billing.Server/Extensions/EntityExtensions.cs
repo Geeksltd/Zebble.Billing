@@ -4,14 +4,23 @@
     {
         internal static bool RequiresStoreUpdate(this Subscription @this) => @this.IsExpired() || @this.IsCanceled();
 
-        public static SubscriptionInfoArgs ToArgs(this Subscription @this)
+        internal static SubscriptionInfoArgs ToArgs(this Subscription @this)
         {
             return new SubscriptionInfoArgs
             {
                 UserId = @this.UserId,
                 ProductId = @this.ProductId,
-                PurchaseToken = @this.PurchaseToken,
-                ReceiptData = @this.ReceiptData
+                PurchaseToken = @this.PurchaseToken
+            };
+        }
+
+        internal static SubscriptionInfoArgs ToArgs(this AppPurchaseAttemptModel @this)
+        {
+            return new SubscriptionInfoArgs
+            {
+                UserId = @this.UserId,
+                ProductId = @this.ProductId,
+                PurchaseToken = @this.PurchaseToken
             };
         }
     }

@@ -14,7 +14,6 @@
 
             services.AddOptions<BillingOptions>()
                     .Configure<IConfiguration>((opts, config) => config.GetSection("ZebbleBilling")?.Bind(opts))
-                    .Validate(opts => opts.VerifyPurchasePath.HasValue(), $"{nameof(BillingOptions.VerifyPurchasePath)} is empty.")
                     .Validate(opts => opts.PurchaseAttemptPath is not null, $"{nameof(BillingOptions.PurchaseAttemptPath)} is null.")
                     .Validate(opts => opts.SubscriptionStatusPath is not null, $"{nameof(BillingOptions.SubscriptionStatusPath)} is null.");
 

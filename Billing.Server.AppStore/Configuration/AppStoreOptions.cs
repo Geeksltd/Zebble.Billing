@@ -12,7 +12,7 @@
         {
             @that.VerifyReceiptSharedSecret = SharedSecret;
             @that.VerificationType = Environment.ToVerificationType();
-            @that.AllowedBundleIds = new[] { PackageName };
+            @that.AllowedBundleIds = new string[] { null };
         }
     }
 }

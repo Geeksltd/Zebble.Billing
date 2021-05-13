@@ -64,8 +64,7 @@
             if (subscription is null)
             {
                 var subscriptionInfo = await StoreConnector.GetSubscriptionInfo(voucher.ToArgs());
-
-                if (subscriptionInfo is null) throw new Exception("Couldn't find voucher info.");
+                if (subscriptionInfo.Status != SubscriptionQueryStatus.Succeeded) throw new Exception("Couldn't find voucher info.");
 
                 subscription = await SubscriptionRepository.AddSubscription(new Subscription
                 {
@@ -74,7 +73,6 @@
                     UserId = subscriptionInfo.UserId,
                     Platform = "Voucher",
                     TransactionId = subscriptionInfo.TransactionId,
-                    ReceiptData = voucher.Code,
                     TransactionDate = voucher.ActivationDate,
                     PurchaseToken = voucher.Code,
                     SubscriptionDate = subscriptionInfo.SubscriptionDate,
