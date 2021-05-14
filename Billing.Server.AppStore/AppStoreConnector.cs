@@ -66,6 +66,11 @@
         {
             var result = await Verificator.VerifyAppleReceiptAsync(purchaseToken);
 
+            if (result?.Status == IAPVerificationResponseStatus.TestReceiptOnProd)
+                result = await Verificator.VerifyAppleSandBoxReceiptAsync(purchaseToken);
+            else if (result?.Status == IAPVerificationResponseStatus.ProdReceiptOnTest)
+                result = await Verificator.VerifyAppleProductionReceiptAsync(purchaseToken);
+                                        
             if (result is null) return (null, SubscriptionQueryStatus.NotFound);
 
             return (result, await ValidateVerificationResult(userId, result));
