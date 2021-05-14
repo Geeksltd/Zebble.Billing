@@ -26,7 +26,7 @@
                 PurchaseToken = args.PurchaseToken
             });
 
-            if (purchaseResult is null) return null;
+            if (purchaseResult is null) return SubscriptionInfo.NotFound;
 
             var subscriptionResult = await DeveloperService.ValidateSubscription(new CafeBazaarValidateSubscriptionRequest
             {
@@ -35,16 +35,16 @@
                 PurchaseToken = args.PurchaseToken
             });
 
-            if (subscriptionResult is null) return null;
+            if (subscriptionResult is null) return SubscriptionInfo.NotFound;
 
-            return CreateSubscription(purchaseResult, subscriptionResult);
+            return CreateSubscription(args.UserId, purchaseResult, subscriptionResult);
         }
 
-        SubscriptionInfo CreateSubscription(CafeBazaarValidatePurchaseResult purchase, CafeBazaarValidateSubscriptionResult subscription)
+        SubscriptionInfo CreateSubscription(string userId, CafeBazaarValidatePurchaseResult purchase, CafeBazaarValidateSubscriptionResult subscription)
         {
             return new SubscriptionInfo
             {
-                UserId = purchase.DeveloperPayload,
+                UserId = userId.Or(purchase.DeveloperPayload),
                 TransactionId = Guid.NewGuid().ToString(),
                 SubscriptionDate = subscription.InitiationTime.DateTime,
                 ExpirationDate = subscription.ValidUntil.DateTime,

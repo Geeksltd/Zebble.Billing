@@ -1,5 +1,6 @@
 ﻿namespace Zebble.Billing
 {
+    using Olive;
     using System;
     using System.Threading.Tasks;
 
@@ -17,14 +18,14 @@
             var result = await Repository.GetByCode(args.PurchaseToken);
 
             if (result is null) return SubscriptionInfo.NotFound;
-            return CreateSubscription(result);
+            return CreateSubscription(args.UserId, result);
         }
 
-        SubscriptionInfo CreateSubscription(Voucher voucher)
+        SubscriptionInfo CreateSubscription(string userId, Voucher voucher)
         {
             return new SubscriptionInfo
             {
-                UserId = voucher.UserId,
+                UserId = userId.Or(voucher.UserId),
                 TransactionId = voucher.Id,
                 SubscriptionDate = voucher.ActivationDate,
                 ExpirationDate = voucher.ExpirationDate()

@@ -31,17 +31,29 @@
             {
                 SubscriptionQueryStatus.NotFound => SubscriptionInfo.NotFound,
                 SubscriptionQueryStatus.UserMismatched => SubscriptionInfo.UserMismatched,
-                _ => CreateSubscription(args.ProductId, result.AppleVerificationResponse)
+                SubscriptionQueryStatus.Expired => CreateExpiredSubscription(args.UserId, result.AppleVerificationResponse),
+                _ => CreateSubscription(args.UserId, args.ProductId, result.AppleVerificationResponse)
             };
         }
 
-        static SubscriptionInfo CreateSubscription(string productId, IAPVerificationResponse response)
+        static SubscriptionInfo CreateExpiredSubscription(string userId, IAPVerificationResponse response)
+        {
+            return new SubscriptionInfo
+            {
+                UserId = userId,
+                SubscriptionDate = response.Receipt.OriginalPurchaseDateDt,
+                ExpirationDate = LocalTime.UtcNow
+            };
+        }
+
+        static SubscriptionInfo CreateSubscription(string userId, string productId, IAPVerificationResponse response)
         {
             var purchase = response?.LatestReceiptInfo.OrderBy(x => x.PurchaseDateDt).LastOrDefault(x => x.ProductId == productId);
             if (purchase is null) return SubscriptionInfo.NotFound;
 
             return new SubscriptionInfo
             {
+                UserId = userId,
                 TransactionId = purchase.OriginalTransactionId,
                 SubscriptionDate = purchase.PurchaseDateDt,
                 ExpirationDate = purchase.ExpirationDateDt,
@@ -61,24 +73,24 @@
 
         async Task<SubscriptionQueryStatus> ValidateVerificationResult(string userId, AppleReceiptVerificationResult verificationResult)
         {
-            if (verificationResult.AppleVerificationResponse is null)
+            var response = verificationResult?.AppleVerificationResponse;
+
+            if (response is null)
             {
                 Logger.LogWarning($"{verificationResult.Message}.");
                 return SubscriptionQueryStatus.NotFound;
             }
 
-            if (verificationResult.AppleVerificationResponse.StatusCode != IAPVerificationResponseStatus.Ok)
+            if (response.StatusCode != IAPVerificationResponseStatus.Ok)
             {
-                Logger.LogWarning($"{verificationResult.Message} [{verificationResult.AppleVerificationResponse.Status} - {verificationResult.AppleVerificationResponse.StatusCode}]");
+                Logger.LogWarning($"{verificationResult.Message} [{response.Status} - {response.StatusCode}]");
+                if (response.StatusCode == IAPVerificationResponseStatus.SubscriptionExpired) return SubscriptionQueryStatus.Expired;
                 return SubscriptionQueryStatus.NotFound;
             }
 
             if (userId.IsEmpty()) return SubscriptionQueryStatus.Succeeded;
 
-            var transactionIds = verificationResult.AppleVerificationResponse
-                .LatestReceiptInfo
-                .Select(x => x.TransactionId)
-                .ToArray();
+            var transactionIds = response.LatestReceiptInfo.Select(x => x.TransactionId).ToArray();
             if (transactionIds.None()) return SubscriptionQueryStatus.Succeeded;
 
             var originUserId = await Repository.GetOriginUserOfTransactionIds(transactionIds);
