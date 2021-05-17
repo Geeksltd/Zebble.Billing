@@ -1,4 +1,4 @@
 ﻿namespace Zebble.Billing
 {
-    public enum SubscriptionQueryStatus { NotFound, UserMismatched, Expired, Succeeded }
+    public enum SubscriptionQueryStatus { NotFound, Expired, Succeeded }
 }

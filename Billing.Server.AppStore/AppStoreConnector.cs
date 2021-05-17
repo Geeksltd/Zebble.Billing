@@ -14,13 +14,11 @@
     {
         readonly ILogger<AppStoreConnector> Logger;
         readonly IAppleReceiptVerificatorService Verificator;
-        readonly ISubscriptionRepository Repository;
 
-        public AppStoreConnector(ILogger<AppStoreConnector> logger, IAppleReceiptVerificatorService verificator, ISubscriptionRepository repository)
+        public AppStoreConnector(ILogger<AppStoreConnector> logger, IAppleReceiptVerificatorService verificator)
         {
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             Verificator = verificator ?? throw new ArgumentNullException(nameof(verificator));
-            Repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
         public async Task<SubscriptionInfo> GetSubscriptionInfo(SubscriptionInfoArgs args)
@@ -30,7 +28,6 @@
             return status switch
             {
                 SubscriptionQueryStatus.NotFound => SubscriptionInfo.NotFound,
-                SubscriptionQueryStatus.UserMismatched => SubscriptionInfo.UserMismatched,
                 SubscriptionQueryStatus.Expired => CreateExpiredSubscription(args.UserId, result.AppleVerificationResponse),
                 _ => CreateSubscription(args.UserId, args.ProductId, result.AppleVerificationResponse)
             };
@@ -73,10 +70,10 @@
 
             if (result is null) return (null, SubscriptionQueryStatus.NotFound);
 
-            return (result, await ValidateVerificationResult(userId, result));
+            return (result, ValidateVerificationResult(result));
         }
 
-        async Task<SubscriptionQueryStatus> ValidateVerificationResult(string userId, AppleReceiptVerificationResult verificationResult)
+        SubscriptionQueryStatus ValidateVerificationResult(AppleReceiptVerificationResult verificationResult)
         {
             var response = verificationResult?.AppleVerificationResponse;
 
@@ -93,17 +90,7 @@
                 return SubscriptionQueryStatus.NotFound;
             }
 
-            if (userId.IsEmpty()) return SubscriptionQueryStatus.Succeeded;
-
-            var transactionIds = response.LatestReceiptInfo.Select(x => x.TransactionId).ToArray();
-            if (transactionIds.None()) return SubscriptionQueryStatus.Succeeded;
-
-            var originUserId = await Repository.GetOriginUserOfTransactionIds(transactionIds);
-            if (originUserId.IsEmpty()) return SubscriptionQueryStatus.Succeeded;
-            if (originUserId.Equals(userId, caseSensitive: false)) return SubscriptionQueryStatus.Succeeded;
-
-            Logger.LogWarning($"This receipt is associated to {originUserId} and can't be used for {userId}.");
-            return SubscriptionQueryStatus.UserMismatched;
+            return SubscriptionQueryStatus.Succeeded;
         }
     }
 }

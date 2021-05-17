@@ -16,7 +16,5 @@
         public SubscriptionInfo(SubscriptionQueryStatus status = SubscriptionQueryStatus.Succeeded) => Status = status;
 
         public static SubscriptionInfo NotFound = new(SubscriptionQueryStatus.NotFound);
-
-        public static SubscriptionInfo UserMismatched = new(SubscriptionQueryStatus.UserMismatched);
     }
 }

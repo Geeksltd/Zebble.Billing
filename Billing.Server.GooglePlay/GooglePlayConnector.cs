@@ -26,39 +26,36 @@
         {
             var product = await Provider.GetById(args.ProductId);
 
-            try
+            if (product.Type == ProductType.Subscription)
             {
-                if (product.Type == ProductType.Subscription)
+                var (subscriptionResult, subscriptionStatus) = await Execute(x => x.Subscriptions.Get(Options.PackageName, args.ProductId, args.PurchaseToken));
+
+                return subscriptionStatus switch
                 {
-                    var subscriptionResult = await Publisher.Purchases.Subscriptions.Get(Options.PackageName, args.ProductId, args.PurchaseToken).ExecuteAsync();
-
-                    if (subscriptionResult is null) return SubscriptionInfo.NotFound;
-                    return CreateSubscription(args.UserId, subscriptionResult);
-                }
-
-                var productResult = await Publisher.Purchases.Products.Get(Options.PackageName, args.ProductId, args.PurchaseToken).ExecuteAsync();
-
-                if (productResult is null) return SubscriptionInfo.NotFound;
-                return CreateSubscription(args.UserId, productResult);
+                    SubscriptionQueryStatus.NotFound => SubscriptionInfo.NotFound,
+                    SubscriptionQueryStatus.Expired => CreateExpiredSubscription(args.UserId),
+                    _ => CreateSubscription(args.UserId, subscriptionResult)
+                };
             }
-            catch (GoogleApiException ex)
+
+            var (productResult, productStatus) = await Execute(x => x.Products.Get(Options.PackageName, args.ProductId, args.PurchaseToken));
+
+            return productStatus switch
             {
-                if (ex.Error.Errors.Any(x => x.Reason.IsAnyOf("subscriptionPurchaseNoLongerAvailable")))
-                    return new SubscriptionInfo
-                    {
-                        UserId = args.UserId,
-                        ExpirationDate = LocalTime.UtcToday
-                    };
+                SubscriptionQueryStatus.NotFound => SubscriptionInfo.NotFound,
+                SubscriptionQueryStatus.Expired => CreateExpiredSubscription(args.UserId),
+                _ => CreateSubscription(args.UserId, productResult)
+            };
+        }
 
-                if (ex.Error.Errors.Any(x => x.Reason.IsAnyOf("purchaseTokenNoLongerValid")))
-                    return new SubscriptionInfo
-                    {
-                        UserId = args.UserId,
-                        CancellationDate = LocalTime.UtcToday
-                    };
-
-                throw;
-            }
+        SubscriptionInfo CreateExpiredSubscription(string userId)
+        {
+            return new SubscriptionInfo
+            {
+                UserId = userId,
+                SubscriptionDate = LocalTime.UtcToday,
+                ExpirationDate = LocalTime.UtcNow
+            };
         }
 
         SubscriptionInfo CreateSubscription(string userId, SubscriptionPurchase purchase)
@@ -83,6 +80,25 @@
                 SubscriptionDate = purchase.PurchaseTimeMillis.ToDateTime(),
                 CancellationDate = purchase.PurchaseState == 1 ? LocalTime.UtcNow : null
             };
+        }
+
+        async Task<(TResult, SubscriptionQueryStatus)> Execute<TResult>(Func<PurchasesResource, AndroidPublisherBaseServiceRequest<TResult>> callee)
+        {
+            try
+            {
+                var result = await callee(Publisher.Purchases).ExecuteAsync();
+
+                if (result is null) return (default, SubscriptionQueryStatus.NotFound);
+                return (result, SubscriptionQueryStatus.Succeeded);
+            }
+            catch (GoogleApiException ex)
+            {
+                var reasons = ex.Error.Errors.Select(x => x.Reason).ToArray();
+                if (reasons.ContainsAny("subscriptionPurchaseNoLongerAvailable", "purchaseTokenNoLongerValid"))
+                    return (default, SubscriptionQueryStatus.Expired);
+
+                throw;
+            }
         }
     }
 }

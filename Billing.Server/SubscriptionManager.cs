@@ -3,17 +3,20 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
+    using Microsoft.Extensions.Logging;
     using Olive;
 
     public class SubscriptionManager
     {
+        readonly ILogger<SubscriptionManager> Logger;
         readonly ISubscriptionRepository Repository;
         readonly IStoreConnectorResolver StoreConnectorResolver;
 
-        public SubscriptionManager(ISubscriptionRepository repository, IStoreConnectorResolver storeConnectorResolver)
+        public SubscriptionManager(ILogger<SubscriptionManager> logger, ISubscriptionRepository repository, IStoreConnectorResolver storeConnectorResolver)
         {
-            Repository = repository;
-            StoreConnectorResolver = storeConnectorResolver;
+            Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            Repository = repository ?? throw new ArgumentNullException(nameof(logger));
+            StoreConnectorResolver = storeConnectorResolver ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public async Task<PurchaseAttemptResult> PurchaseAttempt(string userId, string platform, string productId, string purchaseToken)
@@ -31,7 +34,7 @@
             });
 
             if (subscriptionInfo.Status == SubscriptionQueryStatus.NotFound) return PurchaseAttemptResult.Failed;
-            if (subscriptionInfo.Status == SubscriptionQueryStatus.UserMismatched) return PurchaseAttemptResult.UserMismatched;
+            if (await IsSubscriptionMismatched(userId, subscriptionInfo)) return PurchaseAttemptResult.UserMismatched;
 
             subscription = await Repository.GetByTransactionId(subscriptionInfo.TransactionId);
             if (subscription is not null)
@@ -69,6 +72,20 @@
                 await TryToUpdateSubscription(subscription);
 
             return subscription;
+        }
+
+        async Task<bool> IsSubscriptionMismatched(string userId, SubscriptionInfo subscriptionInfo)
+        {
+            if (userId.IsEmpty()) return false;
+
+            if (subscriptionInfo.TransactionId.IsEmpty()) return false;
+
+            var originUserId = await Repository.GetOriginUserOfTransactionId(subscriptionInfo.TransactionId);
+            if (originUserId.IsEmpty()) return false;
+            if (originUserId.Equals(userId, caseSensitive: false)) return false;
+
+            Logger.LogWarning($"This purchase is associated to {originUserId} and can't be used for {userId}.");
+            return true;
         }
 
         async Task TryToUpdateSubscription(Subscription subscription)
