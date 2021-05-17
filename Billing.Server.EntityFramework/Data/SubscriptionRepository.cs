@@ -59,7 +59,7 @@
                                 .Where(x => !x.IsCanceled())
                                 .Where(x => !x.IsExpired())
                                 .Select(x => x.UserId)
-                                .FirstOrDefault();
+                                .FirstOrDefault(x => x.HasValue());
         }
     }
 }
