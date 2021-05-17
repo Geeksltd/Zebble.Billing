@@ -70,7 +70,7 @@
                 result = await Verificator.VerifyAppleSandBoxReceiptAsync(purchaseToken);
             else if (result?.Status == IAPVerificationResponseStatus.ProdReceiptOnTest)
                 result = await Verificator.VerifyAppleProductionReceiptAsync(purchaseToken);
-                                        
+
             if (result is null) return (null, SubscriptionQueryStatus.NotFound);
 
             return (result, await ValidateVerificationResult(userId, result));
@@ -99,7 +99,7 @@
             if (transactionIds.None()) return SubscriptionQueryStatus.Succeeded;
 
             var originUserId = await Repository.GetOriginUserOfTransactionIds(transactionIds);
-            if (userId?.Equals(originUserId, caseSensitive: false) ?? true) return SubscriptionQueryStatus.Succeeded;
+            if (originUserId?.Equals(userId, caseSensitive: false) ?? true) return SubscriptionQueryStatus.Succeeded;
 
             Logger.LogWarning($"This receipt is associated to {originUserId} and can't be used for {userId}.");
             return SubscriptionQueryStatus.UserMismatched;
