@@ -99,7 +99,8 @@
             if (transactionIds.None()) return SubscriptionQueryStatus.Succeeded;
 
             var originUserId = await Repository.GetOriginUserOfTransactionIds(transactionIds);
-            if (originUserId?.Equals(userId, caseSensitive: false) ?? true) return SubscriptionQueryStatus.Succeeded;
+            if (originUserId.IsEmpty()) return SubscriptionQueryStatus.Succeeded;
+            if (originUserId.Equals(userId, caseSensitive: false)) return SubscriptionQueryStatus.Succeeded;
 
             Logger.LogWarning($"This receipt is associated to {originUserId} and can't be used for {userId}.");
             return SubscriptionQueryStatus.UserMismatched;
