@@ -115,8 +115,8 @@
             {
                 Type = JsonCredentialParameters.ServiceAccountCredentialType,
                 ProjectId = Options.ProjectId,
-                PrivateKeyId = Options.PrivateKeyId,
-                PrivateKey = Options.PrivateKey,
+                PrivateKeyId = Options.PubSubPrivateKeyId ?? Options.PrivateKeyId,
+                PrivateKey = Options.PubSubPrivateKey ?? Options.PrivateKey,
                 ClientEmail = Options.ClientEmail,
                 ClientId = Options.ClientId
             }.ToJson(new JsonSerializerOptions { PropertyNamingPolicy = new SnakeCasePropertyNamingPolicy() });

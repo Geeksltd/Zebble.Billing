@@ -3,6 +3,8 @@
     public class GooglePlayOptions : StoreOptionsBase
     {
         public string ProjectId { get; set; }
+        public string PubSubPrivateKeyId { get; set; }
+        public string PubSubPrivateKey { get; set; }
         public string PrivateKeyId { get; set; }
         public string PrivateKey { get; set; }
         public string ClientEmail { get; set; }
