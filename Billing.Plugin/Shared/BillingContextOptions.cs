@@ -50,13 +50,16 @@
         /// </remarks>
         public string CatalogPath { get; set; } = @"Catalog.json";
 
-        public BillingContextOptions()
+        public BillingContextOptions Validate()
         {
-            var baseUrl = Config.Get("Billing.Base.Url", Config.Get("Api.Base.Url"));
+            if (BaseUri == null)
+            {
+                var baseUrl = Config.Get("Billing.Base.Url", Config.Get("Api.Base.Url"));
+                if (baseUrl.HasValue()) BaseUri = new Uri(baseUrl);
+            }
 
-            if (baseUrl.HasValue()) BaseUri = new Uri(baseUrl);
-
-            if (BaseUri == null) throw new ArgumentNullException(nameof(BaseUri), "Add Billing.Base.Url or Api.Base.Url to your Config.xml");
+            if (BaseUri == null)
+                throw new ArgumentNullException(nameof(BaseUri), "Add Billing.Base.Url or Api.Base.Url to your Config.xml");
 
             if (!BaseUri.IsAbsoluteUri) throw new ArgumentException($"{nameof(BaseUri)} should be absolute.");
 
@@ -67,6 +70,8 @@
             if (SubscriptionStatusPath.IsEmpty()) throw new ArgumentNullException(nameof(SubscriptionStatusPath));
 
             if (CatalogPath.IsEmpty()) throw new ArgumentNullException(nameof(CatalogPath));
+
+            return this;
         }
     }
 }

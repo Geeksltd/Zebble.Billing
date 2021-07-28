@@ -32,15 +32,15 @@
             if (options is null) throw new ArgumentNullException(nameof(options));
             if (userAccessor is null) throw new ArgumentNullException(nameof(userAccessor));
 
-            Options = options;
+            Options = options.Validate();
 
             Current = new BillingContext
             {
                 UserAccessor = userAccessor,
-                ProductProvider = new ProductProvider(Options.CatalogPath)
+                ProductProvider = new ProductProvider(Options.CatalogPath),
+                SubscriptionSource = new TaskCompletionSource<bool>()
             };
 
-            Current.SubscriptionSource = new TaskCompletionSource<bool>();
             Thread.Pool.RunOnNewThread(async () =>
             {
                 await SubscriptionFileStore.Load();
