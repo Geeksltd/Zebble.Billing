@@ -5,7 +5,7 @@
     <RootNamespace>Zebble</RootNamespace>
     <PackageId>Zebble.Billing.Server.CafeBazaar</PackageId>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
-    <Version>1.0.18.0</Version>
+    <Version>1.0.19.0</Version>
     <PackOnBuild>true</PackOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
     <DefineConstants>$(DefineConstants)</DefineConstants>
@@ -37,7 +37,7 @@
     <None Remove=".gitignore" />
     <None Remove="icon.png" />
     <None Remove="README.md" />
-    <PackageReference Include="CafeBazaar.DeveloperApi" Version="1.0.18" />
+    <PackageReference Include="CafeBazaar.DeveloperApi" Version="1.0.19" />
     <ProjectReference Include="..\Billing.Server\Billing.Server.csproj" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
