@@ -3,7 +3,7 @@
     using Amazon.DynamoDBv2.DataModel;
 
     [DynamoDBTable("Transactions")]
-    public sealed class TransactionProxy : Transaction, IBillingDynamoDbProxy
+    sealed class TransactionProxy : Transaction, IBillingDynamoDbProxy
     {
         [DynamoDBHashKey]
         public override string Id { get; set; }

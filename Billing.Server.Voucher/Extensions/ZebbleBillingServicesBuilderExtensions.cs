@@ -7,7 +7,11 @@
 
     public static partial class ZebbleBillingServicesBuilderExtensions
     {
-        public static ZebbleBillingServicesBuilder AddVoucher(this ZebbleBillingServicesBuilder builder, Action<ZebbleBillingVoucherServicesBuilder> voucherBuilder = null, string configKey = "ZebbleBilling:Voucher")
+        public static ZebbleBillingServicesBuilder AddVoucher(
+            this ZebbleBillingServicesBuilder builder,
+            Action<ZebbleBillingVoucherServicesBuilder> voucherBuilder = null,
+            string configKey = "ZebbleBilling:Voucher"
+        )
         {
             builder.Services.AddOptions<VoucherOptions>()
                             .Configure<IConfiguration>((opts, config) => config.GetSection(configKey)?.Bind(opts))

@@ -19,7 +19,12 @@
         readonly IServiceProvider Services;
         readonly GooglePlayConnector StoreConnector;
 
-        public GooglePlayQueueProcessor(ILogger<GooglePlayQueueProcessor> logger, IOptionsSnapshot<GooglePlayOptions> options, IServiceProvider services, GooglePlayConnector storeConnector)
+        public GooglePlayQueueProcessor(
+            ILogger<GooglePlayQueueProcessor> logger,
+            IOptionsSnapshot<GooglePlayOptions> options,
+            IServiceProvider services,
+            GooglePlayConnector storeConnector
+        )
         {
             Logger = logger;
             Options = options.Value;
@@ -68,11 +73,13 @@
                     var subscriptionInfo = await StoreConnector.GetSubscriptionInfo(notification.ToArgs());
                     if (subscriptionInfo.Status != SubscriptionQueryStatus.Succeeded) return;
 
+                    var oldSubscription = await repository.GetByTransactionId(subscriptionInfo.TransactionId);
+
                     subscription = await repository.AddSubscription(new Subscription
                     {
                         Id = Guid.NewGuid().ToString(),
                         ProductId = notification.ProductId,
-                        UserId = subscriptionInfo.UserId,
+                        UserId = subscriptionInfo.UserId.Or(oldSubscription?.UserId).Or("<NOT_PROVIDED>"),
                         Platform = "GooglePlay",
                         TransactionId = subscriptionInfo.TransactionId,
                         TransactionDate = notification.EventTime,
@@ -115,8 +122,8 @@
             {
                 Type = JsonCredentialParameters.ServiceAccountCredentialType,
                 ProjectId = Options.ProjectId,
-                PrivateKeyId = Options.PubSubPrivateKeyId ?? Options.PrivateKeyId,
-                PrivateKey = Options.PubSubPrivateKey ?? Options.PrivateKey,
+                PrivateKeyId = Options.PubSubPrivateKeyId.Or(Options.PrivateKeyId),
+                PrivateKey = Options.PubSubPrivateKey.Or(Options.PrivateKey),
                 ClientEmail = Options.ClientEmail,
                 ClientId = Options.ClientId
             }.ToJson(new JsonSerializerOptions { PropertyNamingPolicy = new SnakeCasePropertyNamingPolicy() });

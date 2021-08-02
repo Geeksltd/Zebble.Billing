@@ -1,15 +1,18 @@
 ﻿namespace Zebble.Billing
 {
+    using Microsoft.Extensions.Logging;
     using Olive;
     using System;
     using System.Threading.Tasks;
 
     class VoucherConnector : IStoreConnector
     {
+        readonly ILogger<VoucherConnector> Logger;
         readonly IVoucherRepository Repository;
 
-        public VoucherConnector(IVoucherRepository repository)
+        public VoucherConnector(ILogger<VoucherConnector> logger, IVoucherRepository repository)
         {
+            Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             Repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
@@ -17,7 +20,12 @@
         {
             var result = await Repository.GetByCode(args.PurchaseToken);
 
-            if (result is null) return SubscriptionInfo.NotFound;
+            if (result is null)
+            {
+                Logger.LogWarning($"No voucher with code '{args.PurchaseToken}' found.");
+                return SubscriptionInfo.NotFound;
+            }
+
             return CreateSubscription(args.UserId, result);
         }
 

@@ -4,7 +4,7 @@
     using Olive;
 
     [DynamoDBTable("Subscriptions")]
-    public sealed class SubscriptionProxy : Subscription, IBillingDynamoDbProxy
+    sealed class SubscriptionProxy : Subscription, IBillingDynamoDbProxy
     {
         [DynamoDBHashKey]
         public override string Id { get; set; }

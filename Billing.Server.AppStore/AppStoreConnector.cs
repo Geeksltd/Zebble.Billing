@@ -23,7 +23,7 @@
 
         public async Task<SubscriptionInfo> GetSubscriptionInfo(SubscriptionInfoArgs args)
         {
-            var (result, status) = await GetVerifiedResult(args.UserId, args.PurchaseToken);
+            var (result, status) = await GetVerifiedResult(args.PurchaseToken);
 
             return status switch
             {
@@ -43,10 +43,14 @@
             };
         }
 
-        static SubscriptionInfo CreateSubscription(string userId, string productId, IAPVerificationResponse response)
+        SubscriptionInfo CreateSubscription(string userId, string productId, IAPVerificationResponse response)
         {
             var purchase = response?.LatestReceiptInfo.OrderBy(x => x.PurchaseDateDt).LastOrDefault(x => x.ProductId == productId);
-            if (purchase is null) return SubscriptionInfo.NotFound;
+            if (purchase is null)
+            {
+                Logger.LogError($"The receipt contains no purchase info for product id '{productId}'.");
+                return SubscriptionInfo.NotFound;
+            }
 
             return new SubscriptionInfo
             {
@@ -59,7 +63,7 @@
             };
         }
 
-        async Task<(AppleReceiptVerificationResult, SubscriptionQueryStatus)> GetVerifiedResult(string userId, string purchaseToken)
+        async Task<(AppleReceiptVerificationResult, SubscriptionQueryStatus)> GetVerifiedResult(string purchaseToken)
         {
             var result = await Verificator.VerifyAppleReceiptAsync(purchaseToken);
 

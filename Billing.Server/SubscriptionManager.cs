@@ -23,7 +23,12 @@
         {
             var subscription = await Repository.GetByPurchaseToken(purchaseToken);
             if (subscription is not null)
+            {
+                Logger.LogWarning($"An existing subscription found for token '{purchaseToken}'.");
+                Logger.LogWarning($"Additional params {{ userId: {userId}, platform: {platform}, productId: {productId} }}");
+                Logger.LogWarning($"Existing params {{ userId: {subscription.UserId}, platform: {subscription.Platform}, productId: {subscription.ProductId} }}");
                 throw new Exception($"An existing subscription found for token '{purchaseToken}'.");
+            }
 
             var storeConnector = StoreConnectorResolver.Resolve(platform);
             var subscriptionInfo = await storeConnector.GetSubscriptionInfo(new SubscriptionInfoArgs
@@ -33,8 +38,19 @@
                 PurchaseToken = purchaseToken
             });
 
-            if (subscriptionInfo.Status == SubscriptionQueryStatus.NotFound) return PurchaseAttemptResult.Failed;
-            if (await IsSubscriptionMismatched(userId, subscriptionInfo)) return PurchaseAttemptResult.UserMismatched;
+            if (subscriptionInfo.Status == SubscriptionQueryStatus.NotFound)
+            {
+                Logger.LogWarning($"No subscription info found for token '{purchaseToken}'.");
+                Logger.LogWarning($"Additional params {{ userId: {userId}, platform: {platform}, productId: {productId} }}");
+                return PurchaseAttemptResult.Failed;
+            }
+
+            if (await IsSubscriptionMismatched(userId, subscriptionInfo))
+            {
+                Logger.LogWarning($"A mismatched subscription info found for token '{purchaseToken}'.");
+                Logger.LogWarning($"Additional params {{ userId: {userId}, platform: {platform}, productId: {productId} }}");
+                return PurchaseAttemptResult.UserMismatched;
+            }
 
             await Repository.AddSubscription(new Subscription
             {
@@ -58,6 +74,13 @@
         public async Task<Subscription> GetSubscriptionStatus(string userId)
         {
             var subscriptions = await Repository.GetAll(userId);
+            if (subscriptions.None())
+            {
+                Logger.LogWarning($"Found no subscription record for user with id '{userId}'.");
+                return null;
+            }
+
+            Logger.LogInformation($"Found {subscriptions.Length} subscription records for user with id '{userId}'.");
 
             var subscription = subscriptions.OrderBy(x => x.SubscriptionDate).LastOrDefault();
 
@@ -89,7 +112,12 @@
             var storeConnector = StoreConnectorResolver.Resolve(subscription.Platform);
             var subscriptionInfo = await storeConnector.GetSubscriptionInfo(subscription.ToArgs());
 
-            if (subscriptionInfo.Status != SubscriptionQueryStatus.Succeeded) return;
+            if (subscriptionInfo.Status != SubscriptionQueryStatus.Succeeded)
+            {
+                Logger.LogWarning($"Subscription with id '{subscription.Id}' needed to be updated, but we were not able to pull fresh data from the store.");
+                Logger.LogWarning($"Additional params {{ userId: {subscription.UserId}, platform: {subscription.Platform}, productId: {subscription.ProductId} }}");
+                return;
+            }
 
             subscription.SubscriptionDate = subscriptionInfo.SubscriptionDate;
             subscription.ExpirationDate = subscriptionInfo.ExpirationDate;
