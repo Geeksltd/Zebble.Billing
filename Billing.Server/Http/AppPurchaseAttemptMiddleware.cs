@@ -7,7 +7,7 @@
     {
         public AppPurchaseAttemptMiddleware(RequestDelegate _) { }
 
-        public async Task InvokeAsync(HttpContext context, SubscriptionManager manager)
+        public async Task InvokeAsync(HttpContext context, ISubscriptionManager manager)
         {
             var model = await context.Request.Body.ConvertTo<AppPurchaseAttemptModel>();
 
