@@ -148,12 +148,21 @@ This is the sample settings file we included in the project to clearly show you 
     "GooglePlay": {
       "PackageName": "<play.package.name>",
       "QueueProcessorUri": "google-play/process-queue",
-      "ProjectId": "<PROJECT_ID>",
-      "PrivateKeyId": "<PRIVATE_KEY_ID>",
-      "PrivateKey": "<PRIVATE_KEY>",
-      "ClientEmail": "<CLIENT_EMAIL>",
-      "ClientId": "<CLIENT_ID>",
-      "SubscriptionId": "<SUBSCRIPTION_ID>"
+      "Store": {      
+          "ProjectId": "<PROJECT_ID>",
+          "PrivateKeyId": "<PRIVATE_KEY_ID>",
+          "PrivateKey": "<PRIVATE_KEY>",
+          "ClientEmail": "<CLIENT_EMAIL>",
+          "ClientId": "<CLIENT_ID>"
+      },
+      "PubSub": {      
+          "ProjectId": "<PROJECT_ID>",
+          "PrivateKeyId": "<PRIVATE_KEY_ID>",
+          "PrivateKey": "<PRIVATE_KEY>",
+          "ClientEmail": "<CLIENT_EMAIL>",
+          "ClientId": "<CLIENT_ID>",
+          "SubscriptionId": "<SUBSCRIPTION_ID>"
+      }
     },
     "CafeBazaar": {
       "PackageName": "<bazaar.package.name>",
