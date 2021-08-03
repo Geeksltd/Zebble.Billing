@@ -1,15 +1,16 @@
 ﻿namespace Zebble.Billing
 {
-    using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Http;
+	using System.Threading.Tasks;
+	using Microsoft.AspNetCore.Http;
 
-    class GooglePlayQueueProcessingMiddleware
-    {
-        public GooglePlayQueueProcessingMiddleware(RequestDelegate _) { }
+	class GooglePlayQueueProcessingMiddleware
+	{
+		public GooglePlayQueueProcessingMiddleware(RequestDelegate _) { }
 
-        public Task InvokeAsync(HttpContext _, GooglePlayQueueProcessor queueProcessor)
-        {
-            return queueProcessor.Process();
-        }
-    }
+		public async Task InvokeAsync(HttpContext context, GooglePlayQueueProcessor queueProcessor)
+		{
+			var count = await queueProcessor.Process();
+			await context.Response.WriteAsync($"Processed: {count}");
+		}
+	}
 }
