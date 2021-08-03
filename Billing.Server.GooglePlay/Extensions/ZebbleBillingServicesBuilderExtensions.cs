@@ -37,6 +37,7 @@
 				var initializer = new ServiceAccountCredential(new ServiceAccountCredential.Initializer(options.ClientEmail)
 				{
 					ProjectId = options.ProjectId,
+					KeyId = options.PrivateKeyId,
 					Scopes = new[] { AndroidPublisherService.ScopeConstants.Androidpublisher }
 				}.FromPrivateKey(options.PrivateKey));
 
