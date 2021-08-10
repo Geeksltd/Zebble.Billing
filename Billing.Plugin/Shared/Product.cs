@@ -1,9 +1,8 @@
 ﻿namespace Zebble.Billing
 {
-    using Plugin.InAppBilling;
-
-    public partial class Product
-    {
-        public decimal Price { get; set; }
-    }
+	public partial class Product
+	{
+		public decimal Price { get; set; }
+		public string CurrencySymbol { get; set; }
+	}
 }

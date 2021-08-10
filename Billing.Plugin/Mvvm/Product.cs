@@ -2,6 +2,6 @@
 {
     partial class Product
     {
-        public string LocalPrice => $"${Price}";
+        public string LocalPrice => $"{CurrencySymbol}{Price}";
     }
 }

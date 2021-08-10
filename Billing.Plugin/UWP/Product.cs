@@ -1,7 +1,7 @@
 ﻿namespace Zebble.Billing
 {
-    partial class Product
-    {
-        public string LocalPrice => $"${Price}";
-    }
+	partial class Product
+	{
+		public string LocalPrice => $"{CurrencySymbol}{Price}";
+	}
 }
