@@ -19,6 +19,7 @@
         public static BillingContext Current { get; private set; }
         public static AsyncEvent<SubscriptionPurchasedEventArgs> SubscriptionPurchased = new();
         public static AsyncEvent<SubscriptionRestoredEventArgs> SubscriptionRestored = new();
+        public static AsyncEvent<PriceUpdateFailedEventArgs> PriceUpdateFailed = new();
 
         public static void Initialize(Func<IBillingUser> userAccessor)
         {

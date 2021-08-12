@@ -43,13 +43,18 @@
         /// <remarks>An active internet connection is required.</remarks>
         public async Task UpdateProductPrices()
         {
+            var pricesUpdated = false;
+
 #if !MVVM && !UWP
             await UIContext.AwaitConnection(10);
             await Task.Delay(3.Seconds());
 
-            try { await new ProductsPriceUpdaterCommand().Execute(); }
+            try { pricesUpdated = await new ProductsPriceUpdaterCommand().Execute(); }
             catch (Exception ex) { Log.For(typeof(BillingContext)).Error(ex); }
 #endif
+
+            if (pricesUpdated) return;
+            await PriceUpdateFailed.Raise(new PriceUpdateFailedEventArgs());
         }
     }
 }
