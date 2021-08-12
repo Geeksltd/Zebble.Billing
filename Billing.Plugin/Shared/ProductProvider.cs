@@ -72,7 +72,7 @@
 					.GetCultures(CultureTypes.AllCultures)
 					.Where(x => !x.IsNeutralCulture)
 					.Select(x => x.Name)
-					.ExceptNull()
+					.Where(x => x.HasValue())
 					.Select(x => new RegionInfo(x))
 					.GroupBy(x => x.ISOCurrencySymbol)
 					.ToDictionary(x => x.Key, x => x.First().CurrencySymbol);

@@ -1,6 +1,7 @@
 ﻿namespace Zebble.Billing
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using Olive;
 
@@ -54,7 +55,11 @@
 #endif
 
             if (pricesUpdated) return;
-            await PriceUpdateFailed.Raise(new PriceUpdateFailedEventArgs());
+            await PriceUpdateFailed.Raise(new PriceUpdateFailedEventArgs
+            {
+                ProductIds = (await ProductProvider.GetProducts()).Select(x => x.Id).ToArray(),
+                UpdatePrice = ProductProvider.UpdatePrice,
+            });
         }
     }
 }
