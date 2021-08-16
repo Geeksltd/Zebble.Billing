@@ -43,6 +43,6 @@
     <ProjectReference Include="..\Billing.Server.Voucher\Billing.Server.Voucher.csproj" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="update-local-nuget-cache" />
+    <Exec Command="update-local-nuget-cache $(TargetDir)" />
   </Target>
 </Project>
