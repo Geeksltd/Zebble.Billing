@@ -1,6 +1,5 @@
 ﻿namespace Zebble.Billing
 {
-    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using Olive;
@@ -17,15 +16,11 @@
         /// </summary>
         public async Task<Product> GetProduct(string productId)
         {
-            if (productId.IsEmpty()) return null;
-
-            var product = await ProductProvider.GetById(productId) ?? new Product
+            return await ProductProvider.GetById(productId) ?? new Product
             {
                 Id = productId,
                 Type = ProductType.Voucher
             };
-
-            return product;
         }
 
         /// <summary>
@@ -51,7 +46,7 @@
             await Task.Delay(3.Seconds());
 
             try { pricesUpdated = await new ProductsPriceUpdaterCommand().Execute(); }
-            catch (Exception ex) { Log.For(typeof(BillingContext)).Error(ex); }
+            catch (System.Exception ex) { Log.For(typeof(BillingContext)).Error(ex); }
 #endif
 
             if (pricesUpdated) return;
