@@ -4,6 +4,7 @@
     using System.Linq;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.DependencyInjection.Extensions;
     using Olive;
 
     public static class ServiceCollectionExtensions
@@ -29,6 +30,8 @@
             services.AddScoped<ISubscriptionManager, SubscriptionManager>();
 
             builder?.Invoke(new ZebbleBillingServicesBuilder(services));
+
+            services.TryAddScoped<ISubscriptionComparer, NeutralSubscriptionComparer>();
 
             return services;
         }
