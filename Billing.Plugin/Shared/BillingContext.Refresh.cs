@@ -14,8 +14,11 @@
         public async Task BackgroundRefresh()
         {
             while (User == null) await Task.Delay(500);
-            if (Subscription?.ExpirationDate is null) return;
-            if (Subscription.ExpirationDate?.AddDays(-2) > LocalTime.Now) return;
+            if (Subscription is not null)
+            {
+                if (Subscription.ExpirationDate is null) return;
+                if (Subscription.ExpirationDate?.AddDays(-2) > LocalTime.Now) return;
+            }
 
             await UIContext.AwaitConnection();
             try { await DoRefresh(); }
