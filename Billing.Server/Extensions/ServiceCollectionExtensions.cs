@@ -31,7 +31,7 @@
 
             builder?.Invoke(new ZebbleBillingServicesBuilder(services));
 
-            services.TryAddScoped<ISubscriptionComparer, NeutralSubscriptionComparer>();
+            services.TryAddScoped<ISubscriptionComparer, DefaultSubscriptionComparer>();
 
             return services;
         }
