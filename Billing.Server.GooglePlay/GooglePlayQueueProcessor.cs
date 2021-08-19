@@ -13,40 +13,47 @@
 		readonly ILogger<GooglePlayQueueProcessor> Logger;
 		readonly IServiceProvider Services;
 		readonly GooglePlayConnector StoreConnector;
-		readonly SubscriberClient Subscriber;
 
 		public GooglePlayQueueProcessor(
 			ILogger<GooglePlayQueueProcessor> logger,
 			IServiceProvider services,
-			GooglePlayConnector storeConnector,
-			SubscriberClient subscriber
+			GooglePlayConnector storeConnector
 		)
 		{
 			Logger = logger;
 			Services = services;
 			StoreConnector = storeConnector;
-			Subscriber = subscriber;
 		}
 
 		public async Task<int> Process()
 		{
 			var messageCount = 0;
 
-			var startTask = Subscriber.StartAsync(async (message, _) =>
+			while (true)
 			{
-				var notification = message.ToNotification();
+				var chunkCount = 0;
 
-				Interlocked.Increment(ref messageCount);
+				var subscriber = Services.GetService<SubscriberClient>();
 
-				if (!notification.IsTest) await ProccessNotification(notification);
+				var startTask = subscriber.StartAsync(async (message, _) =>
+				{
+					var notification = message.ToNotification();
 
-				return SubscriberClient.Reply.Ack;
-			});
+					Interlocked.Increment(ref chunkCount);
 
-			await Task.Delay(5.Seconds());
-			await Subscriber.StopAsync(CancellationToken.None);
+					if (!notification.IsTest) await ProccessNotification(notification);
 
-			await startTask;
+					return SubscriberClient.Reply.Ack;
+				});
+
+				await Task.Delay(2.Seconds());
+				await subscriber.StopAsync(CancellationToken.None);
+
+				await startTask;
+
+				if (chunkCount == 0) break;
+				else messageCount += chunkCount;
+			}
 
 			Logger.Debug($"{messageCount} queue messages are processed.");
 
