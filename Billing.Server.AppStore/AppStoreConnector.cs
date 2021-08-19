@@ -58,7 +58,7 @@
 			var purchase = response?.LatestReceiptInfo?.OrderBy(x => x.PurchaseDateDt).LastOrDefault(x => x.ProductId == productId);
 			if (purchase is null)
 			{
-				Logger.LogError($"The receipt contains no purchase info for product id '{productId}'.");
+				Logger.LogWarning($"The receipt contains no purchase info for product id '{productId}'.");
 				return SubscriptionInfo.NotFound;
 			}
 
