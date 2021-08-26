@@ -47,7 +47,7 @@
 				});
 			});
 
-			builder.Services.AddScoped(sp =>
+			builder.Services.AddTransient(sp =>
 			{
 				var options = sp.GetService<IOptions<GooglePlayOptions>>().Value.PubSub;
 
