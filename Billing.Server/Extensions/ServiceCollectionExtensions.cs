@@ -9,7 +9,10 @@
 
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddZebbleBilling(this IServiceCollection services, Action<ZebbleBillingServicesBuilder> builder = null)
+        public static IServiceCollection AddZebbleBilling(
+            this IServiceCollection services,
+            Action<ZebbleBillingServicesBuilder> builder = null
+        )
         {
             if (services is null) throw new ArgumentNullException(nameof(services));
 
@@ -27,7 +30,7 @@
 
             services.AddScoped<IStoreConnectorResolver, StoreConnectorResolver>();
 
-            services.AddScoped<ISubscriptionManager, SubscriptionManager>();
+            services.TryAddScoped<ISubscriptionManager, DefaultSubscriptionManager>();
 
             builder?.Invoke(new ZebbleBillingServicesBuilder(services));
 
