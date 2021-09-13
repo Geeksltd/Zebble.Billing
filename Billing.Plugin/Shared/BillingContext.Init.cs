@@ -1,5 +1,6 @@
 ﻿namespace Zebble.Billing
 {
+    using Olive;
     using System;
     using System.Threading.Tasks;
 
@@ -28,7 +29,11 @@
 
         public static void Initialize(BillingContextOptions options, Func<IBillingUser> userAccessor)
         {
-            if (Current != null) throw new InvalidOperationException($"{nameof(BillingContext)} is already initialized.");
+            if (Current is not null)
+            {
+                Log.For<BillingContext>().Error($"Ignoring because {nameof(BillingContext)} is already initialized.");
+                return;
+            }
 
             if (options is null) throw new ArgumentNullException(nameof(options));
             if (userAccessor is null) throw new ArgumentNullException(nameof(userAccessor));
