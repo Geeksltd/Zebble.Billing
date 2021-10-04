@@ -11,7 +11,11 @@
         {
             var model = await context.Request.Body.ConvertTo<AppPurchaseAttemptModel>();
 
-            await manager.PurchaseAttempt(model.UserId, model.Platform, model.ProductId, model.PurchaseToken);
+            var result = await manager.PurchaseAttempt(
+                model.UserId, model.Platform, model.ProductId, model.PurchaseToken
+            );
+
+            await context.Response.WriteAsync(result.ToJson());
         }
     }
 
