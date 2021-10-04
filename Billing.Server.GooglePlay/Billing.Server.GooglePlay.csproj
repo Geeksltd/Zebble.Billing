@@ -37,8 +37,8 @@
     <None Remove=".gitignore" />
     <None Remove="icon.png" />
     <None Remove="README.md" />
-    <PackageReference Include="Google.Apis.AndroidPublisher.v3" Version="1.53.0.2393" />
-    <PackageReference Include="Google.Cloud.PubSub.V1" Version="2.5.0" />
+    <PackageReference Include="Google.Apis.AndroidPublisher.v3" Version="1.55.0.2435" />
+    <PackageReference Include="Google.Cloud.PubSub.V1" Version="2.7.0" />
     <ProjectReference Include="..\Billing.Server\Billing.Server.csproj" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
