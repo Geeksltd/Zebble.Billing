@@ -9,10 +9,10 @@
         /// <summary>
         /// Triggers a new purchase process.
         /// </summary>
-        public async Task<PurchaseResult> PurchaseSubscription(string productId)
+        public async Task<(PurchaseResult, string)> PurchaseSubscription(string productId)
         {
 #if MVVM || UWP
-            return PurchaseResult.AppStoreUnavailable;
+            return (PurchaseResult.AppStoreUnavailable, null);
 #else
             var product = await GetProduct(productId) ?? throw new Exception($"Product with id '{productId}' not found.");
             return await new PurchaseSubscriptionCommand(product).Execute();

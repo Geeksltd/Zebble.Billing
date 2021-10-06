@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
     using Olive;
 
     public class DefaultSubscriptionManager : ISubscriptionManager
@@ -12,18 +13,21 @@
         readonly ISubscriptionRepository Repository;
         readonly ISubscriptionComparer Comparer;
         readonly IStoreConnectorResolver StoreConnectorResolver;
+        readonly BillingOptions Options;
 
         public DefaultSubscriptionManager(
             ILogger<DefaultSubscriptionManager> logger,
             ISubscriptionRepository repository,
             ISubscriptionComparer comparer,
-            IStoreConnectorResolver storeConnectorResolver
+            IStoreConnectorResolver storeConnectorResolver,
+            IOptionsSnapshot<BillingOptions> options
         )
         {
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             Repository = repository ?? throw new ArgumentNullException(nameof(repository));
             Comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
             StoreConnectorResolver = storeConnectorResolver ?? throw new ArgumentNullException(nameof(storeConnectorResolver));
+            Options = options.Value ?? throw new ArgumentNullException(nameof(options));
         }
 
         public virtual async Task<PurchaseAttemptResult> PurchaseAttempt(string userId, string platform, string productId, string purchaseToken)
@@ -52,11 +56,22 @@
                 return PurchaseAttemptResult.Failed;
             }
 
-            if (await IsSubscriptionMismatched(userId, subscriptionInfo))
+            var (isMismatched, originUserId) = await IsSubscriptionMismatched(userId, subscriptionInfo);
+            if (isMismatched)
             {
                 Logger.LogWarning($"A mismatched subscription info found for token '{purchaseToken}'.");
-                Logger.LogWarning($"Additional params {{ userId: {userId}, platform: {platform}, productId: {productId} }}");
-                return PurchaseAttemptResult.UserMismatched;
+                Logger.LogWarning($"Additional params {{ userId: {userId}, platform: {platform}, productId: {productId}, resolving strategy: {Options.UserMismatchResolvingStrategy} }}");
+
+                switch (Options.UserMismatchResolvingStrategy)
+                {
+                    case UserMismatchResolvingStrategy.Block:
+                        return PurchaseAttemptResult.UserMismatchedAndBlocked(originUserId);
+                    case UserMismatchResolvingStrategy.Replace:
+                        await CancelAllMatchingSubscriptions(userId, subscriptionInfo.TransactionId);
+                        return PurchaseAttemptResult.UserMismatchedAndReplaced(originUserId);
+                    default:
+                        throw new ArgumentOutOfRangeException($"{Options.UserMismatchResolvingStrategy} isn't supported.");
+                }
             }
 
             await Repository.AddSubscription(new Subscription
@@ -96,18 +111,30 @@
             return subscription;
         }
 
-        protected virtual async Task<bool> IsSubscriptionMismatched(string userId, SubscriptionInfo subscriptionInfo)
+        protected virtual async Task<(bool, string)> IsSubscriptionMismatched(string userId, SubscriptionInfo subscriptionInfo)
         {
-            if (userId.IsEmpty()) return false;
+            if (userId.IsEmpty()) return (false, null);
 
-            if (subscriptionInfo.TransactionId.IsEmpty()) return false;
+            if (subscriptionInfo.TransactionId.IsEmpty()) return (false, null);
 
             var originUserId = await Repository.GetOriginUserOfTransactionId(subscriptionInfo.TransactionId);
-            if (originUserId.IsEmpty()) return false;
-            if (originUserId.Equals(userId, caseSensitive: false)) return false;
+            if (originUserId.IsEmpty()) return (false, null);
+            if (originUserId.Equals(userId, caseSensitive: false)) return (false, null);
 
             Logger.LogWarning($"Transaction #{subscriptionInfo.TransactionId} is associated to {originUserId} and can't be used for {userId}.");
-            return true;
+
+            return (true, originUserId);
+        }
+
+        protected virtual async Task CancelAllMatchingSubscriptions(string userId, string transactionId)
+        {
+            var subscriptions = await Repository.GetAllWithTransactionIdNotOwnedBy(userId, transactionId);
+            Logger.LogWarning($"Found {subscriptions.Length} subscriptions for cancellation.");
+
+            subscriptions.Do(x => x.CancellationDate = LocalTime.UtcNow);
+            await Repository.UpdateSubscriptions(subscriptions);
+            Logger.LogWarning($"{subscriptions.Length} subscriptions have been cancelled.");
+            Logger.LogWarning($"Affected user ids: {subscriptions.Select(x => x.UserId).Distinct().ToString(", ")}");
         }
 
         protected virtual async Task TryToUpdateSubscription(Subscription subscription)

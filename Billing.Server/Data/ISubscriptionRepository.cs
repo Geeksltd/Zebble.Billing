@@ -9,7 +9,9 @@
         Task<Subscription[]> GetAll(string userId);
         Task<Subscription> AddSubscription(Subscription subscription);
         Task UpdateSubscription(Subscription subscription);
+        Task UpdateSubscriptions(Subscription[] subscriptions);
         Task<Transaction> AddTransaction(Transaction transaction);
         Task<string> GetOriginUserOfTransactionId(string transactionId);
+        Task<Subscription[]> GetAllWithTransactionIdNotOwnedBy(string userId, string transactionId);
     }
 }

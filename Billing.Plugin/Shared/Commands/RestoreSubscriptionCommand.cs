@@ -26,8 +26,13 @@
                     if (purchase.IsAcknowledged) continue;
 #endif
 
-                    await BillingContext.Current.PurchaseAttempt(purchase.ToEventArgs());
+                    var result = await BillingContext.Current.PurchaseAttempt(purchase.ToEventArgs());
+                    if (result is null) continue;
+
 #if !(CAFEBAZAAR && ANDROID)
+                    if (result.Status.IsAnyOf(PurchaseAttemptStatus.Failed, PurchaseAttemptStatus.UserMismatchedAndBlocked))
+                        continue;
+
                     await Billing.AcknowledgePurchaseAsync(purchase.PurchaseToken);
 #endif
                 }
