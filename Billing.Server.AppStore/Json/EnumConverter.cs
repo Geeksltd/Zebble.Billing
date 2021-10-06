@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using System.Runtime.Serialization;
     using System.Text.Json;
     using System.Text.Json.Serialization;
     using Olive;
@@ -18,7 +19,7 @@
 
             Cache = Enum.GetValues(typeof(T)).OfType<T>().ToDictionary(
                 x => x,
-                x => FindAttribute<JsonPropertyNameAttribute>(x)?.Name
+                x => FindAttribute<EnumMemberAttribute>(x)?.Value
             );
         }
 
