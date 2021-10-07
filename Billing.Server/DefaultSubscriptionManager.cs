@@ -30,7 +30,7 @@
             Options = options.Value ?? throw new ArgumentNullException(nameof(options));
         }
 
-        public virtual async Task<PurchaseAttemptResult> PurchaseAttempt(string userId, string platform, string productId, string purchaseToken)
+        public virtual async Task<PurchaseAttemptResult> PurchaseAttempt(string userId, string platform, string productId, string purchaseToken, bool replaceConfirmed)
         {
             var subscription = await Repository.GetByPurchaseToken(purchaseToken);
             if (subscription is not null)
@@ -65,10 +65,15 @@
                 switch (Options.UserMismatchResolvingStrategy)
                 {
                     case UserMismatchResolvingStrategy.Block:
-                        return PurchaseAttemptResult.UserMismatchedAndBlocked(originUserId);
+                        return PurchaseAttemptResult.UserMismatched(originUserId);
                     case UserMismatchResolvingStrategy.Replace:
-                        await CancelAllMatchingSubscriptions(userId, subscriptionInfo.TransactionId);
-                        return PurchaseAttemptResult.UserMismatchedAndReplaced(originUserId);
+                        if (replaceConfirmed)
+                        {
+                            await CancelAllMatchingSubscriptions(userId, subscriptionInfo.TransactionId);
+                            return PurchaseAttemptResult.Succeeded(originUserId);
+                        }
+
+                        return PurchaseAttemptResult.UserMismatched(originUserId, userId);
                     default:
                         throw new ArgumentOutOfRangeException($"{Options.UserMismatchResolvingStrategy} isn't supported.");
                 }
@@ -90,7 +95,7 @@
                 AutoRenews = subscriptionInfo.AutoRenews
             });
 
-            return PurchaseAttemptResult.Succeeded;
+            return PurchaseAttemptResult.Succeeded();
         }
 
         public virtual async Task<Subscription> GetSubscriptionStatus(string userId)

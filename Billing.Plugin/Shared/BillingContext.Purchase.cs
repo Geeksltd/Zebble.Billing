@@ -1,8 +1,10 @@
 ﻿namespace Zebble.Billing
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Olive;
+    using Plugin.InAppBilling;
 
     partial class BillingContext
     {
@@ -69,6 +71,46 @@
                 await SubscriptionPurchased.Raise(args);
 
             return result;
+        }
+
+        internal async Task<(PurchaseResult, string)> ProcessPurchase(InAppBillingPurchase purchase)
+        {
+            var replaceConfirmed = false;
+
+            while (true)
+            {
+                var result = await PurchaseAttempt(purchase.ToEventArgs(replaceConfirmed));
+                if (result.Status == PurchaseAttemptStatus.Succeeded)
+                    return (PurchaseResult.Succeeded, replaceConfirmed ? result.OriginUserId : null);
+
+                if (result.Status != PurchaseAttemptStatus.UserMismatched) break;
+
+                // In iOS, we get PurchaseAttemptStatus.UserMismatched error when we try to purchase an item
+                // that is already associated with another app-specific account
+
+                // BillingOptions.UserMismatchResolvingStrategy is set to block
+                if (result.NewUserId.IsEmpty())
+                    return (PurchaseResult.UserMismatched, null);
+
+#if !NETCOREAPP
+                var promptResult = await Alert.Prompt(
+                    "Warning",
+                    $"This iTunes account subscription was previously linked to {result.OriginUserId}. Where do you want your Pro?", new[] {
+                    new KeyValuePair<string, Action>(result.OriginUserId, () => { }),
+                    new KeyValuePair<string, Action>(result.NewUserId, () => { }),
+                });
+
+                if (promptResult == result.NewUserId)
+                {
+                    replaceConfirmed = true;
+                    continue;
+                }
+#endif
+
+                return (PurchaseResult.UserMismatched, null);
+            }
+
+            return (PurchaseResult.NotCompleted, null);
         }
     }
 }

@@ -6,22 +6,21 @@
 
         internal static PurchaseAttemptResult Failed = new(PurchaseAttemptStatus.Failed);
 
-        internal static PurchaseAttemptResult UserMismatchedAndBlocked(string originUserId)
+        internal static PurchaseAttemptResult UserMismatched(string originUserId, string newUserId = null)
         {
-            return new(PurchaseAttemptStatus.UserMismatchedAndBlocked)
+            return new(PurchaseAttemptStatus.UserMismatched)
             {
-                OriginUserId = originUserId
+                OriginUserId = originUserId,
+                NewUserId = newUserId,
             };
         }
 
-        internal static PurchaseAttemptResult UserMismatchedAndReplaced(string originUserId)
+        internal static PurchaseAttemptResult Succeeded(string originUserId = null)
         {
-            return new(PurchaseAttemptStatus.UserMismatchedAndReplaced)
+            return new(PurchaseAttemptStatus.Succeeded)
             {
-                OriginUserId = originUserId
+                OriginUserId = originUserId,
             };
         }
-
-        internal static PurchaseAttemptResult Succeeded = new(PurchaseAttemptStatus.Succeeded);
     }
 }

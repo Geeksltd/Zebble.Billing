@@ -15,14 +15,15 @@
             };
         }
 
-        public static SubscriptionPurchasedEventArgs ToEventArgs(this InAppBillingPurchase purchase)
+        public static SubscriptionPurchasedEventArgs ToEventArgs(this InAppBillingPurchase purchase, bool replaceConfirmed = false)
         {
             return new SubscriptionPurchasedEventArgs
             {
                 ProductId = purchase.ProductId,
                 TransactionId = purchase.Id,
                 TransactionDate = purchase.TransactionDateUtc,
-                PurchaseToken = purchase.PurchaseToken
+                PurchaseToken = purchase.PurchaseToken,
+                ReplaceConfirmed = replaceConfirmed,
             };
         }
     }

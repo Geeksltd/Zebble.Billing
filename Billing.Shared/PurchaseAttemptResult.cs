@@ -4,5 +4,6 @@
     {
         public PurchaseAttemptStatus Status { get; set; }
         public string OriginUserId { get; set; }
+        public string NewUserId { get; set; }
     }
 }

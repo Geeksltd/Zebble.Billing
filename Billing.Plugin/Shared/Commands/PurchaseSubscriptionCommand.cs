@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using Plugin.InAppBilling;
     using Olive;
+    using System.Collections.Generic;
 
     class PurchaseSubscriptionCommand : StoreCommandBase<(PurchaseResult, string)>
     {
@@ -26,35 +27,19 @@
 #else
                 var purchase = await Billing.PurchaseAsync(Product.Id, Product.GetItemType());
 #endif
-
-                var result = await context.PurchaseAttempt(purchase.ToEventArgs());
-                if (result?.Status != PurchaseAttemptStatus.Succeeded)
-                {
-                    // In iOS, we get this error when we try to purchase an item that is already associated with another app-specific account
-                    // And BillingOptions.UserMismatchResolvingStrategy is set to block
-                    if (result?.Status == PurchaseAttemptStatus.UserMismatchedAndBlocked)
-                        return (PurchaseResult.UserMismatchedAndBlocked, result.OriginUserId);
-
-                    // In iOS, we get this error when we try to purchase an item that is already associated with another app-specific account
-                    // And BillingOptions.UserMismatchResolvingStrategy is set to replace
-                    // The developer should consider this as a successful purchase
-                    if (result?.Status == PurchaseAttemptStatus.UserMismatchedAndReplaced)
-                        return (PurchaseResult.UserMismatchedAndReplaced, result.OriginUserId);
-
-                    return (PurchaseResult.NotCompleted, null);
-                }
+                var (result, originUserId) = await context.ProcessPurchase(purchase);
+                if (result != PurchaseResult.Succeeded) return (result, null);
 
 #if !(CAFEBAZAAR && ANDROID)
                 if (purchase.State == PurchaseState.Purchased)
                     await Billing.AcknowledgePurchaseAsync(purchase.PurchaseToken);
 #endif
-
                 await context.Refresh();
 
-                if (context.IsSubscribed) return (PurchaseResult.Succeeded, null);
+                if (context.IsSubscribed) return (PurchaseResult.Succeeded, originUserId);
 
                 if (purchase.State.IsAnyOf(PurchaseState.Restored, PurchaseState.Purchased, PurchaseState.Purchasing, PurchaseState.PaymentPending))
-                    return (PurchaseResult.WillBeActivated, null);
+                    return (PurchaseResult.WillBeActivated, originUserId);
 
                 if (purchase.State.IsAnyOf(PurchaseState.Failed, PurchaseState.Canceled)) return (PurchaseResult.NotCompleted, null);
 
