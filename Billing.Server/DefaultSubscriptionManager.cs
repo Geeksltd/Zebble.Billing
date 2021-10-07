@@ -67,13 +67,9 @@
                     case UserMismatchResolvingStrategy.Block:
                         return PurchaseAttemptResult.UserMismatched(originUserId);
                     case UserMismatchResolvingStrategy.Replace:
-                        if (replaceConfirmed)
-                        {
-                            await CancelAllMatchingSubscriptions(userId, subscriptionInfo.TransactionId);
-                            return PurchaseAttemptResult.Succeeded(originUserId);
-                        }
-
-                        return PurchaseAttemptResult.UserMismatched(originUserId, userId);
+                        if (replaceConfirmed) return PurchaseAttemptResult.UserMismatched(originUserId, userId);
+                        await CancelAllMatchingSubscriptions(userId, subscriptionInfo.TransactionId);
+                        break;
                     default:
                         throw new ArgumentOutOfRangeException($"{Options.UserMismatchResolvingStrategy} isn't supported.");
                 }
@@ -95,7 +91,7 @@
                 AutoRenews = subscriptionInfo.AutoRenews
             });
 
-            return PurchaseAttemptResult.Succeeded();
+            return PurchaseAttemptResult.Succeeded(originUserId);
         }
 
         public virtual async Task<Subscription> GetSubscriptionStatus(string userId)
