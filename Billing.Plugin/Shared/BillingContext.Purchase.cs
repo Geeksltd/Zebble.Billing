@@ -93,11 +93,11 @@
                     return (PurchaseResult.UserMismatched, null);
 
 #if !NETCOREAPP
-                var promptResult = await Alert.Prompt(
+                var promptResult = await Alert.Show(
                     "Warning",
                     $"This iTunes account subscription was previously linked to {result.OriginUserId}. Where do you want your Pro?", new[] {
-                    new KeyValuePair<string, Action>(result.OriginUserId, () => { }),
-                    new KeyValuePair<string, Action>(result.NewUserId, () => { }),
+                    new KeyValuePair<string, string>(result.OriginUserId, result.OriginUserId),
+                    new KeyValuePair<string, string>(result.NewUserId, result.NewUserId),
                 });
 
                 if (promptResult == result.NewUserId)
