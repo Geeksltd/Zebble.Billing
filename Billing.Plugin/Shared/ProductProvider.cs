@@ -50,17 +50,20 @@
 
             var rawPrice = microsPrice / 1000000m;
             var price = Math.Round(rawPrice, 2);
+            var currencySymbol = CurrencyTools.GetCurrencySymbol(currencyCode);
 
-            if (product.Price == price)
+            if (product.Price == price && product.CurrencySymbol == currencySymbol)
             {
-                Log.For(this).Info($"The price of the product with id '{productId}' isn't changed since the last update. ({product.Price} - {product.LocalPrice})");
+                Log.For(this).Info($"The price and currency symbol of the product with id '{productId}' isn't changed since the last update. ({product.Price} - {product.LocalPrice})");
                 return;
             }
 
             product.Price = price;
-            product.CurrencySymbol = CurrencyTools.GetCurrencySymbol(currencyCode);
+            product.CurrencySymbol = currencySymbol;
 
             await File.WriteAllTextAsync(JsonConvert.SerializeObject(Options));
+
+            Log.For(this).Info($"The price or currency symbol of the product with id '{productId}' is updated. ({product.Price} - {product.LocalPrice})");
         }
 
         static class CurrencyTools
