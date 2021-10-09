@@ -184,7 +184,7 @@
 
 		class IAPLegacyReceipt
 		{
-			[JsonProperty("expires_date_ms")]
+			[JsonProperty("expires_date")]
 			public string ExpiresDateMs { get; set; }
 
 			[JsonProperty("purchase_date_ms")]
