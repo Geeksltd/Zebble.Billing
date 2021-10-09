@@ -67,7 +67,7 @@
                     case UserMismatchResolvingStrategy.Block:
                         return PurchaseAttemptResult.UserMismatched(originUserId);
                     case UserMismatchResolvingStrategy.Replace:
-                        if (replaceConfirmed) return PurchaseAttemptResult.UserMismatched(originUserId, userId);
+                        if (!replaceConfirmed) return PurchaseAttemptResult.UserMismatched(originUserId, userId);
                         await CancelAllMatchingSubscriptions(userId, subscriptionInfo.TransactionId);
                         break;
                     default:
