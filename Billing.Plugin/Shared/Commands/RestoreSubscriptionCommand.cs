@@ -16,16 +16,14 @@
         {
             try
             {
-                var purchases = await Billing.GetPurchasesAsync(type);
+                var purchases = await Billing.GetPurchasesAsync(type)
+                                             .Where(x => x.State == PurchaseState.Purchased)
+                                             .Distinct(x => x.Id).ToArray();
+
                 if (purchases.None()) return false;
 
-                foreach (var purchase in purchases.Distinct(x => x.Id))
+                foreach (var purchase in purchases)
                 {
-                    if (purchase.State != PurchaseState.Purchased) continue;
-#if !(CAFEBAZAAR && ANDROID)
-                    if (purchase.IsAcknowledged) continue;
-#endif
-
                     var (result, _) = await BillingContext.Current.ProcessPurchase(purchase);
 
 #if !(CAFEBAZAAR && ANDROID)
