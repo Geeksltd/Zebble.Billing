@@ -18,19 +18,20 @@
             {
                 var purchases = await Billing.GetPurchasesAsync(type)
                                              .Where(x => x.State == PurchaseState.Purchased)
-                                             .Distinct(x => x.Id).ToArray();
+                                             .Distinct(x => x.Id).ToList();
 
                 if (purchases.None()) return false;
 
-                foreach (var purchase in purchases)
+                await purchases.ForEachAsync(Environment.ProcessorCount*2,async purchase=>
                 {
                     var (result, _) = await BillingContext.Current.ProcessPurchase(purchase);
 
 #if !(CAFEBAZAAR && ANDROID)
-                    if (result != PurchaseResult.Succeeded) continue;
+                    if (result != PurchaseResult.Succeeded) return;
                     await Billing.AcknowledgePurchaseAsync(purchase.PurchaseToken);
 #endif
-                }
+                });
+
 
                 return true;
             }
