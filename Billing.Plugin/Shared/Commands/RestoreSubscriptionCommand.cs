@@ -18,11 +18,11 @@
             {
                 var purchases = await Billing.GetPurchasesAsync(type)
                                              .Where(x => x.State == PurchaseState.Purchased)
-                                             .Distinct(x => x.Id).ToList();
+                                             .Distinct(x => x.Id).ToArray();
 
                 if (purchases.None()) return false;
 
-                await purchases.ForEachAsync(Environment.ProcessorCount*2,async purchase=>
+                static async Task ProcessPurchase(InAppBillingPurchase purchase)
                 {
                     var (result, _) = await BillingContext.Current.ProcessPurchase(purchase);
 
@@ -30,8 +30,9 @@
                     if (result != PurchaseResult.Succeeded) return;
                     await Billing.AcknowledgePurchaseAsync(purchase.PurchaseToken);
 #endif
-                });
+                }
 
+                await purchases.ForEachAsync(Environment.ProcessorCount * 2, ProcessPurchase);
 
                 return true;
             }
