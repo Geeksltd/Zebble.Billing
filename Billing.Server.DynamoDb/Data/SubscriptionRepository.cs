@@ -42,9 +42,7 @@
 
         public Task UpdateSubscriptions(Subscription[] subscriptions)
         {
-            return Task.WhenAll(subscriptions.DoAsync(
-                subscription => Context.Subscriptions.UpdateAsync(x => x.Id, new SubscriptionProxy(subscription))
-            ));
+            return Task.WhenAll(subscriptions.DoAsync(UpdateSubscription));
         }
 
         public async Task<Transaction> AddTransaction(Transaction transaction)
