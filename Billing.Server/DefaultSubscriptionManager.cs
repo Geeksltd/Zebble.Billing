@@ -32,15 +32,6 @@
 
         public virtual async Task<PurchaseAttemptResult> PurchaseAttempt(string userId, string platform, string productId, string purchaseToken, bool replaceConfirmed)
         {
-            var subscription = await Repository.GetByPurchaseToken(purchaseToken);
-            if (subscription is not null)
-            {
-                Logger.LogWarning($"An existing subscription found for token '{purchaseToken}'.");
-                Logger.LogWarning($"Additional params {{ userId: {userId}, platform: {platform}, productId: {productId} }}");
-                Logger.LogWarning($"Existing params {{ userId: {subscription.UserId}, platform: {subscription.Platform}, productId: {subscription.ProductId} }}");
-                throw new Exception($"An existing subscription found for token '{purchaseToken}'.");
-            }
-
             var storeConnector = StoreConnectorResolver.Resolve(platform);
             var subscriptionInfo = await storeConnector.GetSubscriptionInfo(new SubscriptionInfoArgs
             {
@@ -49,6 +40,15 @@
                 PurchaseToken = purchaseToken
             });
 
+            var subscription = await Repository.GetByTransactionId(subscriptionInfo.TransactionId);
+            if (subscription is not null)
+            {
+                Logger.LogWarning($"An existing subscription found for token '{purchaseToken}'.");
+                Logger.LogWarning($"Additional params {{ userId: {userId}, platform: {platform}, productId: {productId} }}");
+                Logger.LogWarning($"Existing params {{ userId: {subscription.UserId}, platform: {subscription.Platform}, productId: {subscription.ProductId} }}");
+                throw new Exception($"An existing subscription found for token '{purchaseToken}'.");
+            }
+
             if (subscriptionInfo.Status == SubscriptionQueryStatus.NotFound)
             {
                 Logger.LogWarning($"No subscription info found for token '{purchaseToken}'.");
@@ -56,7 +56,7 @@
                 return PurchaseAttemptResult.Failed;
             }
 
-            var (isMismatched, originUserId) = await IsSubscriptionMismatched(userId, subscriptionInfo);
+            var (isMismatched, originUserId) = await IsSubscriptionMismatched(userId, productId, subscriptionInfo.TransactionId);
             if (isMismatched)
             {
                 Logger.LogWarning($"A mismatched subscription info found for token '{purchaseToken}'.");
@@ -68,7 +68,7 @@
                         return PurchaseAttemptResult.UserMismatched(originUserId);
                     case UserMismatchResolvingStrategy.Replace:
                         if (!replaceConfirmed) return PurchaseAttemptResult.UserMismatched(originUserId, userId);
-                        await CancelAllMatchingSubscriptions(userId, subscriptionInfo.TransactionId);
+                        await CancelAllMatchingSubscriptions(userId, productId, subscriptionInfo.TransactionId);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException($"{Options.UserMismatchResolvingStrategy} isn't supported.");
@@ -112,24 +112,26 @@
             return subscription;
         }
 
-        protected virtual async Task<(bool, string)> IsSubscriptionMismatched(string userId, SubscriptionInfo subscriptionInfo)
+        protected virtual async Task<(bool, string)> IsSubscriptionMismatched(string userId, string productId, string transactionId)
         {
             if (userId.IsEmpty()) return (false, null);
 
-            if (subscriptionInfo.TransactionId.IsEmpty()) return (false, null);
+            if (transactionId.IsEmpty()) return (false, null);
 
-            var originUserId = await Repository.GetOriginUserOfTransactionId(subscriptionInfo.TransactionId);
+            var subscriptions = await GetMatchingSubscriptionsNotOwnedBy(transactionId, productId, userId);
+            var originUserId = subscriptions.Select(x => x.UserId)
+                                            .FirstOrDefault(x => x.HasValue());
+
             if (originUserId.IsEmpty()) return (false, null);
-            if (originUserId.Equals(userId, caseSensitive: false)) return (false, null);
 
-            Logger.LogWarning($"Transaction #{subscriptionInfo.TransactionId} is associated to {originUserId} and can't be used for {userId}.");
+            Logger.LogWarning($"Transaction #{transactionId} is associated to {originUserId} and can't be used for {userId}.");
 
             return (true, originUserId);
         }
 
-        protected virtual async Task CancelAllMatchingSubscriptions(string userId, string transactionId)
+        protected virtual async Task CancelAllMatchingSubscriptions(string userId, string productId, string transactionId)
         {
-            var subscriptions = await Repository.GetAllWithTransactionIdNotOwnedBy(userId, transactionId);
+            var subscriptions = await GetMatchingSubscriptionsNotOwnedBy(transactionId, productId, userId);
             Logger.LogWarning($"Found {subscriptions.Length} subscriptions for cancellation.");
 
             subscriptions.Do(x => x.CancellationDate = LocalTime.UtcNow);
@@ -156,6 +158,16 @@
             subscription.AutoRenews = subscriptionInfo.AutoRenews;
 
             await Repository.UpdateSubscription(subscription);
+        }
+
+        async Task<Subscription[]> GetMatchingSubscriptionsNotOwnedBy(string transactionId, string productId, string userId)
+        {
+            var subscriptions = await Repository.GetAllWithTransactionId(transactionId);
+            return subscriptions.Where(x => x.ProductId == productId)
+                                .Except(x => x.UserId == userId)
+                                .Except(x => x.IsExpired())
+                                .Except(x => x.IsCanceled())
+                                .ToArray();
         }
     }
 }

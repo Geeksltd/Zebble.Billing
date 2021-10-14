@@ -18,11 +18,6 @@
                                         .LastOrDefaultAsync();
         }
 
-        public Task<Subscription> GetByPurchaseToken(string purchaseToken)
-        {
-            return Context.Subscriptions.SingleOrDefaultAsync(x => x.PurchaseToken == purchaseToken);
-        }
-
         public Task<Subscription[]> GetAll(string userId)
         {
             return Context.Subscriptions.Where(x => x.UserId == userId)
@@ -57,22 +52,9 @@
             return transaction;
         }
 
-        public async Task<string> GetOriginUserOfTransactionId(string transactionId)
+        public Task<Subscription[]> GetAllWithTransactionId(string transactionId)
         {
-            var subscriptions = await Context.Subscriptions.Where(x => x.TransactionId == transactionId)
-                                                           .ToListAsync();
-
-            return subscriptions.Where(x => !x.IsCanceled())
-                                .Select(x => x.UserId)
-                                .FirstOrDefault(x => x.HasValue());
-        }
-
-        public async Task<Subscription[]> GetAllWithTransactionIdNotOwnedBy(string userId, string transactionId)
-        {
-            var subscriptions = await Context.Subscriptions.Where(x => x.TransactionId == transactionId)
-                                                           .ToListAsync();
-
-            return subscriptions.Except(x => x.UserId == userId).ToArray();
+            return Context.Subscriptions.Where(x => x.TransactionId == transactionId).ToArrayAsync();
         }
     }
 }

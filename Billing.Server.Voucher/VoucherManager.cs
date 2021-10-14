@@ -59,13 +59,13 @@
 
         async Task CreateSubscription(Voucher voucher)
         {
-            var subscription = await SubscriptionRepository.GetByPurchaseToken(voucher.Code);
+            var subscriptionInfo = await StoreConnector.GetSubscriptionInfo(voucher.ToArgs());
+            if (subscriptionInfo.Status != SubscriptionQueryStatus.Succeeded) throw new Exception("Couldn't find voucher info.");
+
+            var subscription = await SubscriptionRepository.GetByTransactionId(subscriptionInfo.TransactionId);
 
             if (subscription is null)
             {
-                var subscriptionInfo = await StoreConnector.GetSubscriptionInfo(voucher.ToArgs());
-                if (subscriptionInfo.Status != SubscriptionQueryStatus.Succeeded) throw new Exception("Couldn't find voucher info.");
-
                 subscription = await SubscriptionRepository.AddSubscription(new Subscription
                 {
                     Id = Guid.NewGuid().ToString(),

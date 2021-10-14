@@ -17,12 +17,6 @@
                                                           .LastOrDefault();
         }
 
-        public async Task<Subscription> GetByPurchaseToken(string purchaseToken)
-        {
-            var hash = purchaseToken.ToSimplifiedSHA1Hash();
-            return await Context.SubscriptionPurchaseTokenHashes.FirstOrDefault(hash);
-        }
-
         public async Task<Subscription[]> GetAll(string userId)
         {
             return await Context.SubscriptionUsers.All(userId);
@@ -52,20 +46,9 @@
             return transaction;
         }
 
-        public async Task<string> GetOriginUserOfTransactionId(string transactionId)
+        public async Task<Subscription[]> GetAllWithTransactionId(string transactionId)
         {
-            var subscriptions = await Context.SubscriptionTransactions.All(transactionId);
-
-            return subscriptions.Where(x => !x.IsCanceled())
-                                .Select(x => x.UserId)
-                                .FirstOrDefault(x => x.HasValue());
-        }
-
-        public async Task<Subscription[]> GetAllWithTransactionIdNotOwnedBy(string userId, string transactionId)
-        {
-            var subscriptions = await Context.SubscriptionTransactions.All(transactionId);
-
-            return subscriptions.Except(x => x.UserId == userId).ToArray();
+            return await Context.SubscriptionTransactions.All(transactionId);
         }
     }
 }

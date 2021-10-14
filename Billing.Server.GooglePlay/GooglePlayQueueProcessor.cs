@@ -67,20 +67,17 @@
 				using var scope = Services.CreateScope();
 				var repository = scope.ServiceProvider.GetRequiredService<ISubscriptionRepository>();
 
-				var subscription = await repository.GetByPurchaseToken(notification.PurchaseToken);
-
 				var subscriptionInfo = await StoreConnector.GetSubscriptionInfo(notification.ToArgs());
 				if (subscriptionInfo.Status != SubscriptionQueryStatus.Succeeded) return;
 
-				if (subscription is null)
-				{
-					var oldSubscription = await repository.GetByTransactionId(subscriptionInfo.TransactionId);
+				var subscription = await repository.GetByTransactionId(subscriptionInfo.TransactionId);
 
+				if (subscription is null)
 					subscription = await repository.AddSubscription(new Subscription
 					{
 						Id = Guid.NewGuid().ToString(),
 						ProductId = notification.ProductId,
-						UserId = subscriptionInfo.UserId.Or(oldSubscription?.UserId).Or("<NOT_PROVIDED>"),
+						UserId = subscriptionInfo.UserId.Or("<NOT_PROVIDED>"),
 						Platform = "GooglePlay",
 						TransactionId = subscriptionInfo.TransactionId,
 						TransactionDate = notification.EventTime,
@@ -91,7 +88,6 @@
 						LastUpdate = LocalTime.UtcNow,
 						AutoRenews = subscriptionInfo.AutoRenews
 					});
-				}
 				else
 				{
 					subscription.TransactionDate = notification.EventTime;
