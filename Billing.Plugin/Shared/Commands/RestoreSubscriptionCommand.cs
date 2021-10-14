@@ -22,17 +22,15 @@
 
                 if (purchases.None()) return false;
 
-                static async Task ProcessPurchase(InAppBillingPurchase purchase)
+                foreach (var purchase in purchases)
                 {
                     var (result, _) = await BillingContext.Current.ProcessPurchase(purchase);
 
 #if !(CAFEBAZAAR && ANDROID)
-                    if (result != PurchaseResult.Succeeded) return;
+                    if (result != PurchaseResult.Succeeded) continue;
                     await Billing.AcknowledgePurchaseAsync(purchase.PurchaseToken);
 #endif
                 }
-
-                await purchases.ForEachAsync(Environment.ProcessorCount * 2, ProcessPurchase);
 
                 return true;
             }
