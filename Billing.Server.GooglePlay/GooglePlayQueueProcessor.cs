@@ -12,16 +12,19 @@
 	{
 		readonly ILogger<GooglePlayQueueProcessor> Logger;
 		readonly IServiceProvider Services;
+		readonly ISubscriptionComparer Comparer;
 		readonly GooglePlayConnector StoreConnector;
 
 		public GooglePlayQueueProcessor(
 			ILogger<GooglePlayQueueProcessor> logger,
 			IServiceProvider services,
+			ISubscriptionComparer comparer,
 			GooglePlayConnector storeConnector
 		)
 		{
 			Logger = logger;
 			Services = services;
+			Comparer = comparer;
 			StoreConnector = storeConnector;
 		}
 
@@ -70,7 +73,8 @@
 				var subscriptionInfo = await StoreConnector.GetSubscriptionInfo(notification.ToArgs());
 				if (subscriptionInfo.Status != SubscriptionQueryStatus.Succeeded) return;
 
-				var subscription = await repository.GetByTransactionId(subscriptionInfo.TransactionId);
+				var subscriptions = await repository.GetAllWithTransactionId(subscriptionInfo.TransactionId);
+				var subscription = subscriptions.GetMostRecent(Comparer);
 
 				if (subscription is null)
 					subscription = await repository.AddSubscription(new Subscription

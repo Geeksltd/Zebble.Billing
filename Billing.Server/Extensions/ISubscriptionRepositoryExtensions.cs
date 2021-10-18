@@ -1,10 +1,13 @@
-﻿using System;
-namespace Zebble.Extensions
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace Zebble.Billing
 {
-    public class ISubscriptionRepositoryExtensions
+    public static class SubscriptionExtensions
     {
-        public ISubscriptionRepositoryExtensions()
+        public static Subscription GetMostRecent(this IEnumerable<Subscription> @this, ISubscriptionComparer comparer)
         {
+            return @this.OrderBy(x => x, comparer).LastOrDefault();
         }
     }
 }

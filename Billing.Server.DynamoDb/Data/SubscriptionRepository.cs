@@ -10,13 +10,6 @@
 
         public SubscriptionRepository(SubscriptionDbContext context) => Context = context;
 
-        public async Task<Subscription> GetByTransactionId(string transactionId)
-        {
-            return (await Context.SubscriptionTransactions.All(transactionId))
-                                                          .OrderBy(x => x.SubscriptionDate)
-                                                          .LastOrDefault();
-        }
-
         public async Task<Subscription[]> GetAll(string userId)
         {
             return await Context.SubscriptionUsers.All(userId);

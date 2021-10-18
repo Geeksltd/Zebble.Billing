@@ -40,15 +40,6 @@
                 PurchaseToken = purchaseToken
             });
 
-            var subscription = await Repository.GetByTransactionId(subscriptionInfo.TransactionId);
-            if (subscription is not null)
-            {
-                Logger.LogWarning($"An existing subscription found for token '{purchaseToken}'.");
-                Logger.LogWarning($"Additional params {{ userId: {userId}, platform: {platform}, productId: {productId} }}");
-                Logger.LogWarning($"Existing params {{ userId: {subscription.UserId}, platform: {subscription.Platform}, productId: {subscription.ProductId} }}");
-                throw new Exception($"An existing subscription found for token '{purchaseToken}'.");
-            }
-
             if (subscriptionInfo.Status == SubscriptionQueryStatus.NotFound)
             {
                 Logger.LogWarning($"No subscription info found for token '{purchaseToken}'.");
@@ -75,21 +66,36 @@
                 }
             }
 
-            await Repository.AddSubscription(new Subscription
+            var subscriptions = await Repository.GetAllWithTransactionId(subscriptionInfo.TransactionId);
+            var subscription = subscriptions.Where(x => x.UserId == userId).GetMostRecent(Comparer);
+
+            if (subscription is null)
+                await Repository.AddSubscription(new Subscription
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    UserId = userId,
+                    Platform = platform,
+                    ProductId = productId,
+                    TransactionId = subscriptionInfo.TransactionId,
+                    TransactionDate = subscriptionInfo.SubscriptionDate,
+                    PurchaseToken = purchaseToken,
+                    LastUpdate = LocalTime.UtcNow,
+                    SubscriptionDate = subscriptionInfo.SubscriptionDate,
+                    ExpirationDate = subscriptionInfo.ExpirationDate,
+                    CancellationDate = subscriptionInfo.CancellationDate,
+                    AutoRenews = subscriptionInfo.AutoRenews
+                });
+            else
             {
-                Id = Guid.NewGuid().ToString(),
-                UserId = userId,
-                Platform = platform,
-                ProductId = productId,
-                TransactionId = subscriptionInfo.TransactionId,
-                TransactionDate = subscriptionInfo.SubscriptionDate,
-                PurchaseToken = purchaseToken,
-                LastUpdate = LocalTime.UtcNow,
-                SubscriptionDate = subscriptionInfo.SubscriptionDate,
-                ExpirationDate = subscriptionInfo.ExpirationDate,
-                CancellationDate = subscriptionInfo.CancellationDate,
-                AutoRenews = subscriptionInfo.AutoRenews
-            });
+                subscription.TransactionDate = subscriptionInfo.SubscriptionDate;
+                subscription.SubscriptionDate = subscriptionInfo.SubscriptionDate;
+                subscription.ExpirationDate = subscriptionInfo.ExpirationDate;
+                subscription.CancellationDate = subscriptionInfo.CancellationDate;
+                subscription.LastUpdate = LocalTime.UtcNow;
+                subscription.AutoRenews = subscriptionInfo.AutoRenews;
+
+                await Repository.UpdateSubscription(subscription);
+            }
 
             return PurchaseAttemptResult.Succeeded(originUserId);
         }
@@ -105,7 +111,7 @@
 
             Logger.LogInformation($"Found {subscriptions.Length} subscription records for user with id '{userId}'.");
 
-            var subscription = subscriptions.OrderBy(x => x, Comparer).LastOrDefault();
+            var subscription = subscriptions.GetMostRecent(Comparer);
             if (subscription?.RequiresStoreUpdate() == true)
                 await TryToUpdateSubscription(subscription);
 
@@ -115,7 +121,6 @@
         protected virtual async Task<(bool, string)> IsSubscriptionMismatched(string userId, string productId, string transactionId)
         {
             if (userId.IsEmpty()) return (false, null);
-
             if (transactionId.IsEmpty()) return (false, null);
 
             var subscriptions = await GetMatchingSubscriptionsNotOwnedBy(transactionId, productId, userId);

@@ -4,7 +4,6 @@
 
     public interface ISubscriptionRepository
     {
-        Task<Subscription> GetByTransactionId(string transactionId);
         Task<Subscription[]> GetAll(string userId);
         Task<Subscription> AddSubscription(Subscription subscription);
         Task UpdateSubscription(Subscription subscription);

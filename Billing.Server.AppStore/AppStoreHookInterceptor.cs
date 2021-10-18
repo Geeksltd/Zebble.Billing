@@ -11,18 +11,21 @@
         readonly ILogger<AppStoreHookInterceptor> Logger;
         readonly AppStoreOptions Options;
         readonly ISubscriptionRepository Repository;
+        readonly ISubscriptionComparer Comparer;
         readonly AppStoreConnector StoreConnector;
 
         public AppStoreHookInterceptor(
             ILogger<AppStoreHookInterceptor> logger,
             IOptionsSnapshot<AppStoreOptions> options,
             ISubscriptionRepository repository,
+            ISubscriptionComparer comparer,
             AppStoreConnector storeConnector
         )
         {
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             Options = options.Value ?? throw new ArgumentNullException(nameof(options));
             Repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            Comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
             StoreConnector = storeConnector ?? throw new ArgumentNullException(nameof(storeConnector));
         }
 
@@ -35,7 +38,8 @@
                 var subscriptionInfo = await StoreConnector.GetSubscriptionInfo(notification.ToArgs());
                 if (subscriptionInfo.Status != SubscriptionQueryStatus.Succeeded) return;
 
-                var subscription = await Repository.GetByTransactionId(subscriptionInfo.TransactionId);
+                var subscriptions = await Repository.GetAllWithTransactionId(subscriptionInfo.TransactionId);
+                var subscription = subscriptions.GetMostRecent(Comparer);
 
                 if (subscription is null)
                     subscription = await Repository.AddSubscription(new Subscription

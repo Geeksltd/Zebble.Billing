@@ -11,13 +11,6 @@
 
         public SubscriptionRepository(SubscriptionDbContext context) => Context = context;
 
-        public Task<Subscription> GetByTransactionId(string transactionId)
-        {
-            return Context.Subscriptions.Where(x => x.TransactionId == transactionId)
-                                        .OrderBy(x => x.SubscriptionDate)
-                                        .LastOrDefaultAsync();
-        }
-
         public Task<Subscription[]> GetAll(string userId)
         {
             return Context.Subscriptions.Where(x => x.UserId == userId)

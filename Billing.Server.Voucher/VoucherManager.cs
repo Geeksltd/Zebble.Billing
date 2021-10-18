@@ -9,12 +9,14 @@
     {
         readonly IVoucherRepository VoucherRepository;
         readonly ISubscriptionRepository SubscriptionRepository;
+        readonly ISubscriptionComparer SubscriptionComparer;
         readonly VoucherConnector StoreConnector;
 
-        public VoucherManager(IVoucherRepository voucherRepository, ISubscriptionRepository subscriptionRepository, VoucherConnector storeConnector)
+        public VoucherManager(IVoucherRepository voucherRepository, ISubscriptionRepository subscriptionRepository, ISubscriptionComparer subscriptionComparer, VoucherConnector storeConnector)
         {
             VoucherRepository = voucherRepository;
             SubscriptionRepository = subscriptionRepository;
+            SubscriptionComparer = subscriptionComparer;
             StoreConnector = storeConnector;
         }
 
@@ -62,7 +64,8 @@
             var subscriptionInfo = await StoreConnector.GetSubscriptionInfo(voucher.ToArgs());
             if (subscriptionInfo.Status != SubscriptionQueryStatus.Succeeded) throw new Exception("Couldn't find voucher info.");
 
-            var subscription = await SubscriptionRepository.GetByTransactionId(subscriptionInfo.TransactionId);
+            var subscriptions = await SubscriptionRepository.GetAllWithTransactionId(subscriptionInfo.TransactionId);
+            var subscription = subscriptions.Where(x => x.UserId == voucher.UserId).GetMostRecent(SubscriptionComparer);
 
             if (subscription is null)
             {

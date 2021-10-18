@@ -38,18 +38,7 @@
 			return status switch
 			{
 				SubscriptionQueryStatus.NotFound => SubscriptionInfo.NotFound,
-				SubscriptionQueryStatus.Expired => CreateExpiredSubscription(args.UserId, result.AppleVerificationResponse),
 				_ => CreateSubscription(args.UserId, args.ProductId, result.AppleVerificationResponse)
-			};
-		}
-
-		static SubscriptionInfo CreateExpiredSubscription(string userId, IAPVerificationResponse response)
-		{
-			return new SubscriptionInfo
-			{
-				UserId = userId,
-				SubscriptionDate = response.Receipt.OriginalPurchaseDateDt,
-				ExpirationDate = LocalTime.UtcNow
 			};
 		}
 
@@ -65,7 +54,7 @@
 			return new SubscriptionInfo
 			{
 				UserId = userId,
-				TransactionId = purchase.OriginalTransactionId,
+				TransactionId = purchase.TransactionId,
 				SubscriptionDate = purchase.PurchaseDateDt,
 				ExpirationDate = purchase.ExpirationDateDt,
 				CancellationDate = purchase.CancellationDateDt,
@@ -140,6 +129,9 @@
 
 		SubscriptionQueryStatus ValidateVerificationResult(AppleReceiptVerificationResult verificationResult)
 		{
+			if (verificationResult?.Status == IAPVerificationResponseStatus.SubscriptionExpired)
+				return SubscriptionQueryStatus.Expired;
+
 			var response = verificationResult?.AppleVerificationResponse;
 
 			if (response is null)
