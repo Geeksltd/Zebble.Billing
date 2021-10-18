@@ -63,7 +63,7 @@
             if (User == null) throw new Exception("User is not available.");
 
             var url = new Uri(Options.BaseUri, Options.PurchaseAttemptPath).ToString();
-            var @params = new { User.Ticket, User.UserId, Platform = PaymentAuthority, args.ProductId, args.PurchaseToken, args.ReplaceConfirmed };
+            var @params = new { User.Ticket, User.UserId, Platform = PaymentAuthority, args.ProductId, args.TransactionId, args.PurchaseToken, args.ReplaceConfirmed };
 
             var result = await BaseApi.Post<PurchaseAttemptResult>(url, @params, OnError.Ignore, showWaiting: false);
 

@@ -4,7 +4,7 @@
 
     public interface ISubscriptionManager
     {
-        Task<PurchaseAttemptResult> PurchaseAttempt(string userId, string platform, string productId, string purchaseToken, bool replaceConfirmed);
+        Task<PurchaseAttemptResult> PurchaseAttempt(string userId, string platform, string productId, string transactionId, string purchaseToken, bool replaceConfirmed);
         Task<Subscription> GetSubscriptionStatus(string userId);
     }
 }

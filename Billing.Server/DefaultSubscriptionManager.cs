@@ -30,7 +30,7 @@
             Options = options.Value ?? throw new ArgumentNullException(nameof(options));
         }
 
-        public virtual async Task<PurchaseAttemptResult> PurchaseAttempt(string userId, string platform, string productId, string purchaseToken, bool replaceConfirmed)
+        public virtual async Task<PurchaseAttemptResult> PurchaseAttempt(string userId, string platform, string productId, string transactionId, string purchaseToken, bool replaceConfirmed)
         {
             var storeConnector = StoreConnectorResolver.Resolve(platform);
             var subscriptionInfo = await storeConnector.GetSubscriptionInfo(new SubscriptionInfoArgs
@@ -40,12 +40,15 @@
                 PurchaseToken = purchaseToken
             });
 
-            if (subscriptionInfo.Status == SubscriptionQueryStatus.NotFound)
+            if (subscriptionInfo.Status != SubscriptionQueryStatus.Succeeded)
             {
                 Logger.LogWarning($"No subscription info found for token '{purchaseToken}'.");
                 Logger.LogWarning($"Additional params {{ userId: {userId}, platform: {platform}, productId: {productId} }}");
                 return PurchaseAttemptResult.Failed;
             }
+
+            // GooglePlay doesn't return expired purchase details, so we've to ensure we have the transaction id.
+            subscriptionInfo.TransactionId = subscriptionInfo.TransactionId.Or(transactionId);
 
             var (isMismatched, originUserId) = await IsSubscriptionMismatched(userId, productId, subscriptionInfo.TransactionId);
             if (isMismatched)
