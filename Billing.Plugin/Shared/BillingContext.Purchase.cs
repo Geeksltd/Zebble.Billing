@@ -80,6 +80,8 @@
             while (true)
             {
                 var result = await PurchaseAttempt(purchase.ToEventArgs(replaceConfirmed));
+                if (result is null) return (PurchaseResult.Unknown, null);
+
                 if (result.Status == PurchaseAttemptStatus.Succeeded)
                     return (PurchaseResult.Succeeded, replaceConfirmed ? result.OriginUserId : null);
 
