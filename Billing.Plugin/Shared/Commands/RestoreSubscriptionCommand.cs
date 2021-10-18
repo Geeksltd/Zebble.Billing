@@ -1,6 +1,7 @@
 ﻿namespace Zebble.Billing
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using Plugin.InAppBilling;
     using Olive;
@@ -9,16 +10,15 @@
     {
         protected override async Task<bool> DoExecute()
         {
-            return await Fetch(ItemType.Subscription) | await Fetch(ItemType.InAppPurchase);
-        }
-
-        async Task<bool> Fetch(ItemType type)
-        {
             try
             {
-                var purchases = await Billing.GetPurchasesAsync(type)
+                var subscriptions = await Billing.GetPurchasesAsync(ItemType.Subscription).ToArray();
+                var inAppPurchases = await Billing.GetPurchasesAsync(ItemType.InAppPurchase).ToArray();
+
+                var purchases = subscriptions.Concat(inAppPurchases)
                                              .Where(x => x.State == PurchaseState.Purchased)
-                                             .Distinct(x => x.Id).ToArray();
+                                             .Where(x => x.PurchaseToken.HasValue())
+                                             .Distinct(x => new { x.Id, x.ProductId }).ToArray();
 
                 if (purchases.None()) return false;
 
