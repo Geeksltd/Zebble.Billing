@@ -5,7 +5,7 @@
 
     partial class BillingContext
     {
-        public bool IsSubscribed => IsStarted && !IsExpired && !IsCanceled;
+        public bool IsSubscribed => IsStarted && !IsExpired;
 
         public Task<Product> CurrentProduct => GetProduct(Subscription?.ProductId);
 
