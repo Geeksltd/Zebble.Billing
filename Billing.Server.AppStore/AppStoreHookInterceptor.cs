@@ -89,6 +89,7 @@
         {
             if (notification.SharedSecret != Options.SharedSecret) throw new Exception("SharedSecret doesn't match.");
 
+            if (Options.AllowEnvironmentMixing) return;
             if (notification.Environment != Options.Environment) throw new Exception("Environment doesn't match.");
         }
     }
