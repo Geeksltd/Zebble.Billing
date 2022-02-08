@@ -33,13 +33,23 @@
 
         public string ProductId => CandidateReceiptInfo?.ProductId;
 
+        public string OriginalTransactionId => CandidateReceiptInfo?.OriginalTransactionId;
+
+        public string TransactionId => CandidateReceiptInfo?.TransactionId;
+
         public string PurchaseToken => UnifiedReceipt?.LatestReceipt;
+
+        public string OriginalPurchaseDateMs => CandidateReceiptInfo?.OriginalPurchaseDateMs;
+
+        public string PurchaseDateMs => CandidateReceiptInfo?.PurchaseDateMs;
 
         public DateTime? PurchaseDate => CandidateReceiptInfo?.PurchaseDate;
 
         public DateTime? CancellationDate => CandidateReceiptInfo?.CancellationDate;
 
-        public DateTime? ExpirationDate => CandidateReceiptInfo?.ExpirationDate;
+        public string ExpiresDateMs => CandidateReceiptInfo?.ExpiresDateMs;
+
+        public DateTime? ExpirationDate => CandidateReceiptInfo?.ExpiresDate;
 
         public bool? IsInBillingRetryPeriod => CandidateRenewalInfo?.IsInBillingRetryPeriod;
 
