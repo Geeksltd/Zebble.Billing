@@ -13,5 +13,7 @@
 
         public virtual string UserId { get; set; }
         public DateTime? ActivationDate { get; set; }
+
+        public string DiscountCode { get; set; }
     }
 }

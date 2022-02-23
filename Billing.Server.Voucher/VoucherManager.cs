@@ -20,12 +20,12 @@
             StoreConnector = storeConnector;
         }
 
-        public async Task<string> Generate(TimeSpan duration, string productId, string comments)
+        public async Task<string> Generate(TimeSpan duration, string productId, string comments, string discountCode)
         {
             const string UNAMBIGUOUS_LETTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
             var code = Enumerable.Range(0, 12).Select(x => UNAMBIGUOUS_LETTERS.PickRandom()).ToString("");
 
-            if (await VoucherRepository.GetByCode(code) is not null) return await Generate(duration, productId, comments);
+            if (await VoucherRepository.GetByCode(code) is not null) return await Generate(duration, productId, comments, discountCode);
 
             await VoucherRepository.Add(new Voucher
             {
@@ -33,7 +33,8 @@
                 Code = code,
                 Duration = duration,
                 ProductId = productId,
-                Comments = comments
+                Comments = comments,
+                DiscountCode = discountCode,
             });
 
             return code;
