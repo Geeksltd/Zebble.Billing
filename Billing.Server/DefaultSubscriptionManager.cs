@@ -115,8 +115,8 @@
             Logger.LogInformation($"Found {subscriptions.Length} subscription records for user with id '{userId}'.");
 
             var subscription = subscriptions.GetMostRecent(Comparer);
-            if (subscription?.IsExpired() == true)
-                await TryToUpdateSubscription(subscription);
+            //if (subscription?.IsExpired() == true)
+            //    await TryToUpdateSubscription(subscription);
 
             return subscription;
         }
