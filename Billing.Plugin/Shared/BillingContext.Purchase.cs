@@ -97,7 +97,7 @@
 #if !NETCOREAPP
                 var promptResult = await Alert.Show(
                     "Warning",
-                    $"This iTunes account subscription was previously linked to {result.OriginUserId}. Where do you want your Pro?", new[] {
+                    $"This account subscription was previously linked to {result.OriginUserId}. Where do you want your subscription?", new[] {
                     new KeyValuePair<string, string>("Previous account", result.OriginUserId),
                     new KeyValuePair<string, string>("This account", result.NewUserId),
                 });
