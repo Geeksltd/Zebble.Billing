@@ -55,7 +55,7 @@
             return new SubscriptionInfo
             {
                 UserId = userId,
-                TransactionId = purchase.TransactionId,
+                TransactionId = purchase.OriginalTransactionId,
                 SubscriptionDate = purchase.PurchaseDateDt,
                 ExpirationDate = purchase.ExpirationDateDt,
                 CancellationDate = purchase.CancellationDateDt,
@@ -118,7 +118,6 @@
                                 PurchaseDateMs = notification.PurchaseDateMs,
                                 ProductId = notification.ProductId,
                                 OriginalTransactionId = notification.OriginalTransactionId,
-                                TransactionId = notification.TransactionId,
                                 ExpirationDateMs = notification.ExpiresDateMs,
                                 SubscriptionAutoRenewStatus = notification.AutoRenewStatus == true ?
                                     AppleSubscriptionAutoRenewStatus.Active :
@@ -141,7 +140,6 @@
                                 PurchaseDateMs = result.Receipt.PurchaseDateMs,
                                 ProductId = result.Receipt.ProductId,
                                 OriginalTransactionId = result.Receipt.OriginalTransactionId,
-                                TransactionId = result.Receipt.TransactionId,
                                 ExpirationDateMs = result.Receipt.ExpiresDateMs,
                                 SubscriptionAutoRenewStatus = notification.AutoRenewStatus == true ?
                                     AppleSubscriptionAutoRenewStatus.Active :
@@ -220,9 +218,6 @@
 
             [JsonPropertyName("original_transaction_id")]
             public string OriginalTransactionId { get; set; }
-
-            [JsonPropertyName("transaction_id")]
-            public string TransactionId { get; set; }
 
             [JsonPropertyName("product_id")]
             public string ProductId { get; set; }

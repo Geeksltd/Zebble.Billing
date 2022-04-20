@@ -23,9 +23,6 @@
         [JsonPropertyName("original_transaction_id")]
         public string OriginalTransactionId { get; set; }
 
-        [JsonPropertyName("transaction_id")]
-        public string TransactionId { get; set; }
-
         [JsonPropertyName("original_purchase_date_ms")]
         public string OriginalPurchaseDateMs { get; set; }
 

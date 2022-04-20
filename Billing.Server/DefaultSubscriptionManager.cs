@@ -70,7 +70,9 @@
             }
 
             var subscriptions = await Repository.GetAllWithTransactionId(subscriptionInfo.TransactionId);
-            var subscription = subscriptions.Where(x => x.UserId == userId).GetMostRecent(Comparer);
+            var subscription = subscriptions.Where(x => x.UserId == userId)
+                                            .Where(x => x.ProductId == productId)
+                                            .GetMostRecent(Comparer);
 
             if (subscription is null)
                 await Repository.AddSubscription(new Subscription
@@ -142,8 +144,14 @@
             var subscriptions = await GetMatchingSubscriptionsNotOwnedBy(transactionId, productId, userId);
             Logger.LogWarning($"Found {subscriptions.Length} subscriptions for cancellation.");
 
-            subscriptions.Do(x => x.CancellationDate = LocalTime.UtcNow);
+            subscriptions.Do(x =>
+            {
+                x.CancellationDate = LocalTime.UtcNow;
+                // We do not ignore the cancelled records, so we need to also update the expiration date.
+                x.ExpirationDate = LocalTime.UtcNow;
+            });
             await Repository.UpdateSubscriptions(subscriptions);
+
             Logger.LogWarning($"{subscriptions.Length} subscriptions have been cancelled.");
             Logger.LogWarning($"Affected user ids: {subscriptions.Select(x => x.UserId).Distinct().ToString(", ")}");
         }

@@ -35,8 +35,6 @@
 
         public string OriginalTransactionId => CandidateReceiptInfo?.OriginalTransactionId;
 
-        public string TransactionId => CandidateReceiptInfo?.TransactionId;
-
         public string PurchaseToken => UnifiedReceipt?.LatestReceipt;
 
         public string OriginalPurchaseDateMs => CandidateReceiptInfo?.OriginalPurchaseDateMs;
