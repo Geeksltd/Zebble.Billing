@@ -11,6 +11,7 @@
             {
                 ProductType.Subscription => ItemType.Subscription,
                 ProductType.InAppPurchase => ItemType.InAppPurchase,
+                ProductType.Voucher => ItemType.Voucher,
                 _ => throw new ArgumentOutOfRangeException(nameof(@this.Type)),
             };
         }

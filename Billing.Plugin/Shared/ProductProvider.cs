@@ -1,13 +1,13 @@
 ﻿namespace Zebble.Billing
 {
+    using Newtonsoft.Json;
+    using Olive;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
-    using Newtonsoft.Json;
-    using Olive;
 
     class ProductProvider : IProductProvider
     {
@@ -48,9 +48,13 @@
                 return;
             }
 
-            var rawPrice = microsPrice / 1000000m;
-            var price = Math.Round(rawPrice, 2);
             var currencySymbol = CurrencyTools.GetCurrencySymbol(currencyCode);
+            decimal price = microsPrice;
+            if (currencySymbol != "ریال")
+            {
+                var rawPrice = microsPrice / 1000000m;
+                price = Math.Round(rawPrice, 2);
+            }
 
             if (product.Price == price && product.CurrencySymbol == currencySymbol)
             {
@@ -84,7 +88,7 @@
 
             public static string GetCurrencySymbol(string code)
             {
-                return Cache.TryGetValue(code, out var symbol) ? symbol : code;
+                return Cache.TryGetValue(code ?? "IRR", out var symbol) ? symbol : code;
             }
         }
     }
