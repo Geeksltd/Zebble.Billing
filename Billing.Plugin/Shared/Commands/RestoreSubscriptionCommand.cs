@@ -28,7 +28,7 @@
 
 #if !(CAFEBAZAAR && ANDROID)
                     if (result != PurchaseResult.Succeeded) continue;
-                    await Billing.AcknowledgePurchaseAsync(purchase.PurchaseToken);
+                    await Billing.FinalizePurchaseAsync(purchase.PurchaseToken);
 #endif
                 }
 

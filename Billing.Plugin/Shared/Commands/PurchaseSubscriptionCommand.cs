@@ -32,7 +32,7 @@
 
 #if !(CAFEBAZAAR && ANDROID)
                 if (purchase.State == PurchaseState.Purchased)
-                    await Billing.AcknowledgePurchaseAsync(purchase.PurchaseToken);
+                    await Billing.FinalizePurchaseAsync(purchase.PurchaseToken);
 #endif
                 await context.Refresh();
 
