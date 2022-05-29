@@ -1,12 +1,9 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.23">
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1;Xamarin.iOS10;MonoAndroid90</TargetFrameworks>
-    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">$(TargetFrameworks);uap10.0.18362</TargetFrameworks>
     <AssemblyName>Zebble.Billing</AssemblyName>
     <RootNamespace>Zebble</RootNamespace>
-    <PackageId>Zebble.Billing</PackageId>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
-    <Version>1.0.97.0</Version>
+    <Version>1.0.99.0</Version>
     <PackOnBuild>true</PackOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
     <DefineConstants>$(DefineConstants)</DefineConstants>
@@ -15,11 +12,9 @@
     <LangVersion>latest</LangVersion>
     <DebugType>portable</DebugType>
     <PackageLicenseUrl>https://raw.githubusercontent.com/Geeksltd/Zebble.Billing/master/Zebble-LicenseAgreement.txt</PackageLicenseUrl>
-    <PackageProjectUrl>https://nuget.org/packages/Zebble.Billing/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Geeksltd/Zebble.Billing/</RepositoryUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/Geeksltd/Zebble.Billing/master/icon.png</PackageIconUrl>
     <PackageTags>xamarin, windows, ios, android, zebble</PackageTags>
-    <Title>Zebble.Billing</Title>
     <Description>Zebble IAP plugin for Xamarin.</Description>
     <PackageReleaseNotes>Minor fixes</PackageReleaseNotes>
     <Owners>Geeks Ltd</Owners>
@@ -28,6 +23,20 @@
     <DisableExtraReferences>true</DisableExtraReferences>
     <Configurations>Debug;Release;DebugCafeBazaar;ReleaseCafeBazaar</Configurations>
   </PropertyGroup>
+  <PropertyGroup Condition=" $(Configuration.EndsWith('CafeBazaar'))==false ">
+    <TargetFrameworks>netcoreapp3.1;Xamarin.iOS10;MonoAndroid90</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">$(TargetFrameworks);uap10.0.18362</TargetFrameworks>
+    <PackageId>Zebble.Billing</PackageId>
+    <PackageProjectUrl>https://nuget.org/packages/Zebble.Billing/</PackageProjectUrl>
+    <Title>Zebble.Billing</Title>
+  </PropertyGroup>
+  <PropertyGroup Condition=" $(Configuration.EndsWith('CafeBazaar')) ">
+    <TargetFrameworks>MonoAndroid90</TargetFrameworks>
+    <DefineConstants>$(DefineConstants);CAFEBAZAAR</DefineConstants>
+    <PackageId>Zebble.Billing.CafeBazaar</PackageId>
+    <PackageProjectUrl>https://nuget.org/packages/Zebble.Billing.CafeBazaar/</PackageProjectUrl>
+    <Title>Zebble.Billing.CafeBazaar</Title>
+  </PropertyGroup>
   <PropertyGroup Condition=" $(Configuration.StartsWith('Debug')) ">
     <DebugSymbols>true</DebugSymbols>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
@@ -35,12 +44,6 @@
   <PropertyGroup Condition=" $(Configuration.StartsWith('Release')) ">
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" $(Configuration.EndsWith('CafeBazaar')) ">
-    <DefineConstants>$(DefineConstants);CAFEBAZAAR</DefineConstants>
-    <PackageId>Zebble.Billing.CafeBazaar</PackageId>
-    <PackageProjectUrl>https://nuget.org/packages/Zebble.Billing.CafeBazaar/</PackageProjectUrl>
-    <Title>Zebble.Billing.CafeBazaar</Title>
   </PropertyGroup>
   <PropertyGroup Condition=" $(TargetFramework.StartsWith('uap10.0')) ">
     <DefineConstants>$(DefineConstants);UWP</DefineConstants>
@@ -69,7 +72,7 @@
   </ItemGroup>
   <ItemGroup Condition=" $(DefineConstants.Contains('ANDROID')) AND $(DefineConstants.Contains('CAFEBAZAAR')) ">
     <Compile Include="Android\CafeBazaar\**\*.cs" />
-    <PackageReference Include="Plugin.InAppBilling.CafeBazaar" Version="1.0.1" />
+    <PackageReference Include="Plugin.InAppBilling.CafeBazaar" Version="1.0.2" />
   </ItemGroup>
   <ItemGroup Condition=" $(DefineConstants.Contains('IOS')) ">
     <Compile Include="iOS\**\*.cs" />
