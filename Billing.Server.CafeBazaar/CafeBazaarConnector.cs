@@ -45,7 +45,6 @@
             return new SubscriptionInfo
             {
                 UserId = userId.Or(purchase.DeveloperPayload),
-                TransactionId = Guid.NewGuid().ToString(),
                 SubscriptionDate = subscription.InitiationTime.DateTime,
                 ExpirationDate = subscription.ValidUntil.DateTime,
                 CancellationDate = purchase.PurchaseState == CafeBazaarPurchaseState.Refunded ? LocalTime.UtcNow : null,

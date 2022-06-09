@@ -59,7 +59,6 @@ namespace Zebble.Billing.Sample
 
                 builder.UseAppStore();
                 builder.UseGooglePlay();
-                builder.UseCafeBazaar();
 
                 builder.UseVoucher(builder =>
                 {
