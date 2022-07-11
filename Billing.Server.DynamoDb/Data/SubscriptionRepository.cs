@@ -43,5 +43,10 @@
         {
             return await Context.SubscriptionTransactions.All(transactionId);
         }
+
+        public async Task<Subscription[]> GetAllWithPurchaseToken(string purchaseToken)
+        {
+            return await Context.SubscriptionPurchaseTokenHashes.All(purchaseToken?.ToSimplifiedSHA1Hash());
+        }
     }
 }

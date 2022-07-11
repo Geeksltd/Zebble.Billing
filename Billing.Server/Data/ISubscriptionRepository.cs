@@ -10,5 +10,6 @@
         Task UpdateSubscriptions(Subscription[] subscriptions);
         Task<Transaction> AddTransaction(Transaction transaction);
         Task<Subscription[]> GetAllWithTransactionId(string transactionId);
+        Task<Subscription[]> GetAllWithPurchaseToken(string purchaseToken);
     }
 }

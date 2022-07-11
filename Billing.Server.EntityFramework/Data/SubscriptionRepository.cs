@@ -49,5 +49,10 @@
         {
             return Context.Subscriptions.Where(x => x.TransactionId == transactionId).ToArrayAsync();
         }
+
+        public Task<Subscription[]> GetAllWithPurchaseToken(string purchaseToken)
+        {
+            return Context.Subscriptions.Where(x => x.PurchaseToken == purchaseToken).ToArrayAsync();
+        }
     }
 }
