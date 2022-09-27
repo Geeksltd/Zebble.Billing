@@ -6,10 +6,28 @@
     {
         public string ProductId { get; set; }
 
-        public DateTime? SubscriptionDate { get; set; }
-        public DateTime? SubscriptionDateOnly => SubscriptionDate?.Date;
-        public DateTime? ExpirationDate { get; set; }
-        public DateTime? CancellationDate { get; set; }
-        public DateTime? CancellationDateOnly => CancellationDate?.Date;
+        DateTime? subscriptionDate;
+        public DateTime? SubscriptionDate
+        {
+            get => subscriptionDate;
+            set { subscriptionDate = value; SubscriptionDateOnly = value?.Date; }
+        }
+        public DateTime? SubscriptionDateOnly { get; set; }
+
+        DateTime? expirationDate;
+        public DateTime? ExpirationDate
+        {
+            get => expirationDate;
+            set { expirationDate = value; ExpirationDateOnly = value?.Date; }
+        }
+        public DateTime? ExpirationDateOnly { get; set; }
+
+        DateTime? cancellationDate;
+        public DateTime? CancellationDate
+        {
+            get => cancellationDate;
+            set { cancellationDate = value; CancellationDateOnly = value?.Date; }
+        }
+        public DateTime? CancellationDateOnly { get; set; }
     }
 }
