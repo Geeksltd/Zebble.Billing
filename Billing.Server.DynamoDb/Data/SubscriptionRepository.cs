@@ -1,6 +1,5 @@
 ﻿namespace Zebble.Billing
 {
-    using System.Linq;
     using System.Threading.Tasks;
     using Olive;
 
@@ -9,6 +8,11 @@
         readonly SubscriptionDbContext Context;
 
         public SubscriptionRepository(SubscriptionDbContext context) => Context = context;
+
+        public async Task<Subscription[]> GetAll()
+        {
+            return await Context.Subscriptions.All();
+        }
 
         public async Task<Subscription[]> GetAll(string userId)
         {

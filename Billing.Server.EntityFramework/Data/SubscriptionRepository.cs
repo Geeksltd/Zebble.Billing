@@ -3,13 +3,17 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.EntityFrameworkCore;
-    using Olive;
 
     class SubscriptionRepository : ISubscriptionRepository
     {
         readonly SubscriptionDbContext Context;
 
         public SubscriptionRepository(SubscriptionDbContext context) => Context = context;
+
+        public Task<Subscription[]> GetAll()
+        {
+            return Context.Subscriptions.ToArrayAsync();
+        }
 
         public Task<Subscription[]> GetAll(string userId)
         {
