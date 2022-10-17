@@ -3,7 +3,7 @@
     <AssemblyName>Zebble.Billing</AssemblyName>
     <RootNamespace>Zebble</RootNamespace>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
-    <Version>1.0.100.0</Version>
+    <Version>1.0.101.0</Version>
     <PackOnBuild>true</PackOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
     <DefineConstants>$(DefineConstants)</DefineConstants>
@@ -72,7 +72,7 @@
   </ItemGroup>
   <ItemGroup Condition=" $(DefineConstants.Contains('ANDROID')) AND $(DefineConstants.Contains('CAFEBAZAAR')) ">
     <Compile Include="Android\CafeBazaar\**\*.cs" />
-    <PackageReference Include="Plugin.InAppBilling.CafeBazaar" Version="1.0.2" />
+    <PackageReference Include="Plugin.InAppBilling.CafeBazaar" Version="1.0.3" />
   </ItemGroup>
   <ItemGroup Condition=" $(DefineConstants.Contains('IOS')) ">
     <Compile Include="iOS\**\*.cs" />
@@ -87,8 +87,8 @@
     <None Remove="Zebble-LicenseAgreement.txt" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Olive" Version="2.1.320" />
-    <PackageReference Include="Zebble" Version="4.5.643" />
+    <PackageReference Include="Olive" Version="2.1.325" />
+    <PackageReference Include="Zebble" Version="4.5.656" />
     <PackageReference Include="Zebble.WebApi" Version="4.5.399" />
     <PackageReference Include="Plugin.InAppBilling" Version="5.3.3-beta" Condition=" $(DefineConstants.Contains('CAFEBAZAAR'))==false OR $(DefineConstants.Contains('ANDROID'))==false " />
   </ItemGroup>
