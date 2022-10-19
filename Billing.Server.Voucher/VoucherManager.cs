@@ -40,7 +40,7 @@
             return code;
         }
 
-        public async Task<ApplyVoucherResult> Apply(string userId, string code)
+        public async Task<ApplyVoucherResult> Apply(string userId, string code, DateTime? activationDate = null)
         {
             var voucher = await VoucherRepository.GetByCode(code);
 
@@ -51,7 +51,7 @@
             if (voucher.IsExpired()) return ApplyVoucherResult.From(VoucherApplyStatus.Expired);
 
             voucher.UserId = userId;
-            voucher.ActivationDate ??= LocalTime.UtcNow;
+            voucher.ActivationDate ??= activationDate ?? LocalTime.UtcNow;
 
             await VoucherRepository.Update(voucher);
 
