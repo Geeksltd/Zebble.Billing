@@ -50,6 +50,8 @@
 
             var rawPrice = microsPrice / 1000000m;
             var price = Math.Round(rawPrice, 2);
+            if (currencyCode == "IRR")
+                currencyCode = "IRT";
             var currencySymbol = CurrencyTools.GetCurrencySymbol(currencyCode);
 
             if (product.Price == price && product.CurrencySymbol == currencySymbol)
@@ -80,6 +82,8 @@
                     .Select(x => new RegionInfo(x))
                     .GroupBy(x => x.ISOCurrencySymbol)
                     .ToDictionary(x => x.Key, x => x.First().CurrencySymbol);
+                if (!Cache.ContainsKey("IRT"))
+                    Cache["IRT"] = "تومان";
             }
 
             public static string GetCurrencySymbol(string code)
