@@ -11,13 +11,21 @@
         readonly ISubscriptionRepository SubscriptionRepository;
         readonly ISubscriptionComparer SubscriptionComparer;
         readonly VoucherConnector StoreConnector;
+        readonly ISubscriptionChangeHandler SubscriptionChangeHandler;
 
-        public VoucherManager(IVoucherRepository voucherRepository, ISubscriptionRepository subscriptionRepository, ISubscriptionComparer subscriptionComparer, VoucherConnector storeConnector)
+        public VoucherManager(
+            IVoucherRepository voucherRepository,
+            ISubscriptionRepository subscriptionRepository,
+            ISubscriptionComparer subscriptionComparer,
+            VoucherConnector storeConnector,
+            ISubscriptionChangeHandler subscriptionChangeHandler
+        )
         {
-            VoucherRepository = voucherRepository;
-            SubscriptionRepository = subscriptionRepository;
-            SubscriptionComparer = subscriptionComparer;
-            StoreConnector = storeConnector;
+            VoucherRepository = voucherRepository ?? throw new ArgumentNullException(nameof(voucherRepository));
+            SubscriptionRepository = subscriptionRepository ?? throw new ArgumentNullException(nameof(subscriptionRepository));
+            SubscriptionComparer = subscriptionComparer ?? throw new ArgumentNullException(nameof(subscriptionComparer));
+            StoreConnector = storeConnector ?? throw new ArgumentNullException(nameof(storeConnector));
+            SubscriptionChangeHandler = subscriptionChangeHandler ?? throw new ArgumentNullException(nameof(subscriptionChangeHandler));
         }
 
         public async Task<string> Generate(TimeSpan duration, string productId, string comments, string discountCode)
@@ -95,6 +103,8 @@
                 Date = LocalTime.UtcNow,
                 Details = voucher.ToJson()
             });
+
+            await SubscriptionChangeHandler.Handle(subscription);
         }
     }
 }

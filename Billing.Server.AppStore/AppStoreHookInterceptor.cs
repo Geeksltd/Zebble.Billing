@@ -13,13 +13,16 @@
         readonly ISubscriptionRepository Repository;
         readonly ISubscriptionComparer Comparer;
         readonly AppStoreConnector StoreConnector;
+        readonly ISubscriptionChangeHandler SubscriptionChangeHandler;
+
 
         public AppStoreHookInterceptor(
             ILogger<AppStoreHookInterceptor> logger,
             IOptionsSnapshot<AppStoreOptions> options,
             ISubscriptionRepository repository,
             ISubscriptionComparer comparer,
-            AppStoreConnector storeConnector
+            AppStoreConnector storeConnector,
+            ISubscriptionChangeHandler subscriptionChangeHandler
         )
         {
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -27,6 +30,7 @@
             Repository = repository ?? throw new ArgumentNullException(nameof(repository));
             Comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
             StoreConnector = storeConnector ?? throw new ArgumentNullException(nameof(storeConnector));
+            SubscriptionChangeHandler = subscriptionChangeHandler ?? throw new ArgumentNullException(nameof(subscriptionChangeHandler));
         }
 
         public async Task Intercept(AppStoreNotification notification)
@@ -77,6 +81,8 @@
                     Date = LocalTime.UtcNow,
                     Details = notification.OriginalData
                 });
+
+                await SubscriptionChangeHandler.Handle(subscription);
             }
             catch (Exception ex)
             {

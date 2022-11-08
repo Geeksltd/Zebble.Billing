@@ -6,8 +6,6 @@ namespace Zebble.Billing
     public static class SubscriptionExtensions
     {
         public static Subscription GetMostRecent(this IEnumerable<Subscription> @this, ISubscriptionComparer comparer)
-        {
-            return @this.OrderBy(x => x, comparer).LastOrDefault();
-        }
+            => @this.OrderBy(x => x, comparer).LastOrDefault();
     }
 }

@@ -14,18 +14,21 @@
         readonly IServiceProvider Services;
         readonly ISubscriptionComparer Comparer;
         readonly GooglePlayConnector StoreConnector;
+        readonly ISubscriptionChangeHandler SubscriptionChangeHandler;
 
         public GooglePlayQueueProcessor(
             ILogger<GooglePlayQueueProcessor> logger,
             IServiceProvider services,
             ISubscriptionComparer comparer,
-            GooglePlayConnector storeConnector
+            GooglePlayConnector storeConnector,
+            ISubscriptionChangeHandler subscriptionChangeHandler
         )
         {
-            Logger = logger;
-            Services = services;
-            Comparer = comparer;
-            StoreConnector = storeConnector;
+            Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            Services = services ?? throw new ArgumentNullException(nameof(services));
+            Comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
+            StoreConnector = storeConnector ?? throw new ArgumentNullException(nameof(storeConnector));
+            SubscriptionChangeHandler = subscriptionChangeHandler ?? throw new ArgumentNullException(nameof(subscriptionChangeHandler));
         }
 
         public async Task<int> Process()
@@ -117,6 +120,8 @@
                     Date = notification.EventTime ?? LocalTime.UtcNow,
                     Details = notification.OriginalData
                 });
+
+                await SubscriptionChangeHandler.Handle(subscription);
             }
             catch (Exception ex)
             {

@@ -36,6 +36,8 @@
 
             services.TryAddScoped<ISubscriptionComparer, DefaultSubscriptionComparer>();
 
+            services.TryAddScoped<ISubscriptionChangeHandler, DefaultSubscriptionChangeHandler>();
+
             return services;
         }
 

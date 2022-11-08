@@ -13,6 +13,7 @@
         readonly ISubscriptionRepository Repository;
         readonly ISubscriptionComparer Comparer;
         readonly IStoreConnectorResolver StoreConnectorResolver;
+        readonly ISubscriptionChangeHandler SubscriptionChangeHandler;
         readonly BillingOptions Options;
 
         public DefaultSubscriptionManager(
@@ -20,6 +21,7 @@
             ISubscriptionRepository repository,
             ISubscriptionComparer comparer,
             IStoreConnectorResolver storeConnectorResolver,
+            ISubscriptionChangeHandler subscriptionChangeHandler,
             IOptionsSnapshot<BillingOptions> options
         )
         {
@@ -27,6 +29,7 @@
             Repository = repository ?? throw new ArgumentNullException(nameof(repository));
             Comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
             StoreConnectorResolver = storeConnectorResolver ?? throw new ArgumentNullException(nameof(storeConnectorResolver));
+            SubscriptionChangeHandler = subscriptionChangeHandler ?? throw new ArgumentNullException(nameof(subscriptionChangeHandler));
             Options = options.Value ?? throw new ArgumentNullException(nameof(options));
         }
 
@@ -101,6 +104,8 @@
 
                 await Repository.UpdateSubscription(subscription);
             }
+
+            await SubscriptionChangeHandler.Handle(subscription);
 
             return PurchaseAttemptResult.Succeeded(originUserId);
         }
