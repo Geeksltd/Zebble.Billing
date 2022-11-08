@@ -78,7 +78,7 @@
                                             .GetMostRecent(Comparer);
 
             if (subscription is null)
-                await Repository.AddSubscription(new Subscription
+                subscription = await Repository.AddSubscription(new Subscription
                 {
                     Id = Guid.NewGuid().ToString(),
                     UserId = userId,
