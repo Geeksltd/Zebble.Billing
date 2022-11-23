@@ -14,7 +14,20 @@
         public Task Initialization => SubscriptionSource?.Task;
 
         internal IBillingUser User => UserAccessor();
-        internal Subscription Subscription { get; set; }
+
+        Subscription subscription;
+        internal Subscription Subscription
+        {
+            get => subscription;
+            set
+            {
+                subscription = value;
+                IsLoaded = true;
+            }
+        }
+
+        public bool IsLoaded { get; private set; }
+
         internal IProductProvider ProductProvider { get; private set; }
 
         public static BillingContext Current { get; private set; }

@@ -16,7 +16,7 @@
         public static async Task Load()
         {
             while (User == null) await Task.Delay(500);
-            if (!CacheFile.Exists()) return;
+            if (!await CacheFile.ExistsAsync()) return;
 
             var fileContents = await CacheFile.ReadAllTextAsync();
             if (fileContents.IsEmpty()) return;
