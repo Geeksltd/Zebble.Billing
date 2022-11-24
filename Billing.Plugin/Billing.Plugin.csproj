@@ -3,7 +3,7 @@
     <AssemblyName>Zebble.Billing</AssemblyName>
     <RootNamespace>Zebble</RootNamespace>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
-    <Version>1.0.103.0</Version>
+    <Version>1.0.104.0</Version>
     <PackOnBuild>true</PackOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
     <DefineConstants>$(DefineConstants)</DefineConstants>
@@ -87,8 +87,8 @@
     <None Remove="Zebble-LicenseAgreement.txt" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Olive" Version="2.1.325" />
-    <PackageReference Include="Zebble" Version="4.5.656" />
+    <PackageReference Include="Olive" Version="2.1.329" />
+    <PackageReference Include="Zebble" Version="4.5.662" />
     <PackageReference Include="Zebble.WebApi" Version="4.5.399" />
     <PackageReference Include="Plugin.InAppBilling" Version="5.3.3-beta" Condition=" $(DefineConstants.Contains('CAFEBAZAAR'))==false OR $(DefineConstants.Contains('ANDROID'))==false " />
   </ItemGroup>
