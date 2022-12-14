@@ -24,14 +24,24 @@
         }
 
         /// <summary>
-        /// Gets a product's price by its Id.
+        /// Gets a product's original price by its Id.
         /// </summary>
-        public async Task<decimal> GetPrice(string productId) => (await GetProduct(productId)).Price;
+        public async Task<decimal> GetOriginalPrice(string productId) => (await GetProduct(productId)).OriginalPrice;
 
         /// <summary>
-        /// Gets a product's local price by its Id.
+        /// Gets a product's local original price by its Id.
         /// </summary>
-        public async Task<string> GetLocalPrice(string productId) => (await GetProduct(productId)).LocalPrice;
+        public async Task<string> GetLocalOriginalPrice(string productId) => (await GetProduct(productId)).LocalOriginalPrice;
+
+        /// <summary>
+        /// Gets a product's discounted price by its Id.
+        /// </summary>
+        public async Task<decimal> GetDiscountedPrice(string productId) => (await GetProduct(productId)).DiscountedPrice;
+
+        /// <summary>
+        /// Gets a product's local discounted price by its Id.
+        /// </summary>
+        public async Task<string> GetLocalDiscountedPrice(string productId) => (await GetProduct(productId)).LocalDiscountedPrice;
 
         /// <summary>
         /// Fetches and stores the latest prices from the store.
@@ -53,7 +63,7 @@
             await PriceUpdateFailed.Raise(new PriceUpdateFailedEventArgs
             {
                 ProductIds = (await ProductProvider.GetProducts()).Select(x => x.Id).ToArray(),
-                UpdatePrice = ProductProvider.UpdatePrice,
+                UpdatePrice = args => ProductProvider.UpdatePrice(args.ProductId, args.OriginalMicrosPrice, args.DiscountedMicrosPrice, args.CurrencyCode),
             });
         }
     }

@@ -6,6 +6,6 @@
     public class PriceUpdateFailedEventArgs : EventArgs
     {
         public string[] ProductIds { get; internal set; }
-        public Func<string, decimal, string, Task> UpdatePrice { get; internal set; }
+        public Func<(string ProductId, decimal OriginalMicrosPrice, decimal DiscountedMicrosPrice, string CurrencyCode), Task> UpdatePrice { get; internal set; }
     }
 }

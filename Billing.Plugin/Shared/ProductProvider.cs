@@ -39,7 +39,7 @@
             return Task.FromResult(Options.Products.Where(x => x.Platform.IsEmpty() || x.Platform.Equals(BillingContext.PaymentAuthority, false)).ToArray());
         }
 
-        public async Task UpdatePrice(string productId, decimal microsPrice, string currencyCode)
+        public async Task UpdatePrice(string productId, decimal originalMicrosPrice, decimal discountedMicrosPrice, string currencyCode)
         {
             var product = await GetById(productId);
             if (product is null)
@@ -48,24 +48,27 @@
                 return;
             }
 
-            var rawPrice = microsPrice / 1000000m;
-            var price = Math.Round(rawPrice, 2);
-            if (currencyCode == "IRR")
-                currencyCode = "IRT";
+            static decimal GetPrice(decimal microsPrice) => Math.Round(microsPrice / 1000000m, 2);
+
+            var originalPrice = GetPrice(originalMicrosPrice);
+            var discountedPrice = GetPrice(discountedMicrosPrice);
+
+            if (currencyCode == "IRR") currencyCode = "IRT";
             var currencySymbol = CurrencyTools.GetCurrencySymbol(currencyCode);
 
-            if (product.Price == price && product.CurrencySymbol == currencySymbol)
+            if (product.OriginalPrice == originalPrice && product.DiscountedPrice == discountedPrice && product.CurrencySymbol == currencySymbol)
             {
-                Log.For(this).Info($"The price and currency symbol of the product with id '{productId}' isn't changed since the last update. ({product.Price} - {product.LocalPrice})");
+                Log.For(this).Info($"The price and currency symbol of the product with id '{productId}' isn't changed since the last update. ({product.OriginalPrice} - {product.DiscountedPrice} - {product.CurrencySymbol})");
                 return;
             }
 
-            product.Price = price;
+            product.OriginalPrice = originalPrice;
+            product.DiscountedPrice = discountedPrice;
             product.CurrencySymbol = currencySymbol;
 
             await File.WriteAllTextAsync(JsonConvert.SerializeObject(Options));
 
-            Log.For(this).Info($"The price or currency symbol of the product with id '{productId}' is updated. ({product.Price} - {product.LocalPrice})");
+            Log.For(this).Info($"The price or currency symbol of the product with id '{productId}' is updated. ({product.OriginalPrice} - {product.DiscountedPrice} - {product.CurrencySymbol})");
         }
 
         static class CurrencyTools

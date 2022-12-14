@@ -44,7 +44,7 @@
                         throw new Exception($"No product info was retrieved for {group.ProductIds.ToString(", ")} ({group.ItemType})");
 
                     foreach (var item in items)
-                        await productProvider.UpdatePrice(item.ProductId, item.MicrosPrice, item.CurrencyCode);
+                        await productProvider.UpdatePrice(item.ProductId, item.MicrosPrice, GetDiscountedPrice(item) ?? item.MicrosPrice, item.CurrencyCode);
                 }
 
                 return true;
@@ -61,6 +61,21 @@
 
                 throw;
             }
+        }
+
+        decimal? GetDiscountedPrice(InAppBillingProduct item)
+        {
+            if (BillingContext.PaymentAuthority == "GooglePlay")
+                return item.AndroidExtras?.MicrosIntroductoryPrice;
+
+            if (BillingContext.PaymentAuthority == "AppStore")
+                return (decimal?)item.AppleExtras.Discounts?.Min(x => x.Price);
+
+            if (BillingContext.PaymentAuthority == "WindowsStore")
+                // return item.WindowsExtras?.FormattedBasePrice;
+                return null;
+
+            return null;
         }
     }
 }
