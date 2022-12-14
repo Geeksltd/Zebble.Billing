@@ -65,17 +65,18 @@
 
         decimal? GetDiscountedPrice(InAppBillingProduct item)
         {
-            if (BillingContext.PaymentAuthority == "GooglePlay")
-                return item.AndroidExtras?.MicrosIntroductoryPrice;
-
-            if (BillingContext.PaymentAuthority == "AppStore")
-                return (decimal?)item.AppleExtras.Discounts?.Min(x => x.Price);
-
-            if (BillingContext.PaymentAuthority == "WindowsStore")
-                // return item.WindowsExtras?.FormattedBasePrice;
-                return null;
-
+#if ANDROID
+#if CAFEBAZAAR
             return null;
+#else
+            return item.AndroidExtras?.MicrosIntroductoryPrice;
+#endif
+#elif IOS
+            return (decimal?)item.AppleExtras.Discounts?.Min(x => x.Price);
+#else
+            // return item.WindowsExtras?.FormattedBasePrice;
+            return null;
+#endif
         }
     }
 }

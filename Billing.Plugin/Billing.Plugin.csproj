@@ -3,7 +3,7 @@
     <AssemblyName>Zebble.Billing</AssemblyName>
     <RootNamespace>Zebble</RootNamespace>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
-    <Version>1.0.105.0</Version>
+    <Version>1.0.106.0</Version>
     <PackOnBuild>true</PackOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
     <DefineConstants>$(DefineConstants)</DefineConstants>
@@ -99,7 +99,4 @@
     <Folder Include="Mvvm\" />
   </ItemGroup>
   <Import Project="..\Billing.Shared\Billing.Shared.projitems" Label="Shared" />
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="update-local-nuget-cache $(TargetDir)" />
-  </Target>
 </Project>
