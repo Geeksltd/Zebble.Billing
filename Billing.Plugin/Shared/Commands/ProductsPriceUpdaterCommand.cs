@@ -44,7 +44,12 @@
                         throw new Exception($"No product info was retrieved for {group.ProductIds.ToString(", ")} ({group.ItemType})");
 
                     foreach (var item in items)
-                        await productProvider.UpdatePrice(item.ProductId, item.MicrosPrice, GetDiscountedPrice(item) ?? item.MicrosPrice, item.CurrencyCode);
+                    {
+                        var discountedMicrosPrice = GetDiscountedPrice(item) ?? default;
+                        if (discountedMicrosPrice == default) discountedMicrosPrice = item.MicrosPrice;
+
+                        await productProvider.UpdatePrice(item.ProductId, item.MicrosPrice, discountedMicrosPrice, item.CurrencyCode);
+                    }
                 }
 
                 return true;
@@ -54,7 +59,7 @@
                 if (ex.PurchaseError == PurchaseError.InvalidProduct)
                 {
                     // Invalid Product: XYZ
-                    var invalidProductId = ex.Message.Split(":").LastOrDefault().Trim();
+                    var invalidProductId = ex.Message.Split(":").Last().Trim();
                     var filteredProducts = products.Except(x => x.Id.Equals(invalidProductId, caseSensitive: false)).ToArray();
                     return await ProcessProducts(filteredProducts);
                 }
