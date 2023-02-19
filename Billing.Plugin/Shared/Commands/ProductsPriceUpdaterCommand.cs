@@ -77,7 +77,7 @@
             return item.AndroidExtras?.MicrosIntroductoryPrice;
 #endif
 #elif IOS
-            return (decimal?)item.AppleExtras.Discounts?.Min(x => x.Price);
+            return (decimal?)item.AppleExtras.Discounts?.MinOrNull(x => x.Price);
 #else
             // return item.WindowsExtras?.FormattedBasePrice;
             return null;
