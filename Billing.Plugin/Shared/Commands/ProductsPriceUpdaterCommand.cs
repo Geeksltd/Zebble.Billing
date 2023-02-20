@@ -68,7 +68,7 @@
             }
         }
 
-        decimal? GetDiscountedPrice(InAppBillingProduct item)
+        static decimal? GetDiscountedPrice(InAppBillingProduct item)
         {
 #if ANDROID
 #if CAFEBAZAAR
@@ -77,7 +77,7 @@
             return item.AndroidExtras?.MicrosIntroductoryPrice;
 #endif
 #elif IOS
-            return (decimal?)item.AppleExtras.Discounts?.MinOrNull(x => x.Price);
+            return (decimal?)item.AppleExtras?.Discounts.OrEmpty().Concat(item.AppleExtras.IntroductoryOffer).ExceptNull().MinOrNull(x => x.Price);
 #else
             // return item.WindowsExtras?.FormattedBasePrice;
             return null;
