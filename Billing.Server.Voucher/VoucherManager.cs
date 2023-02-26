@@ -87,8 +87,8 @@
                     TransactionId = subscriptionInfo.TransactionId,
                     TransactionDate = voucher.ActivationDate,
                     PurchaseToken = voucher.Code,
-                    SubscriptionDate = subscriptionInfo.SubscriptionDate,
-                    ExpirationDate = subscriptionInfo.ExpirationDate,
+                    SubscriptionDate = subscriptionInfo.SubscriptionDate.HasValue ? subscriptionInfo.SubscriptionDate : LocalTime.UtcNow,
+                    ExpirationDate = subscriptionInfo.ExpirationDate.HasValue ? subscriptionInfo.ExpirationDate : LocalTime.UtcNow.Add(voucher.Duration),
                     CancellationDate = subscriptionInfo.CancellationDate,
                     LastUpdate = LocalTime.UtcNow,
                     AutoRenews = subscriptionInfo.AutoRenews
