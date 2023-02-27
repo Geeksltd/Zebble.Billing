@@ -76,6 +76,8 @@
             var subscriptions = await SubscriptionRepository.GetAllWithTransactionId(subscriptionInfo.TransactionId);
             var subscription = subscriptions.Where(x => x.UserId == voucher.UserId).GetMostRecent(SubscriptionComparer);
 
+            var utcNow = LocalTime.UtcNow;
+
             if (subscription is null)
             {
                 subscription = await SubscriptionRepository.AddSubscription(new Subscription
@@ -87,10 +89,10 @@
                     TransactionId = subscriptionInfo.TransactionId,
                     TransactionDate = voucher.ActivationDate,
                     PurchaseToken = voucher.Code,
-                    SubscriptionDate = subscriptionInfo.SubscriptionDate.HasValue ? subscriptionInfo.SubscriptionDate : LocalTime.UtcNow,
-                    ExpirationDate = subscriptionInfo.ExpirationDate.HasValue ? subscriptionInfo.ExpirationDate : LocalTime.UtcNow.Add(voucher.Duration),
+                    SubscriptionDate = subscriptionInfo.SubscriptionDate ?? utcNow,
+                    ExpirationDate = subscriptionInfo.ExpirationDate ?? utcNow.Add(voucher.Duration),
                     CancellationDate = subscriptionInfo.CancellationDate,
-                    LastUpdate = LocalTime.UtcNow,
+                    LastUpdate = utcNow,
                     AutoRenews = subscriptionInfo.AutoRenews
                 });
             }
@@ -100,7 +102,7 @@
                 Id = Guid.NewGuid().ToString(),
                 SubscriptionId = subscription.Id,
                 Platform = "Voucher",
-                Date = LocalTime.UtcNow,
+                Date = utcNow,
                 Details = voucher.ToJson()
             });
 
