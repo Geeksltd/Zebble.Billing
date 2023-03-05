@@ -11,7 +11,7 @@
         static IBillingUser User => Context?.User;
         static Subscription Subscription => Context?.Subscription;
 
-        static FileInfo CacheFile => Device.IO.File($"{User.UserId}-Billing-v1.json");
+        static FileInfo CacheFile => Device.IO.Cache.GetFile($"{User.UserId}-Billing-v1.json");
 
         public static async Task Load()
         {
