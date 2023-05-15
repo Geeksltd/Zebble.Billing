@@ -12,29 +12,29 @@
 
         public PurchaseSubscriptionCommand(Product product) => Product = product;
 
-        protected override async Task<(PurchaseResult, string)> DoExecute()
+        protected override async Task<(PurchaseResult, string)> DoExecute(IBillingUser user)
         {
             var context = BillingContext.Current;
 
             try
             {
-                await context.Refresh();
+                await context.Refresh(user);
 
                 if (context.IsSubscribed && (await context.CurrentProduct)?.Id == Product.Id) return (PurchaseResult.AlreadySubscribed, null);
 
 #if CAFEBAZAAR && ANDROID
-                var purchase = await Billing.PurchaseAsync(Product.Id, Product.GetItemType(), context.User.UserId);
+                var purchase = await Billing.PurchaseAsync(Product.Id, Product.GetItemType(), user.UserId);
 #else
                 var purchase = await Billing.PurchaseAsync(Product.Id, Product.GetItemType());
 #endif
-                var (result, originUserId) = await context.ProcessPurchase(purchase);
+                var (result, originUserId) = await context.ProcessPurchase(user, purchase);
                 if (result != PurchaseResult.Succeeded) return (result, null);
 
 #if !(CAFEBAZAAR && ANDROID)
                 if (purchase.State == PurchaseState.Purchased)
                     await Billing.FinalizePurchaseAsync(purchase.PurchaseToken);
 #endif
-                await context.Refresh();
+                await context.Refresh(user);
 
                 if (context.IsSubscribed) return (PurchaseResult.Succeeded, originUserId);
 

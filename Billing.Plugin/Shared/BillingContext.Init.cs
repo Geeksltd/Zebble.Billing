@@ -2,18 +2,10 @@
 {
     using Olive;
     using System;
-    using System.Threading.Tasks;
 
     public partial class BillingContext
     {
         static BillingContextOptions Options;
-
-        Func<IBillingUser> UserAccessor;
-        TaskCompletionSource<bool> SubscriptionSource;
-
-        public Task Initialization => SubscriptionSource?.Task;
-
-        internal IBillingUser User => UserAccessor();
 
         Subscription subscription;
         internal Subscription Subscription
@@ -35,12 +27,12 @@
         public static AsyncEvent<SubscriptionRestoredEventArgs> SubscriptionRestored = new();
         public static AsyncEvent<PriceUpdateFailedEventArgs> PriceUpdateFailed = new();
 
-        public static void Initialize(Func<IBillingUser> userAccessor)
+        public static void Initialize(IBillingUser user)
         {
-            Initialize(new BillingContextOptions(), userAccessor);
+            Initialize(new BillingContextOptions(), user);
         }
 
-        public static void Initialize(BillingContextOptions options, Func<IBillingUser> userAccessor)
+        public static void Initialize(BillingContextOptions options, IBillingUser user)
         {
             if (Current is not null)
             {
@@ -48,23 +40,17 @@
                 return;
             }
 
+            if (user is null) throw new ArgumentNullException(nameof(user));
             if (options is null) throw new ArgumentNullException(nameof(options));
-            if (userAccessor is null) throw new ArgumentNullException(nameof(userAccessor));
-
+            
             Options = options.Validate();
 
             Current = new BillingContext
             {
-                UserAccessor = userAccessor,
-                ProductProvider = new ProductProvider(Options.CatalogPath),
-                SubscriptionSource = new TaskCompletionSource<bool>()
+                ProductProvider = new ProductProvider(Options.CatalogPath)
             };
 
-            Thread.Pool.RunOnNewThread(async () =>
-            {
-                await SubscriptionFileStore.Load();
-                Current.SubscriptionSource.SetResult(true);
-            });
+            SubscriptionFileStore.Load(user);
         }
     }
 }

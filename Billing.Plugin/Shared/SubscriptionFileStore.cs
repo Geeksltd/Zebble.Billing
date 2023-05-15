@@ -2,34 +2,37 @@
 {
     using Newtonsoft.Json;
     using Olive;
+    using System;
     using System.IO;
     using System.Threading.Tasks;
 
     class SubscriptionFileStore
     {
         static BillingContext Context => BillingContext.Current;
-        static IBillingUser User => Context?.User;
         static Subscription Subscription => Context?.Subscription;
 
-        static FileInfo CacheFile => Device.IO.Cache.GetFile($"{User.UserId}-Billing-v1.json");
+        static FileInfo GetFile(IBillingUser user)
+            => Device.IO.Cache.GetFile($"{user.UserId}-Billing-v1.json");
 
-        public static async Task Load()
+        public static void Load(IBillingUser user)
         {
-            while (User == null) await Task.Delay(500);
-            if (!await CacheFile.ExistsAsync()) return;
+            if (user is null) throw new ArgumentNullException(nameof(user));
 
-            var fileContents = await CacheFile.ReadAllTextAsync();
+            var file = GetFile(user);
+            if (!file.Exists()) return;
+
+            var fileContents = file.ReadAllText();
             if (fileContents.IsEmpty()) return;
 
             Context.Subscription = JsonConvert.DeserializeObject<Subscription>(fileContents);
         }
 
-        public static async Task Save()
+        public static async Task Save(IBillingUser user)
         {
-            if (User is null) throw new System.Exception("User is unknown.");
+            if (user is null) throw new ArgumentNullException(nameof(user));
 
             var fileContents = Subscription is null ? null : JsonConvert.SerializeObject(Subscription);
-            await CacheFile.WriteAllTextAsync(fileContents ?? "");
+            await GetFile(user).WriteAllTextAsync(fileContents ?? "");
         }
     }
 }

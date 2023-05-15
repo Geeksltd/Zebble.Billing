@@ -11,9 +11,10 @@
         /// Queries the latest subscription status from the server in background.
         /// </summary>
         /// <remarks>An active internet connection is required.</remarks>
-        public async Task BackgroundRefresh()
+        public async Task BackgroundRefresh(IBillingUser user)
         {
-            while (User == null) await Task.Delay(500);
+            if (user is null) throw new ArgumentNullException(nameof(user));
+
             if (Subscription is not null)
             {
                 if (Subscription.ExpirationDate is null) return;
@@ -21,29 +22,29 @@
             }
 
             await UIContext.AwaitConnection();
-            try { await DoRefresh(); }
+            try { await DoRefresh(user); }
             catch { /*Ignore*/ }
         }
 
         /// <summary>
         /// Queries the latest subscription status from the server.
         /// </summary>
-        public async Task Refresh()
+        public async Task Refresh(IBillingUser user)
         {
-            try { await DoRefresh(); }
+            if (user is null) throw new ArgumentNullException(nameof(user));
+
+            try { await DoRefresh(user); }
             catch (Exception ex) { Log.For<Subscription>().Error(ex); }
         }
 
-        async Task DoRefresh()
+        async Task DoRefresh(IBillingUser user)
         {
-            if (User == null) return;
-
             var url = new Uri(Options.BaseUri, Options.SubscriptionStatusPath).ToString();
-            var @params = new { User.Ticket, User.UserId };
+            var @params = new { user.Ticket, user.UserId };
             var current = await BaseApi.Post<Subscription>(url, @params, errorAction: OnError.Ignore);
 
             Subscription = current;
-            await SubscriptionFileStore.Save();
+            await SubscriptionFileStore.Save(user);
 
             await SubscriptionRestored.Raise(current.ToEventArgs());
         }

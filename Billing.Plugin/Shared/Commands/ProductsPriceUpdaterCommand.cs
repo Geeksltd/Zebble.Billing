@@ -8,7 +8,7 @@
 
     class ProductsPriceUpdaterCommand : StoreCommandBase<bool>
     {
-        protected override async Task<bool> DoExecute()
+        protected override async Task<bool> DoExecute(IBillingUser user)
         {
             try
             {

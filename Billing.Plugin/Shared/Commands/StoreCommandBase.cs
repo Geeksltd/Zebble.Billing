@@ -9,20 +9,22 @@
     {
         protected static IInAppBilling Billing => CrossInAppBilling.Current;
 
-        protected abstract Task<TOut> DoExecute();
+        protected abstract Task<TOut> DoExecute(IBillingUser user);
 
-        public Task<TOut> Execute() => TryExecute();
+        public Task<TOut> Execute(IBillingUser user) => TryExecute(user);
 
-        async Task<TOut> TryExecute()
+        async Task<TOut> TryExecute(IBillingUser user)
         {
             try
             {
+                if (user is null) throw new ArgumentNullException(nameof(user));
+
                 if (!CrossInAppBilling.IsSupported) return default;
 
                 var connected = await Billing.ConnectAsync();
                 if (!connected) return default;
 
-                return await DoExecute();
+                return await DoExecute(user);
             }
             catch (Exception ex)
             {

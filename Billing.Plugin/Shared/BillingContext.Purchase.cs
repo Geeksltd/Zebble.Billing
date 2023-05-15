@@ -11,13 +11,13 @@
         /// <summary>
         /// Triggers a new purchase process.
         /// </summary>
-        public async Task<(PurchaseResult, string)> PurchaseSubscription(string productId)
+        public async Task<(PurchaseResult, string)> PurchaseSubscription(IBillingUser user, string productId)
         {
 #if MVVM || UWP
             return (PurchaseResult.AppStoreUnavailable, null);
 #else
             var product = await GetProduct(productId) ?? throw new Exception($"Product with id '{productId}' not found.");
-            return await new PurchaseSubscriptionCommand(product).Execute();
+            return await new PurchaseSubscriptionCommand(product).Execute(user);
 #endif
         }
 
@@ -25,12 +25,12 @@
         /// Restores all already purchased subscriptions.
         /// </summary>
         /// <remarks>If you pass the true for `userRequest`, and no active subscription is found, it will throw an exception.</remarks>
-        public async Task<bool> RestoreSubscription(bool userRequest = false)
+        public async Task<bool> RestoreSubscription(IBillingUser user, bool userRequest = false)
         {
             var errorMessage = "";
 
 #if !MVVM && !UWP
-            try { await new RestoreSubscriptionCommand().Execute(); }
+            try { await new RestoreSubscriptionCommand().Execute(user); }
             catch (Exception ex)
             {
                 errorMessage = ex.Message;
@@ -41,7 +41,7 @@
             var successful = false;
             try
             {
-                await Refresh();
+                await Refresh(user);
                 successful = IsSubscribed;
             }
             catch (Exception ex)
@@ -56,14 +56,14 @@
             return successful;
         }
 
-        internal async Task<PurchaseAttemptResult> PurchaseAttempt(SubscriptionPurchasedEventArgs args)
+        internal async Task<PurchaseAttemptResult> PurchaseAttempt(IBillingUser user, SubscriptionPurchasedEventArgs args)
         {
+            if (user is null) throw new Exception("User is not available.");
+
             if (await UIContext.IsOffline()) throw new Exception("Network connection is not available.");
 
-            if (User == null) throw new Exception("User is not available.");
-
             var url = new Uri(Options.BaseUri, Options.PurchaseAttemptPath).ToString();
-            var @params = new { User.Ticket, User.UserId, Platform = PaymentAuthority, args.ProductId, args.TransactionId, args.PurchaseToken, args.ReplaceConfirmed };
+            var @params = new { user.Ticket, user.UserId, Platform = PaymentAuthority, args.ProductId, args.TransactionId, args.PurchaseToken, args.ReplaceConfirmed };
 
             var result = await BaseApi.Post<PurchaseAttemptResult>(url, @params, OnError.Ignore, showWaiting: false);
 
@@ -73,13 +73,13 @@
             return result;
         }
 
-        internal async Task<(PurchaseResult, string)> ProcessPurchase(InAppBillingPurchase purchase)
+        internal async Task<(PurchaseResult, string)> ProcessPurchase(IBillingUser user, InAppBillingPurchase purchase)
         {
             var replaceConfirmed = false;
 
             while (true)
             {
-                var result = await PurchaseAttempt(purchase.ToEventArgs(replaceConfirmed));
+                var result = await PurchaseAttempt(user, purchase.ToEventArgs(replaceConfirmed));
                 if (result is null) return (PurchaseResult.Unknown, null);
 
                 if (result.Status == PurchaseAttemptStatus.Succeeded)

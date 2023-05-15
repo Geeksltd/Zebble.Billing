@@ -7,20 +7,20 @@
 
     partial class BillingContext
     {
-        public async Task<VoucherApplyStatus?> ApplyVoucher(string code)
+        public async Task<VoucherApplyStatus?> ApplyVoucher(IBillingUser user, string code)
         {
+            if (user is null) throw new ArgumentNullException(nameof(user));
+
             if (code.IsEmpty()) throw new ArgumentNullException(nameof(code));
 
             if (await UIContext.IsOffline()) throw new Exception("Network connection is not available.");
 
-            if (User == null) throw new Exception("User is not available.");
-
             var url = new Uri(Options.BaseUri, Options.VoucherApplyPath).ToString();
-            var @params = new { User.Ticket, User.UserId, Code = code };
+            var @params = new { user.Ticket, user.UserId, Code = code };
 
             var result = await BaseApi.Post<ApplyVoucherResult>(url, @params, OnError.Ignore, showWaiting: false);
 
-            if (result?.Status == VoucherApplyStatus.Succeeded) await Refresh();
+            if (result?.Status == VoucherApplyStatus.Succeeded) await Refresh(user);
 
             return result?.Status;
         }

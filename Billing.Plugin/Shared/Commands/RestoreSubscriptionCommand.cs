@@ -8,7 +8,7 @@
 
     class RestoreSubscriptionCommand : StoreCommandBase<bool>
     {
-        protected override async Task<bool> DoExecute()
+        protected override async Task<bool> DoExecute(IBillingUser user)
         {
             try
             {
@@ -24,7 +24,7 @@
 
                 foreach (var purchase in purchases)
                 {
-                    var (result, _) = await BillingContext.Current.ProcessPurchase(purchase);
+                    var (result, _) = await BillingContext.Current.ProcessPurchase(user, purchase);
 
 #if !(CAFEBAZAAR && ANDROID)
                     if (result != PurchaseResult.Succeeded) continue;

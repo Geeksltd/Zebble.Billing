@@ -47,7 +47,7 @@
         /// Fetches and stores the latest prices from the store.
         /// </summary>
         /// <remarks>An active internet connection is required.</remarks>
-        public async Task UpdateProductPrices()
+        public async Task UpdateProductPrices(IBillingUser user)
         {
             var pricesUpdated = false;
 
@@ -55,7 +55,7 @@
             await UIContext.AwaitConnection(10);
             await Task.Delay(3.Seconds());
 
-            try { pricesUpdated = await new ProductsPriceUpdaterCommand().Execute(); }
+            try { pricesUpdated = await new ProductsPriceUpdaterCommand().Execute(user); }
             catch (System.Exception ex) { Log.For(typeof(BillingContext)).Error(ex); }
 #endif
 
