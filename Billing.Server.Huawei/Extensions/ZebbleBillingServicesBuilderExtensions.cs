@@ -16,6 +16,7 @@
                             .Validate(opts => opts.PublicKey.HasValue(), $"{nameof(HuaweiOptions.PublicKey)} is empty.");
 
             builder.Services.AddStoreConnector<HuaweiConnector>("Huawei");
+            builder.Services.AddScoped<HuaweiNotificationInterceptor>();
 
             return builder;
         }
