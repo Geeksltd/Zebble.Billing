@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Olive;
-    using Plugin.InAppBilling;
 
     partial class BillingContext
     {
@@ -73,13 +72,14 @@
             return result;
         }
 
-        internal async Task<(PurchaseResult, string)> ProcessPurchase(IBillingUser user, InAppBillingPurchase purchase)
+        async Task<(PurchaseResult, string)> ProcessPurchase(IBillingUser user, SubscriptionPurchasedEventArgs args)
         {
             var replaceConfirmed = false;
 
             while (true)
             {
-                var result = await PurchaseAttempt(user, purchase.ToEventArgs(replaceConfirmed));
+                args.ReplaceConfirmed = replaceConfirmed;
+                var result = await PurchaseAttempt(user, args);
                 if (result is null) return (PurchaseResult.Unknown, null);
 
                 if (result.Status == PurchaseAttemptStatus.Succeeded)

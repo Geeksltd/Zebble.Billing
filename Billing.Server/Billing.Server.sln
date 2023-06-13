@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30803.129
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33717.318
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Billing.Server", "Billing.Server.csproj", "{83F3A04D-1D45-4C29-B877-ED89C4F05AE5}"
 EndProject
@@ -25,11 +25,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Billing.Server.DynamoDb", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Billing.Server.Voucher.DynamoDb", "..\Billing.Server.Voucher.DynamoDb\Billing.Server.Voucher.DynamoDb.csproj", "{D652EA28-635E-4E50-AD08-FC61BDF37773}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Billing.Server.Huawei", "..\Billing.Server.Huawei\Billing.Server.Huawei.csproj", "{0BA8242B-9BAA-450E-AA86-8137F6F490BE}"
+EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		..\Billing.Shared\Billing.Shared.projitems*{83f3a04d-1d45-4c29-b877-ed89c4f05ae5}*SharedItemsImports = 5
-		..\Billing.Shared\Billing.Shared.projitems*{e6dbb3d4-eebf-4470-bc2a-3e16c59c4c8e}*SharedItemsImports = 13
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -75,11 +73,19 @@ Global
 		{D652EA28-635E-4E50-AD08-FC61BDF37773}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D652EA28-635E-4E50-AD08-FC61BDF37773}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D652EA28-635E-4E50-AD08-FC61BDF37773}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BA8242B-9BAA-450E-AA86-8137F6F490BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BA8242B-9BAA-450E-AA86-8137F6F490BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BA8242B-9BAA-450E-AA86-8137F6F490BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BA8242B-9BAA-450E-AA86-8137F6F490BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CF99AD4C-C922-4C15-B96C-3BA17194D1F2}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\Billing.Shared\Billing.Shared.projitems*{83f3a04d-1d45-4c29-b877-ed89c4f05ae5}*SharedItemsImports = 5
+		..\Billing.Shared\Billing.Shared.projitems*{e6dbb3d4-eebf-4470-bc2a-3e16c59c4c8e}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal

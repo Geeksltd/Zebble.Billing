@@ -4,7 +4,6 @@
     using System.Threading.Tasks;
     using Plugin.InAppBilling;
     using Olive;
-    using System.Collections.Generic;
 
     class PurchaseSubscriptionCommand : StoreCommandBase<(PurchaseResult, string)>
     {

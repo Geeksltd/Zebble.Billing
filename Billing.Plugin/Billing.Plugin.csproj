@@ -3,7 +3,7 @@
     <AssemblyName>Zebble.Billing</AssemblyName>
     <RootNamespace>Zebble</RootNamespace>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
-    <Version>1.0.112.0</Version>
+    <Version>1.0.114.0</Version>
     <PackOnBuild>true</PackOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
     <DefineConstants>$(DefineConstants)</DefineConstants>
@@ -21,9 +21,9 @@
     <Authors>Geeks Ltd</Authors>
     <Copyright>Geeks Ltd 2023, All rights reserved.</Copyright>
     <DisableExtraReferences>true</DisableExtraReferences>
-    <Configurations>Debug;Release;DebugCafeBazaar;ReleaseCafeBazaar</Configurations>
+    <Configurations>Debug;Release;DebugCafeBazaar;ReleaseCafeBazaar;DebugHuawei;ReleaseHuawei</Configurations>
   </PropertyGroup>
-  <PropertyGroup Condition=" $(Configuration.EndsWith('CafeBazaar'))==false ">
+  <PropertyGroup Condition=" $(Configuration.EndsWith('CafeBazaar'))==false AND $(Configuration.EndsWith('Huawei'))==false ">
     <TargetFrameworks>net6.0;Xamarin.iOS10;MonoAndroid13.0</TargetFrameworks>
     <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">$(TargetFrameworks);uap10.0.18362</TargetFrameworks>
     <PackageId>Zebble.Billing</PackageId>
@@ -36,6 +36,13 @@
     <PackageId>Zebble.Billing.CafeBazaar</PackageId>
     <PackageProjectUrl>https://nuget.org/packages/Zebble.Billing.CafeBazaar/</PackageProjectUrl>
     <Title>Zebble.Billing.CafeBazaar</Title>
+  </PropertyGroup>
+  <PropertyGroup Condition=" $(Configuration.EndsWith('Huawei')) ">
+    <TargetFrameworks>MonoAndroid13.0</TargetFrameworks>
+    <DefineConstants>$(DefineConstants);HUAWEI</DefineConstants>
+    <PackageId>Zebble.Billing.Huawei</PackageId>
+    <PackageProjectUrl>https://nuget.org/packages/Zebble.Billing.Huawei/</PackageProjectUrl>
+    <Title>Zebble.Billing.Huawei</Title>
   </PropertyGroup>
   <PropertyGroup Condition=" $(Configuration.StartsWith('Debug')) ">
     <DebugSymbols>true</DebugSymbols>
@@ -61,18 +68,23 @@
   <ItemGroup>
     <Compile Include="Shared\**\*.cs" />
   </ItemGroup>
+  <ItemGroup Condition=" $(DefineConstants.Contains('HUAWEI'))==false ">
+    <Compile Include="Shared.Others\**\*.cs" />
+  </ItemGroup>
   <ItemGroup Condition=" $(DefineConstants.Contains('UWP')) ">
     <Compile Include="UWP\**\*.cs" />
   </ItemGroup>
-  <ItemGroup Condition=" $(DefineConstants.Contains('ANDROID')) ">
-    <PackageReference Include="Xamarin.Essentials" Version="1.7.0" Condition=" $(DefineConstants.Contains('CAFEBAZAAR'))==false " />
-  </ItemGroup>
-  <ItemGroup Condition=" $(DefineConstants.Contains('ANDROID')) AND $(DefineConstants.Contains('CAFEBAZAAR'))==false ">
+  <ItemGroup Condition=" $(DefineConstants.Contains('ANDROID')) AND $(DefineConstants.Contains('CAFEBAZAAR'))==false AND $(DefineConstants.Contains('HUAWEI'))==false ">
+    <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
     <Compile Include="Android\GooglePlay\**\*.cs" />
   </ItemGroup>
   <ItemGroup Condition=" $(DefineConstants.Contains('ANDROID')) AND $(DefineConstants.Contains('CAFEBAZAAR')) ">
     <Compile Include="Android\CafeBazaar\**\*.cs" />
     <PackageReference Include="Plugin.InAppBilling.CafeBazaar" Version="1.0.3" />
+  </ItemGroup>
+  <ItemGroup Condition=" $(DefineConstants.Contains('ANDROID')) AND $(DefineConstants.Contains('HUAWEI')) ">
+    <PackageReference Include="Huawei.Hms.Iap" Version="6.4.0.301" />
+    <Compile Include="Android\Huawei\**\*.cs" />
   </ItemGroup>
   <ItemGroup Condition=" $(DefineConstants.Contains('IOS')) ">
     <Compile Include="iOS\**\*.cs" />
@@ -90,13 +102,7 @@
     <PackageReference Include="Olive" Version="2.1.329" />
     <PackageReference Include="Zebble" Version="4.5.662" />
     <PackageReference Include="Zebble.WebApi" Version="4.5.399" />
-    <PackageReference Include="Plugin.InAppBilling" Version="5.3.3-beta" Condition=" $(DefineConstants.Contains('CAFEBAZAAR'))==false OR $(DefineConstants.Contains('ANDROID'))==false " />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Android\" />
-    <Folder Include="iOS\" />
-    <Folder Include="UWP\" />
-    <Folder Include="Mvvm\" />
+    <PackageReference Include="Plugin.InAppBilling" Version="5.3.3-beta" Condition=" $(DefineConstants.Contains('ANDROID'))==false OR $(DefineConstants.Contains('CAFEBAZAAR'))==false AND $(DefineConstants.Contains('HUAWEI'))==false " />
   </ItemGroup>
   <Import Project="..\Billing.Shared\Billing.Shared.projitems" Label="Shared" />
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

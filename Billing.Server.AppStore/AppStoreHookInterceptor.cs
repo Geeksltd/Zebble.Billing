@@ -15,7 +15,6 @@
         readonly AppStoreConnector StoreConnector;
         readonly ISubscriptionChangeHandler SubscriptionChangeHandler;
 
-
         public AppStoreHookInterceptor(
             ILogger<AppStoreHookInterceptor> logger,
             IOptionsSnapshot<AppStoreOptions> options,

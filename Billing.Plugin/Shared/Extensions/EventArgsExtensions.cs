@@ -1,8 +1,6 @@
 ﻿namespace Zebble.Billing
 {
-    using Plugin.InAppBilling;
-
-    static class EventArgsExtensions
+    static partial class EventArgsExtensions
     {
         public static SubscriptionRestoredEventArgs ToEventArgs(this Subscription subscription)
         {
@@ -12,18 +10,6 @@
                 SubscriptionDate = subscription?.SubscriptionDate,
                 ExpirationDate = subscription?.ExpirationDate,
                 CancellationDate = subscription?.CancellationDate
-            };
-        }
-
-        public static SubscriptionPurchasedEventArgs ToEventArgs(this InAppBillingPurchase purchase, bool replaceConfirmed = false)
-        {
-            return new SubscriptionPurchasedEventArgs
-            {
-                ProductId = purchase.ProductId,
-                TransactionId = purchase.Id,
-                TransactionDate = purchase.TransactionDateUtc,
-                PurchaseToken = purchase.PurchaseToken,
-                ReplaceConfirmed = replaceConfirmed,
             };
         }
     }

@@ -1,0 +1,76 @@
+name: Publish Zebble.Billing Packages
+
+on:
+  push:
+    branches: [ master ]
+    
+jobs:
+ build:
+    strategy:
+      matrix:
+        configuration: [Release]
+
+    runs-on: windows-2019
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Publish Zebble.Billing.Server NuGet Package
+      uses: Geeksltd/publish-nuget@v2
+      with:
+        PROJECT_FILE_PATH: Billing.Server/Billing.Server.csproj
+        NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+
+    - name: Publish Zebble.Billing.Server.AppStore NuGet Package
+      uses: Geeksltd/publish-nuget@v2
+      with:
+        PROJECT_FILE_PATH: Billing.Server.AppStore/Billing.Server.AppStore.csproj
+        NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+
+    - name: Publish Zebble.Billing.Server.CafeBazaar NuGet Package
+      uses: Geeksltd/publish-nuget@v2
+      with:
+        PROJECT_FILE_PATH: Billing.Server.CafeBazaar/Billing.Server.CafeBazaar.csproj
+        NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+
+    - name: Publish Zebble.Billing.Server.DynamoDb NuGet Package
+      uses: Geeksltd/publish-nuget@v2
+      with:
+        PROJECT_FILE_PATH: Billing.Server.DynamoDb/Billing.Server.DynamoDb.csproj
+        NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+
+    - name: Publish Zebble.Billing.Server.EntityFramework NuGet Package
+      uses: Geeksltd/publish-nuget@v2
+      with:
+        PROJECT_FILE_PATH: Billing.Server.EntityFramework/Billing.Server.EntityFramework.csproj
+        NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+
+    - name: Publish Zebble.Billing.Server.GooglePlay NuGet Package
+      uses: Geeksltd/publish-nuget@v2
+      with:
+        PROJECT_FILE_PATH: Billing.Server.GooglePlay/Billing.Server.GooglePlay.csproj
+        NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+
+    - name: Publish Zebble.Billing.Server.Huawei NuGet Package
+      uses: Geeksltd/publish-nuget@v2
+      with:
+        PROJECT_FILE_PATH: Billing.Server.Huawei/Billing.Server.Huawei.csproj
+        NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+
+    - name: Publish Zebble.Billing.Server.Voucher NuGet Package
+      uses: Geeksltd/publish-nuget@v2
+      with:
+        PROJECT_FILE_PATH: Billing.Server.Voucher/Billing.Server.Voucher.csproj
+        NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+
+    - name: Publish Zebble.Billing.Server.Voucher.DynamoDb NuGet Package
+      uses: Geeksltd/publish-nuget@v2
+      with:
+        PROJECT_FILE_PATH: Billing.Server.Voucher.DynamoDb/Billing.Server.Voucher.DynamoDb.csproj
+        NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+
+    - name: Publish Zebble.Billing.Server.Voucher.EntityFramework NuGet Package
+      uses: Geeksltd/publish-nuget@v2
+      with:
+        PROJECT_FILE_PATH: Billing.Server.Voucher.EntityFramework/Billing.Server.Voucher.EntityFramework.csproj
+        NUGET_KEY: ${{secrets.NUGET_API_KEY}}

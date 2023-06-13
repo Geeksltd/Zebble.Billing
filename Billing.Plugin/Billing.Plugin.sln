@@ -1,37 +1,43 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30803.129
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Billing.Plugin", "Billing.Plugin.csproj", "{83F3A04D-1D45-4C29-B877-ED89C4F05AE5}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Billing.Shared", "..\Billing.Shared\Billing.Shared.shproj", "{E6DBB3D4-EEBF-4470-BC2A-3E16C59C4C8E}"
 EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		..\Billing.Shared\Billing.Shared.projitems*{83f3a04d-1d45-4c29-b877-ed89c4f05ae5}*SharedItemsImports = 5
-		..\Billing.Shared\Billing.Shared.projitems*{e6dbb3d4-eebf-4470-bc2a-3e16c59c4c8e}*SharedItemsImports = 13
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		DebugCafeBazaar|Any CPU = DebugCafeBazaar|Any CPU
+		DebugHuawei|Any CPU = DebugHuawei|Any CPU
 		Release|Any CPU = Release|Any CPU
 		ReleaseCafeBazaar|Any CPU = ReleaseCafeBazaar|Any CPU
+		ReleaseHuawei|Any CPU = ReleaseHuawei|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{83F3A04D-1D45-4C29-B877-ED89C4F05AE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{83F3A04D-1D45-4C29-B877-ED89C4F05AE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{83F3A04D-1D45-4C29-B877-ED89C4F05AE5}.DebugCafeBazaar|Any CPU.ActiveCfg = DebugCafeBazaar|Any CPU
 		{83F3A04D-1D45-4C29-B877-ED89C4F05AE5}.DebugCafeBazaar|Any CPU.Build.0 = DebugCafeBazaar|Any CPU
+		{83F3A04D-1D45-4C29-B877-ED89C4F05AE5}.DebugHuawei|Any CPU.ActiveCfg = DebugHuawei|Any CPU
+		{83F3A04D-1D45-4C29-B877-ED89C4F05AE5}.DebugHuawei|Any CPU.Build.0 = DebugHuawei|Any CPU
 		{83F3A04D-1D45-4C29-B877-ED89C4F05AE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{83F3A04D-1D45-4C29-B877-ED89C4F05AE5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{83F3A04D-1D45-4C29-B877-ED89C4F05AE5}.ReleaseCafeBazaar|Any CPU.ActiveCfg = ReleaseCafeBazaar|Any CPU
 		{83F3A04D-1D45-4C29-B877-ED89C4F05AE5}.ReleaseCafeBazaar|Any CPU.Build.0 = ReleaseCafeBazaar|Any CPU
+		{83F3A04D-1D45-4C29-B877-ED89C4F05AE5}.ReleaseHuawei|Any CPU.ActiveCfg = ReleaseHuawei|Any CPU
+		{83F3A04D-1D45-4C29-B877-ED89C4F05AE5}.ReleaseHuawei|Any CPU.Build.0 = ReleaseHuawei|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CF99AD4C-C922-4C15-B96C-3BA17194D1F2}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\Billing.Shared\Billing.Shared.projitems*{83f3a04d-1d45-4c29-b877-ed89c4f05ae5}*SharedItemsImports = 5
+		..\Billing.Shared\Billing.Shared.projitems*{e6dbb3d4-eebf-4470-bc2a-3e16c59c4c8e}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal

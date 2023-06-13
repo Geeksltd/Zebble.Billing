@@ -16,7 +16,7 @@
             Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(activity, bundle);
         }
 
-        public static void OnActivityResult(int requestCode, Result resultCode, Intent data)
+        public static void HandleActivityResult(int requestCode, Result resultCode, Intent data)
         {
             Plugin.InAppBilling.InAppBillingImplementation.HandleActivityResult(requestCode, resultCode, data);
         }

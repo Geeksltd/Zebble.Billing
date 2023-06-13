@@ -27,6 +27,7 @@ namespace Zebble.Billing.Sample
                 builder.AddAppStore();
                 builder.AddGooglePlay();
                 builder.AddCafeBazaar();
+                builder.AddHuawei();
 
                 builder.AddVoucher(builder =>
                 {
@@ -59,6 +60,7 @@ namespace Zebble.Billing.Sample
 
                 builder.UseAppStore();
                 builder.UseGooglePlay();
+                builder.UseHuawei();
 
                 builder.UseVoucher(builder =>
                 {

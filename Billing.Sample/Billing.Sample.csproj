@@ -14,6 +14,7 @@
   <ItemGroup>
     <PackageReference Include="Olive.Mvc" Version="3.1.138" />
     <ProjectReference Include="..\Billing.Server.DynamoDb\Billing.Server.DynamoDb.csproj" />
+    <ProjectReference Include="..\Billing.Server.Huawei\Billing.Server.Huawei.csproj" />
     <ProjectReference Include="..\Billing.Server.Voucher.DynamoDb\Billing.Server.Voucher.DynamoDb.csproj" />
     <ProjectReference Include="..\Billing.Server\Billing.Server.csproj" />
     <ProjectReference Include="..\Billing.Server.AppStore\Billing.Server.AppStore.csproj" />
