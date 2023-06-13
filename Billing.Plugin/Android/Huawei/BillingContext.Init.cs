@@ -11,13 +11,6 @@
             PurchaseSubscriptionCommand.HandlePurchaseResult(requestCode, data, user).RunInParallel();
         }
 
-        public static void HandleAttachBaseContext(Context context)
-        {
-            Huawei.Agconnect.Config.AGConnectServicesConfig
-                .FromContext(context)
-                .OverlayWith(new HmsLazyInputStream(context));
-        }
-
         public static string PaymentAuthority => "Huawei";
     }
 }
