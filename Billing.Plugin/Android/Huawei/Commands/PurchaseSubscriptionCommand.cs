@@ -6,7 +6,6 @@
     using Huawei.Hmf.Extensions;
     using Huawei.Hms.Iap;
     using Huawei.Hms.Iap.Entity;
-    using Huawei.Hms.Support.Api.Client;
     using Olive;
 
     class PurchaseSubscriptionCommand : StoreCommandBase<(PurchaseResult, string)>
@@ -39,7 +38,7 @@
                 var purchase = await Billing.CreatePurchaseIntent(request).AsAsync<PurchaseIntentResult>();
                 var status = purchase.Status;
 
-                if (status != Status.Success)
+                if (!status.IsSuccess)
                     return (PurchaseResult.NotCompleted, null);
 
                 if (status.HasResolution == false)

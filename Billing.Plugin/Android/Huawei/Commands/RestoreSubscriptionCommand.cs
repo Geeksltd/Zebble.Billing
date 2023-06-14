@@ -48,7 +48,10 @@
             var purchases = await Billing.ObtainOwnedPurchases(request)
                 .AsAsync<OwnedPurchasesResult>();
 
-            return purchases.InAppPurchaseDataList.Select(x => new InAppPurchaseData(x)).ToArray();
+            return purchases.InAppPurchaseDataList
+                .OrEmpty()
+                .Select(x => new InAppPurchaseData(x))
+                .ToArray();
         }
     }
 }

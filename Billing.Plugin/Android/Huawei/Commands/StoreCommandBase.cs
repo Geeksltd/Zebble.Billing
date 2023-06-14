@@ -5,7 +5,6 @@
     using Huawei.Hmf.Extensions;
     using Huawei.Hms.Iap;
     using Huawei.Hms.Iap.Entity;
-    using Huawei.Hms.Support.Api.Client;
     using Olive;
 
     abstract class StoreCommandBase<TOut>
@@ -23,8 +22,8 @@
                 if (user is null) throw new ArgumentNullException(nameof(user));
 
                 var result = await Billing.IsEnvReady().AsAsync<IsEnvReadyResult>();
-                    
-                if (result.Status != Status.Success) return default;
+
+                if (!result.Status.IsSuccess) return default;
 
                 return await DoExecute(user);
             }
