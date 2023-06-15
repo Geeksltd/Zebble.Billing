@@ -21,6 +21,8 @@
             {
                 if (user is null) throw new ArgumentNullException(nameof(user));
 
+                BillingContext.ConfigureServices(UIRuntime.CurrentActivity);
+
                 var result = await Billing.IsEnvReady().AsAsync<IsEnvReadyResult>();
 
                 if (!result.Status.IsSuccess) return default;

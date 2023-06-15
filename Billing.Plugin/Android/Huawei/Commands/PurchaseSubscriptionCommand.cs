@@ -74,6 +74,24 @@
 
                 var purchaseResult = billing.ParsePurchaseResultInfoFromIntent(data);
 
+                if (purchaseResult.ReturnCode == OrderStatusCode.OrderStateFailed)
+                {
+                    Source.SetResult((PurchaseResult.NotCompleted, null));
+                    return;
+                }
+
+                if (purchaseResult.ReturnCode == OrderStatusCode.OrderStateCancel)
+                {
+                    Source.SetResult((PurchaseResult.UserCancelled, null));
+                    return;
+                }
+
+                if (purchaseResult.ReturnCode.IsNoneOf(OrderStatusCode.OrderStateSuccess, OrderStatusCode.OrderProductOwned))
+                {
+                    Source.SetResult((PurchaseResult.WillBeActivated, null));
+                    return;
+                }
+
                 var purchase = new InAppPurchaseData(purchaseResult.InAppPurchaseData);
                 var (result, originUserId) = await context.ProcessPurchase(user, purchase);
 
@@ -98,19 +116,7 @@
                     return;
                 }
 
-                if (purchaseResult.ReturnCode.IsAnyOf(OrderStatusCode.OrderStateSuccess, OrderStatusCode.OrderProductOwned))
-                {
-                    Source.SetResult((PurchaseResult.WillBeActivated, originUserId));
-                    return;
-                }
-
-                if (purchaseResult.ReturnCode.IsAnyOf(OrderStatusCode.OrderStateFailed, OrderStatusCode.OrderStateCancel))
-                {
-                    Source.SetResult((PurchaseResult.NotCompleted, null));
-                    return;
-                }
-
-                Source.SetResult((PurchaseResult.Unknown, null));
+                Source.SetResult((PurchaseResult.WillBeActivated, originUserId));
             }
             catch (Exception ex)
             {
