@@ -5,11 +5,9 @@
 
     class HuaweiNotification
     {
-        /// <summary>
-        /// The same value as the shared secret you submit in the password field of the requestBody when validating receipts.
-        /// </summary>
-        [JsonPropertyName("password")]
-        public string SharedSecret { get; set; }
+        [JsonPropertyName("environment")]
+        [JsonConverter(typeof(EnumConverter<HuaweiEnvironment>))]
+        public HuaweiEnvironment? Environment { get; set; }
 
         /// <summary>
         /// The type that describes the in-app purchase event for which the App Store sent the notification.

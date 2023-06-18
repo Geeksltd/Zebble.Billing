@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>Zebble.Billing.Server.Voucher</AssemblyName>
     <RootNamespace>Zebble</RootNamespace>
     <PackageId>Zebble.Billing.Server.Voucher</PackageId>

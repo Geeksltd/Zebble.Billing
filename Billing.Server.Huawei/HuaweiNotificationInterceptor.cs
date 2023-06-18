@@ -36,6 +36,8 @@
         {
             try
             {
+                ValidateNotification(notification);
+
                 var subscriptionInfo = await StoreConnector.GetSubscriptionInfo(notification.ToArgs());
                 if (subscriptionInfo.Status != SubscriptionQueryStatus.Succeeded) return;
 
@@ -86,6 +88,12 @@
                 Logger.LogError(ex, $"Failed to intercept the following notification. {notification.OriginalData}");
                 throw;
             }
+        }
+
+        void ValidateNotification(HuaweiNotification notification)
+        {
+            if (Options.AllowEnvironmentMixing) return;
+            if (notification.Environment != Options.Environment) throw new Exception("Environment doesn't match.");
         }
     }
 }

@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>Zebble.Billing.Server.GooglePlay</AssemblyName>
     <RootNamespace>Zebble</RootNamespace>
     <PackageId>Zebble.Billing.Server.GooglePlay</PackageId>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
-    <Version>1.0.44.0</Version>
+    <Version>1.0.45.0</Version>
     <PackOnBuild>true</PackOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
     <DefineConstants>$(DefineConstants)</DefineConstants>
@@ -37,8 +37,8 @@
     <None Remove=".gitignore" />
     <None Remove="icon.png" />
     <None Remove="README.md" />
-    <PackageReference Include="Google.Apis.AndroidPublisher.v3" Version="1.57.0.2741" />
-    <PackageReference Include="Google.Cloud.PubSub.V1" Version="3.0.0" />
+    <PackageReference Include="Google.Apis.AndroidPublisher.v3" Version="1.60.0.3086" />
+    <PackageReference Include="Google.Cloud.PubSub.V1" Version="3.6.0" />
     <ProjectReference Include="..\Billing.Server\Billing.Server.csproj" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Running)'=='local'">
