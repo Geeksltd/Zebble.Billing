@@ -5,7 +5,7 @@
     <RootNamespace>Zebble</RootNamespace>
     <PackageId>Zebble.Billing.Server.DynamoDb</PackageId>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
-    <Version>1.0.33.0</Version>
+    <Version>1.0.34.0</Version>
     <PackOnBuild>true</PackOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
     <DefineConstants>$(DefineConstants)</DefineConstants>
