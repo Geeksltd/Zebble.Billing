@@ -53,7 +53,7 @@
                         Platform = "Huawei",
                         TransactionId = subscriptionInfo.TransactionId,
                         PurchaseToken = notification.PurchaseToken,
-                        TransactionDate = notification.PurchaseDate,
+                        TransactionDate = notification.PurchaseTime,
                         SubscriptionDate = subscriptionInfo.SubscriptionDate,
                         ExpirationDate = subscriptionInfo.ExpirationDate,
                         CancellationDate = subscriptionInfo.CancellationDate,
@@ -62,8 +62,8 @@
                     });
                 else
                 {
-                    subscription.TransactionDate = notification.PurchaseDate;
-                    subscription.SubscriptionDate = notification.PurchaseDate;
+                    subscription.TransactionDate = notification.PurchaseTime;
+                    subscription.SubscriptionDate = notification.PurchaseTime;
                     subscription.ExpirationDate = notification.ExpirationDate;
                     subscription.CancellationDate = notification.CancellationDate;
                     subscription.LastUpdate = LocalTime.UtcNow;

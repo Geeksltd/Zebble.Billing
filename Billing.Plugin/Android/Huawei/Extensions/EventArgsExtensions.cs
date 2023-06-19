@@ -11,7 +11,7 @@
             {
                 ProductId = purchase.ProductId,
                 TransactionId = purchase.OrderID,
-                TransactionDate = DateTimeOffset.FromUnixTimeSeconds(purchase.PurchaseTime).DateTime,
+                TransactionDate = DateTimeOffset.FromUnixTimeMilliseconds(purchase.PurchaseTime).DateTime,
                 PurchaseToken = purchase.PurchaseToken,
             };
         }

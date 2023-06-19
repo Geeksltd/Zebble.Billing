@@ -5,37 +5,12 @@
 
     class HuaweiNotification
     {
-        [JsonPropertyName("environment")]
-        [JsonConverter(typeof(EnumConverter<HuaweiEnvironment>))]
-        public HuaweiEnvironment? Environment { get; set; }
+        [JsonPropertyName("subNotification")]
+        public string SubNotificationStr { get; set; }
 
-        /// <summary>
-        /// The type that describes the in-app purchase event for which the App Store sent the notification.
-        /// </summary>
-        [JsonPropertyName("notification_type")]
-        [JsonConverter(typeof(EnumConverter<HuaweiNotificationType>))]
-        public HuaweiNotificationType Type { get; set; }
+        HuaweiSubNotification SubNotification
+            => SubNotificationStr.FromJson<HuaweiSubNotification>();
 
-        /// <summary>
-        /// The current renewal status for an auto-renewable subscription product.
-        /// </summary>
-        [JsonPropertyName("auto_renew_status")]
-        [JsonConverter(typeof(NullableBooleanConverter))]
-        public bool? AutoRenewStatus { get; set; }
-
-        public string ProductId { get; set; }
-
-        public string PurchaseToken { get; set; }
-
-        public DateTime? PurchaseDate { get; set; }
-
-        public DateTime? ExpirationDate { get; set; }
-
-        public DateTime? CancellationDate { get; set; }
-
-        /// <summary>
-        /// Original notification json
-        /// </summary>
         public string OriginalData { get; private set; }
 
         public HuaweiNotification WithOriginalData(string originalData)
@@ -44,10 +19,82 @@
             return this;
         }
 
+        public HuaweiEnvironment? Environment
+            => SubNotification.StatusUpdateNotification.Environment;
+
+        public string PurchaseToken
+            => SubNotification.StatusUpdateNotification.PurchaseToken;
+
+        public string ProductId
+            => SubNotification.StatusUpdateNotification.ProductId;
+
+        public bool AutoRenewStatus
+            => SubNotification.StatusUpdateNotification.AutoRenewStatus;
+
+        public DateTime? PurchaseTime
+            => SubNotification.StatusUpdateNotification.LatestReceiptInfo.PurchaseTime;
+
+        public DateTime? ExpirationDate
+            => SubNotification.StatusUpdateNotification.LatestReceiptInfo.ExpirationDate;
+
+        public DateTime? CancellationDate
+            => SubNotification.StatusUpdateNotification.LatestReceiptInfo.CancellationDate;
+
         public SubscriptionInfoArgs ToArgs() => new()
         {
-            ProductId = ProductId,
-            PurchaseToken = PurchaseToken
+            ProductId = SubNotification.StatusUpdateNotification.ProductId,
+            PurchaseToken = SubNotification.StatusUpdateNotification.PurchaseToken
         };
+    }
+
+    class HuaweiSubNotification
+    {
+        [JsonPropertyName("statusUpdateNotification")]
+        public string StatusUpdateNotificationStr { get; set; }
+
+        public HuaweiStatusUpdateNotification StatusUpdateNotification
+            => StatusUpdateNotificationStr.FromJson<HuaweiStatusUpdateNotification>();
+    }
+
+    class HuaweiStatusUpdateNotification
+    {
+        [JsonPropertyName("environment")]
+        [JsonConverter(typeof(EnumConverter<HuaweiEnvironment>))]
+        public HuaweiEnvironment? Environment { get; set; }
+
+        [JsonPropertyName("notificationType")]
+        [JsonConverter(typeof(EnumConverter<HuaweiNotificationType>))]
+        public HuaweiNotificationType Type { get; set; }
+
+        [JsonPropertyName("purchaseToken")]
+        public string PurchaseToken { get; set; }
+
+        [JsonPropertyName("latestReceiptInfo")]
+        public string LatestReceiptInfoStr { get; set; }
+
+        public HuaweiLatestReceiptInfo LatestReceiptInfo
+            => LatestReceiptInfoStr.FromJson<HuaweiLatestReceiptInfo>();
+
+        [JsonPropertyName("autoRenewStatus")]
+        [JsonConverter(typeof(BooleanConverter))]
+        public bool AutoRenewStatus { get; set; }
+
+        [JsonPropertyName("productId")]
+        public string ProductId { get; set; }
+    }
+
+    class HuaweiLatestReceiptInfo
+    {
+        [JsonPropertyName("purchaseTime")]
+        [JsonConverter(typeof(DateTimeConverter))]
+        public DateTime? PurchaseTime { get; set; }
+
+        [JsonPropertyName("expirationDate")]
+        [JsonConverter(typeof(DateTimeConverter))]
+        public DateTime? ExpirationDate { get; set; }
+
+        [JsonPropertyName("cancellationDate")]
+        [JsonConverter(typeof(DateTimeConverter))]
+        public DateTime? CancellationDate { get; set; }
     }
 }

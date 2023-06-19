@@ -1,5 +1,6 @@
 ﻿namespace Zebble.Billing
 {
+    using Huawei.DeveloperApi;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Olive;
@@ -8,7 +9,7 @@
     {
         public static ZebbleBillingServicesBuilder AddHuawei(this ZebbleBillingServicesBuilder builder, string configKey = "ZebbleBilling:Huawei")
         {
-            builder.Services.AddScoped<HuaweiDeveloperService>();
+            builder.Services.AddHuaweiDeveloperApi($"{configKey}:DeveloperApi");
 
             builder.Services.AddOptions<HuaweiOptions>()
                             .Configure<IConfiguration>((opts, config) => config.GetSection(configKey)?.Bind(opts))

@@ -86,9 +86,22 @@
                     return;
                 }
 
-                if (purchaseResult.ReturnCode.IsNoneOf(OrderStatusCode.OrderStateSuccess, OrderStatusCode.OrderProductOwned))
+                if (purchaseResult.ReturnCode == OrderStatusCode.OrderProductOwned)
                 {
-                    Source.SetResult((PurchaseResult.WillBeActivated, null));
+                    await context.RestoreSubscription(user, userRequest: false);
+
+                    if (context.IsSubscribed)
+                    {
+                        Source.SetResult((PurchaseResult.Succeeded, null));
+                        return;
+                    }
+
+                    Source.SetResult((PurchaseResult.AlreadySubscribed, null));
+                    return;
+                }
+                else if (purchaseResult.ReturnCode != OrderStatusCode.OrderStateSuccess)
+                {
+                    Source.SetResult((PurchaseResult.Unknown, null));
                     return;
                 }
 
@@ -107,7 +120,6 @@
                 };
 
                 await billing.ConsumeOwnedPurchase(consumeRequest).AsAsync();
-
                 await context.Refresh(user);
 
                 if (context.IsSubscribed)
