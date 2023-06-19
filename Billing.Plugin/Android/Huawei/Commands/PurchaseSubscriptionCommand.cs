@@ -114,12 +114,6 @@
                     return;
                 }
 
-                var consumeRequest = new ConsumeOwnedPurchaseReq
-                {
-                    PurchaseToken = purchase.PurchaseToken,
-                };
-
-                await billing.ConsumeOwnedPurchase(consumeRequest).AsAsync();
                 await context.Refresh(user);
 
                 if (context.IsSubscribed)

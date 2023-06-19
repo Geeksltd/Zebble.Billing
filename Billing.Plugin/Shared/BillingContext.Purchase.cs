@@ -62,7 +62,7 @@
             if (await UIContext.IsOffline()) throw new Exception("Network connection is not available.");
 
             var url = new Uri(Options.BaseUri, Options.PurchaseAttemptPath).ToString();
-            var @params = new { user.Ticket, user.UserId, Platform = PaymentAuthority, args.ProductId, args.TransactionId, args.PurchaseToken, args.ReplaceConfirmed };
+            var @params = new { user.Ticket, user.UserId, Platform = PaymentAuthority, args.ProductId, args.SubscriptionId, args.TransactionId, args.PurchaseToken, args.ReplaceConfirmed };
 
             var result = await BaseApi.Post<PurchaseAttemptResult>(url, @params, OnError.Ignore, showWaiting: false);
 
