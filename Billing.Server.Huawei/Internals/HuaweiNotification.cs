@@ -50,7 +50,7 @@
         public string StatusUpdateNotificationStr { get; set; }
 
         public HuaweiStatusUpdateNotification StatusUpdateNotification
-            => StatusUpdateNotificationStr.Replace("\\\"", "\"").FromJson<HuaweiStatusUpdateNotification>();
+            => StatusUpdateNotificationStr.FromJson<HuaweiStatusUpdateNotification>();
     }
 
     class HuaweiStatusUpdateNotification
