@@ -6,10 +6,7 @@
     class HuaweiNotification
     {
         [JsonPropertyName("subNotification")]
-        public string SubNotificationStr { get; set; }
-
-        HuaweiSubNotification SubNotification
-            => SubNotificationStr.FromJson<HuaweiSubNotification>();
+        public HuaweiSubNotification SubNotification { get; set; }
 
         public string OriginalData { get; private set; }
 
@@ -53,7 +50,7 @@
         public string StatusUpdateNotificationStr { get; set; }
 
         public HuaweiStatusUpdateNotification StatusUpdateNotification
-            => StatusUpdateNotificationStr.FromJson<HuaweiStatusUpdateNotification>();
+            => StatusUpdateNotificationStr.Replace("\\\"", "\"").FromJson<HuaweiStatusUpdateNotification>();
     }
 
     class HuaweiStatusUpdateNotification
