@@ -30,6 +30,7 @@
             {
                 UserId = userId,
                 SubscriptionId = result.InappPurchaseData.SubscriptionId,
+                TransactionId = result.InappPurchaseData.OrderId,
                 SubscriptionDate = result.InappPurchaseData.PurchaseTime?.DateTime,
                 ExpirationDate = result.InappPurchaseData.ExpirationDate?.DateTime,
                 AutoRenews = result.InappPurchaseData.AutoRenewing
