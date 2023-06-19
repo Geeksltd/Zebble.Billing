@@ -59,10 +59,6 @@
         [JsonConverter(typeof(EnumConverter<HuaweiEnvironment>))]
         public HuaweiEnvironment? Environment { get; set; }
 
-        [JsonPropertyName("notificationType")]
-        [JsonConverter(typeof(EnumConverter<HuaweiNotificationType>))]
-        public HuaweiNotificationType Type { get; set; }
-
         [JsonPropertyName("purchaseToken")]
         public string PurchaseToken { get; set; }
 
