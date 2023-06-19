@@ -7,6 +7,7 @@
         public SubscriptionQueryStatus Status { get; private set; }
 
         public string UserId { get; set; }
+        public string SubscriptionId { get; set; }
         public string TransactionId { get; set; }
         public DateTime? SubscriptionDate { get; set; }
         public DateTime? ExpirationDate { get; set; }

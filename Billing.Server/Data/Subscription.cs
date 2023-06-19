@@ -10,6 +10,7 @@
 
         public string Platform { get; set; }
 
+        public virtual string SubscriptionId { get; set; }
         public virtual string TransactionId { get; set; }
         public DateTime? TransactionDate { get; set; }
         public string PurchaseToken { get; set; }

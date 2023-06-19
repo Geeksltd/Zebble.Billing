@@ -49,6 +49,7 @@
                     {
                         Id = Guid.NewGuid().ToString(),
                         ProductId = notification.ProductId,
+                        SubscriptionId = notification.SubscriptionId,
                         UserId = subscriptionInfo.UserId.Or("<NOT_PROVIDED>"),
                         Platform = "Huawei",
                         TransactionId = subscriptionInfo.TransactionId,

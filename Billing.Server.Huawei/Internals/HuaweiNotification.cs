@@ -25,6 +25,9 @@
         public string ProductId
             => SubNotification.StatusUpdateNotification.ProductId;
 
+        public string SubscriptionId
+            => SubNotification.StatusUpdateNotification.SubscriptionId;
+
         public bool AutoRenewStatus
             => SubNotification.StatusUpdateNotification.AutoRenewStatus;
 
@@ -39,7 +42,7 @@
 
         public SubscriptionInfoArgs ToArgs() => new()
         {
-            ProductId = SubNotification.StatusUpdateNotification.ProductId,
+            SubscriptionId = SubNotification.StatusUpdateNotification.SubscriptionId,
             PurchaseToken = SubNotification.StatusUpdateNotification.PurchaseToken
         };
     }
@@ -74,6 +77,9 @@
 
         [JsonPropertyName("productId")]
         public string ProductId { get; set; }
+
+        [JsonPropertyName("subscriptionId")]
+        public string SubscriptionId { get; set; }
     }
 
     class HuaweiLatestReceiptInfo

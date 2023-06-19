@@ -33,13 +33,14 @@
             Options = options.Value ?? throw new ArgumentNullException(nameof(options));
         }
 
-        public virtual async Task<PurchaseAttemptResult> PurchaseAttempt(string userId, string platform, string productId, string transactionId, string purchaseToken, bool replaceConfirmed)
+        public virtual async Task<PurchaseAttemptResult> PurchaseAttempt(string userId, string platform, string productId, string subscriptionId, string transactionId, string purchaseToken, bool replaceConfirmed)
         {
             var storeConnector = StoreConnectorResolver.Resolve(platform);
             var subscriptionInfo = await storeConnector.GetSubscriptionInfo(new SubscriptionInfoArgs
             {
                 UserId = userId,
                 ProductId = productId,
+                SubscriptionId = subscriptionId,
                 PurchaseToken = purchaseToken
             });
 
@@ -84,6 +85,7 @@
                     UserId = userId,
                     Platform = platform,
                     ProductId = productId,
+                    SubscriptionId = subscriptionId,
                     TransactionId = subscriptionInfo.TransactionId,
                     TransactionDate = subscriptionInfo.SubscriptionDate,
                     PurchaseToken = purchaseToken,

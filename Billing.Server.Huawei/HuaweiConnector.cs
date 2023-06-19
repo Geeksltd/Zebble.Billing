@@ -15,7 +15,7 @@
         {
             var result = await DeveloperService.ValidateSubscription(new HuaweiValidateSubscriptionRequest
             {
-                SubscriptionId = args.ProductId,
+                SubscriptionId = args.SubscriptionId,
                 PurchaseToken = args.PurchaseToken
             });
 
@@ -29,6 +29,7 @@
             return new SubscriptionInfo
             {
                 UserId = userId,
+                SubscriptionId = result.InappPurchaseData.SubscriptionId,
                 SubscriptionDate = result.InappPurchaseData.PurchaseTime?.DateTime,
                 ExpirationDate = result.InappPurchaseData.ExpirationDate?.DateTime,
                 AutoRenews = result.InappPurchaseData.AutoRenewing

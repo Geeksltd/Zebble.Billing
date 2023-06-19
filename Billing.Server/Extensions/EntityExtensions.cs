@@ -8,16 +8,7 @@
             {
                 UserId = @this.UserId,
                 ProductId = @this.ProductId,
-                PurchaseToken = @this.PurchaseToken
-            };
-        }
-
-        internal static SubscriptionInfoArgs ToArgs(this AppPurchaseAttemptModel @this)
-        {
-            return new SubscriptionInfoArgs
-            {
-                UserId = @this.UserId,
-                ProductId = @this.ProductId,
+                SubscriptionId = @this.SubscriptionId,
                 PurchaseToken = @this.PurchaseToken
             };
         }
