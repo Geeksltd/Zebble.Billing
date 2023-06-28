@@ -11,14 +11,10 @@
         internal Subscription Subscription
         {
             get => subscription;
-            set
-            {
-                subscription = value;
-                IsLoaded = true;
-            }
+            set => subscription = value;
         }
 
-        public bool IsLoaded { get; private set; }
+        public bool IsLoaded { get; internal set; }
 
         internal IProductProvider ProductProvider { get; private set; }
 
@@ -42,7 +38,7 @@
 
             if (user is null) throw new ArgumentNullException(nameof(user));
             if (options is null) throw new ArgumentNullException(nameof(options));
-            
+
             Options = options.Validate();
 
             Current = new BillingContext

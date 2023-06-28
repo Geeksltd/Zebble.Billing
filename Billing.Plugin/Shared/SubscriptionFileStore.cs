@@ -18,6 +18,8 @@
         {
             if (user is null) throw new ArgumentNullException(nameof(user));
 
+            Context.IsLoaded = true;
+
             var file = GetFile(user);
             if (!file.Exists()) return;
 
