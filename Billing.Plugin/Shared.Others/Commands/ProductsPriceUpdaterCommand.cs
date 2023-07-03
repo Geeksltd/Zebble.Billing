@@ -74,10 +74,18 @@
 #if CAFEBAZAAR
             return null;
 #else
-            return item.AndroidExtras?.MicrosIntroductoryPrice;
+            return item.AndroidExtras?
+                .SubscriptionOfferDetails
+                .SelectMany(x => x.PricingPhases)
+                .ExceptNull()
+                .MinOrNull(x => x.PriceAmountMicros);
 #endif
 #elif IOS
-            return (decimal?)item.AppleExtras?.Discounts.OrEmpty().Concat(item.AppleExtras.IntroductoryOffer).ExceptNull().MinOrNull(x => x.Price);
+            return (decimal?)item.AppleExtras?
+                .Discounts.OrEmpty()
+                .Concat(item.AppleExtras.IntroductoryOffer)
+                .ExceptNull()
+                .MinOrNull(x => x.Price);
 #else
             // return item.WindowsExtras?.FormattedBasePrice;
             return null;
