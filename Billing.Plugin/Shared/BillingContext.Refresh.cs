@@ -41,14 +41,23 @@
         {
             var url = new Uri(Options.BaseUri, Options.SubscriptionStatusPath).ToString();
             var @params = new { user.Ticket, user.UserId };
-            var current = await BaseApi.Post<Subscription>(url, @params, errorAction: OnError.Ignore);
 
-            Subscription = current;
-            IsLoaded = true;
+            try
+            {
+                var current = await BaseApi.Post<Subscription>(
+                    url, @params, errorAction: OnError.Throw);
 
-            await SubscriptionFileStore.Save(user);
+                Subscription = current;
+                IsLoaded = true;
 
-            await SubscriptionRestored.Raise(current.ToEventArgs());
+                await SubscriptionFileStore.Save(user);
+
+                await SubscriptionRestored.Raise(current.ToEventArgs());
+            }
+            catch (Exception ex)
+            {
+                Log.For(this).Error(ex, $"Failed to refresh the billing data. {ex.Message}");
+            }
         }
     }
 }
