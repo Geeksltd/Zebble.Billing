@@ -18,8 +18,6 @@
         {
             if (user is null) throw new ArgumentNullException(nameof(user));
 
-            Context.IsLoaded = true;
-
             var file = GetFile(user);
             if (!file.Exists()) return;
 
@@ -27,6 +25,7 @@
             if (fileContents.IsEmpty()) return;
 
             Context.Subscription = JsonConvert.DeserializeObject<Subscription>(fileContents);
+            Context.IsLoaded = true;
         }
 
         public static async Task Save(IBillingUser user)
@@ -35,6 +34,7 @@
 
             var fileContents = Subscription is null ? null : JsonConvert.SerializeObject(Subscription);
             await GetFile(user).WriteAllTextAsync(fileContents ?? "");
+            Context.IsLoaded = true;
         }
     }
 }
