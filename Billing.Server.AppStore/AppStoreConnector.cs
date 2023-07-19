@@ -34,27 +34,24 @@
 
         public async Task<SubscriptionInfo> GetSubscriptionInfo(SubscriptionInfoArgs args)
         {
-            var (result, status) = await GetVerifiedResult(args.PurchaseToken);
+            var result = await GetVerifiedResult(args.PurchaseToken);
+            if (result is null) return null;
 
-            return status switch
-            {
-                SubscriptionQueryStatus.NotFound => SubscriptionInfo.NotFound,
-                _ => CreateSubscription(args.UserId, args.ProductId, result.AppleVerificationResponse)
-            };
+            return CreateSubscription(result.AppleVerificationResponse);
         }
 
-        SubscriptionInfo CreateSubscription(string userId, string productId, IAPVerificationResponse response)
+        SubscriptionInfo CreateSubscription(IAPVerificationResponse response)
         {
-            var purchase = response?.LatestReceiptInfo?.OrderBy(x => x.PurchaseDateDt).LastOrDefault(x => x.ProductId == productId);
+            var purchase = response?.LatestReceiptInfo?.OrderBy(x => x.PurchaseDateDt).LastOrDefault();
             if (purchase is null)
             {
-                Logger.LogWarning($"The receipt contains no purchase info for product id '{productId}'.");
-                return SubscriptionInfo.NotFound;
+                Logger.LogWarning("The receipt contains no purchase info.");
+                return null;
             }
 
             return new SubscriptionInfo
             {
-                UserId = userId,
+                ProductId = purchase.ProductId,
                 TransactionId = purchase.OriginalTransactionId,
                 SubscriptionDate = purchase.PurchaseDateDt,
                 ExpirationDate = purchase.ExpirationDateDt,
@@ -63,7 +60,7 @@
             };
         }
 
-        async Task<(AppleReceiptVerificationResult, SubscriptionQueryStatus)> GetVerifiedResult(string purchaseToken)
+        async Task<AppleReceiptVerificationResult> GetVerifiedResult(string purchaseToken)
         {
             var result = await Verificator.VerifyAppleReceiptAsync(purchaseToken);
 
@@ -82,9 +79,9 @@
                     result = await GetLegacyResponse(Settings.Value.ProductionUrl, purchaseToken);
             }
 
-            if (result is null) return (null, SubscriptionQueryStatus.NotFound);
+            if (result is null) return null;
 
-            return (result, ValidateVerificationResult(result));
+            return ValidateVerificationResult(result);
         }
 
         async Task<AppleReceiptVerificationResult> GetLegacyResponse(string url, string purchaseToken)
@@ -158,27 +155,26 @@
             }
         }
 
-        SubscriptionQueryStatus ValidateVerificationResult(AppleReceiptVerificationResult verificationResult)
+        AppleReceiptVerificationResult ValidateVerificationResult(AppleReceiptVerificationResult verificationResult)
         {
             if (verificationResult?.Status == IAPVerificationResponseStatus.SubscriptionExpired)
-                return SubscriptionQueryStatus.Expired;
+                return null;
 
             var response = verificationResult?.AppleVerificationResponse;
 
             if (response is null)
             {
                 Logger.LogWarning($"{verificationResult.Message}.");
-                return SubscriptionQueryStatus.NotFound;
+                return null;
             }
 
             if (response.StatusCode != IAPVerificationResponseStatus.Ok)
             {
                 Logger.LogWarning($"{verificationResult.Message} [{response.Status} - {response.StatusCode}]");
-                if (response.StatusCode == IAPVerificationResponseStatus.SubscriptionExpired) return SubscriptionQueryStatus.Expired;
-                return SubscriptionQueryStatus.NotFound;
+                return null;
             }
 
-            return SubscriptionQueryStatus.Succeeded;
+            return verificationResult;
         }
 
         class IAPVerificationRequest

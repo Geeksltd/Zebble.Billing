@@ -12,21 +12,18 @@
     {
         readonly ILogger<GooglePlayQueueProcessor> Logger;
         readonly IServiceProvider Services;
-        readonly ISubscriptionComparer Comparer;
         readonly GooglePlayConnector StoreConnector;
         readonly ISubscriptionChangeHandler SubscriptionChangeHandler;
 
         public GooglePlayQueueProcessor(
             ILogger<GooglePlayQueueProcessor> logger,
             IServiceProvider services,
-            ISubscriptionComparer comparer,
             GooglePlayConnector storeConnector,
             ISubscriptionChangeHandler subscriptionChangeHandler
         )
         {
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             Services = services ?? throw new ArgumentNullException(nameof(services));
-            Comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
             StoreConnector = storeConnector ?? throw new ArgumentNullException(nameof(storeConnector));
             SubscriptionChangeHandler = subscriptionChangeHandler ?? throw new ArgumentNullException(nameof(subscriptionChangeHandler));
         }
@@ -74,35 +71,14 @@
                 var repository = scope.ServiceProvider.GetRequiredService<ISubscriptionRepository>();
 
                 var subscriptionInfo = await StoreConnector.GetSubscriptionInfo(notification.ToArgs());
-                if (subscriptionInfo.Status != SubscriptionQueryStatus.Succeeded) return;
+                if (subscriptionInfo is null) return;
 
-                var subscriptions = await repository.GetAllWithTransactionId(subscriptionInfo.TransactionId);
-                var subscription = subscriptions.GetMostRecent(Comparer);
-
-                if (subscription is null)
+                var subscription = await repository.GetWithTransactionId(subscriptionInfo.TransactionId);
+                
+                if (subscription is not null)
                 {
-                    if (subscriptionInfo.UserId.IsEmpty())
-                        subscriptionInfo.UserId = (await repository.GetAllWithPurchaseToken(notification.PurchaseToken).Except(x => x.UserId == "<NOT_PROVIDED>").FirstOrDefault())?.UserId;
-
-                    subscription = await repository.AddSubscription(new Subscription
-                    {
-                        Id = Guid.NewGuid().ToString(),
-                        ProductId = notification.ProductId,
-                        UserId = subscriptionInfo.UserId.Or("<NOT_PROVIDED>"),
-                        Platform = "GooglePlay",
-                        TransactionId = subscriptionInfo.TransactionId,
-                        TransactionDate = notification.EventTime,
-                        PurchaseToken = notification.PurchaseToken,
-                        SubscriptionDate = subscriptionInfo.SubscriptionDate,
-                        ExpirationDate = subscriptionInfo.ExpirationDate,
-                        CancellationDate = subscriptionInfo.CancellationDate,
-                        LastUpdate = LocalTime.UtcNow,
-                        AutoRenews = subscriptionInfo.AutoRenews
-                    });
-                }
-                else
-                {
-                    subscription.TransactionDate = notification.EventTime;
+                    subscription.ProductId = subscriptionInfo.ProductId;
+                    subscription.TransactionDate = subscriptionInfo.SubscriptionDate;
                     subscription.SubscriptionDate = subscriptionInfo.SubscriptionDate;
                     subscription.ExpirationDate = subscriptionInfo.ExpirationDate;
                     subscription.CancellationDate = subscriptionInfo.CancellationDate;
@@ -110,18 +86,18 @@
                     subscription.AutoRenews = subscriptionInfo.AutoRenews;
 
                     await repository.UpdateSubscription(subscription);
+
+                    await SubscriptionChangeHandler.Handle(subscription);
                 }
 
                 await repository.AddTransaction(new Transaction
                 {
                     Id = Guid.NewGuid().ToString(),
-                    SubscriptionId = subscription.Id,
+                    SubscriptionId = subscription?.Id,
                     Platform = "GooglePlay",
                     Date = notification.EventTime ?? LocalTime.UtcNow,
                     Details = notification.OriginalData
                 });
-
-                await SubscriptionChangeHandler.Handle(subscription);
             }
             catch (Exception ex)
             {

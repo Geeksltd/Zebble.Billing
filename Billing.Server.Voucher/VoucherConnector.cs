@@ -1,7 +1,6 @@
 ﻿namespace Zebble.Billing
 {
     using Microsoft.Extensions.Logging;
-    using Olive;
     using System;
     using System.Threading.Tasks;
 
@@ -23,17 +22,16 @@
             if (result is null)
             {
                 Logger.LogWarning($"No voucher with code '{args.PurchaseToken}' found.");
-                return SubscriptionInfo.NotFound;
+                return null;
             }
 
-            return CreateSubscription(args.UserId, result);
+            return CreateSubscription(result);
         }
 
-        SubscriptionInfo CreateSubscription(string userId, Voucher voucher)
+        SubscriptionInfo CreateSubscription(Voucher voucher)
         {
             return new SubscriptionInfo
             {
-                UserId = userId.Or(voucher.UserId),
                 TransactionId = voucher.Id,
                 SubscriptionDate = voucher.ActivationDate,
                 ExpirationDate = voucher.ExpirationDate()

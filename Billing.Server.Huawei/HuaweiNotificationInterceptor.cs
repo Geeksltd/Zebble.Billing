@@ -11,7 +11,6 @@
         readonly ILogger<HuaweiNotificationInterceptor> Logger;
         readonly HuaweiOptions Options;
         readonly ISubscriptionRepository Repository;
-        readonly ISubscriptionComparer Comparer;
         readonly HuaweiConnector StoreConnector;
         readonly ISubscriptionChangeHandler SubscriptionChangeHandler;
 
@@ -19,7 +18,6 @@
             ILogger<HuaweiNotificationInterceptor> logger,
             IOptionsSnapshot<HuaweiOptions> options,
             ISubscriptionRepository repository,
-            ISubscriptionComparer comparer,
             HuaweiConnector storeConnector,
             ISubscriptionChangeHandler subscriptionChangeHandler
         )
@@ -27,7 +25,6 @@
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             Options = options.Value ?? throw new ArgumentNullException(nameof(options));
             Repository = repository ?? throw new ArgumentNullException(nameof(repository));
-            Comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
             StoreConnector = storeConnector ?? throw new ArgumentNullException(nameof(storeConnector));
             SubscriptionChangeHandler = subscriptionChangeHandler ?? throw new ArgumentNullException(nameof(subscriptionChangeHandler));
         }
@@ -39,50 +36,32 @@
                 ValidateNotification(notification);
 
                 var subscriptionInfo = await StoreConnector.GetSubscriptionInfo(notification.ToArgs());
-                if (subscriptionInfo.Status != SubscriptionQueryStatus.Succeeded) return;
+                if (subscriptionInfo is null) return;
 
-                var subscriptions = await Repository.GetAllWithTransactionId(subscriptionInfo.TransactionId);
-                var subscription = subscriptions.GetMostRecent(Comparer);
+                var subscription = await Repository.GetWithTransactionId(subscriptionInfo.TransactionId);
 
-                if (subscription is null)
-                    subscription = await Repository.AddSubscription(new Subscription
-                    {
-                        Id = Guid.NewGuid().ToString(),
-                        ProductId = notification.ProductId,
-                        SubscriptionId = notification.SubscriptionId,
-                        UserId = subscriptionInfo.UserId.Or("<NOT_PROVIDED>"),
-                        Platform = "Huawei",
-                        TransactionId = subscriptionInfo.TransactionId,
-                        PurchaseToken = notification.PurchaseToken,
-                        TransactionDate = notification.PurchaseTime,
-                        SubscriptionDate = subscriptionInfo.SubscriptionDate,
-                        ExpirationDate = subscriptionInfo.ExpirationDate,
-                        CancellationDate = subscriptionInfo.CancellationDate,
-                        LastUpdate = LocalTime.UtcNow,
-                        AutoRenews = subscriptionInfo.AutoRenews
-                    });
-                else
+                if (subscription is not null)
                 {
-                    subscription.TransactionDate = notification.PurchaseTime;
-                    subscription.SubscriptionDate = notification.PurchaseTime;
-                    subscription.ExpirationDate = notification.ExpirationDate;
-                    subscription.CancellationDate = notification.CancellationDate;
+                    subscription.TransactionDate = subscriptionInfo.SubscriptionDate;
+                    subscription.SubscriptionDate = subscriptionInfo.SubscriptionDate;
+                    subscription.ExpirationDate = subscriptionInfo.ExpirationDate;
+                    subscription.CancellationDate = subscriptionInfo.CancellationDate;
                     subscription.LastUpdate = LocalTime.UtcNow;
-                    subscription.AutoRenews = notification.AutoRenewStatus;
+                    subscription.AutoRenews = subscriptionInfo.AutoRenews;
 
                     await Repository.UpdateSubscription(subscription);
+
+                    await SubscriptionChangeHandler.Handle(subscription);
                 }
 
                 await Repository.AddTransaction(new Transaction
                 {
                     Id = Guid.NewGuid().ToString(),
-                    SubscriptionId = subscription.Id,
+                    SubscriptionId = subscription?.Id,
                     Platform = "Huawei",
                     Date = LocalTime.UtcNow,
                     Details = notification.OriginalData
                 });
-
-                await SubscriptionChangeHandler.Handle(subscription);
             }
             catch (Exception ex)
             {

@@ -1,7 +1,6 @@
 ﻿namespace Zebble.Billing
 {
     using System;
-    using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
@@ -38,13 +37,12 @@
             var storeConnector = StoreConnectorResolver.Resolve(platform);
             var subscriptionInfo = await storeConnector.GetSubscriptionInfo(new SubscriptionInfoArgs
             {
-                UserId = userId,
                 ProductId = productId,
                 SubscriptionId = subscriptionId,
                 PurchaseToken = purchaseToken
             });
 
-            if (subscriptionInfo.Status != SubscriptionQueryStatus.Succeeded)
+            if (subscriptionInfo is null)
             {
                 Logger.LogWarning($"No subscription info found for token '{purchaseToken}'.");
                 Logger.LogWarning($"Additional params {{ userId: {userId}, platform: {platform}, productId: {productId} }}");
@@ -66,17 +64,14 @@
                         return PurchaseAttemptResult.UserMismatched(originUserId);
                     case UserMismatchResolvingStrategy.Replace:
                         if (!replaceConfirmed) return PurchaseAttemptResult.UserMismatched(originUserId, userId);
-                        await CancelAllMatchingSubscriptions(userId, productId, subscriptionInfo.TransactionId);
+                        await TransferOwnedSubscription(userId, subscriptionInfo.TransactionId);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException($"{Options.UserMismatchResolvingStrategy} isn't supported.");
                 }
             }
 
-            var subscriptions = await Repository.GetAllWithTransactionId(subscriptionInfo.TransactionId);
-            var subscription = subscriptions.Where(x => x.UserId == userId)
-                                            .Where(x => x.ProductId == productId)
-                                            .GetMostRecent(Comparer);
+            var subscription = await Repository.GetWithTransactionId(subscriptionInfo.TransactionId);
 
             if (subscription is null)
                 subscription = await Repository.AddSubscription(new Subscription
@@ -124,9 +119,7 @@
             Logger.LogInformation($"Found {subscriptions.Length} subscription records for user with id '{userId}'.");
 
             var subscription = subscriptions.GetMostRecent(Comparer);
-            //if (subscription?.IsExpired() == true)
-            //    await TryToUpdateSubscription(subscription);
-
+            
             return subscription;
         }
 
@@ -135,10 +128,13 @@
             if (userId.IsEmpty()) return (false, null);
             if (transactionId.IsEmpty()) return (false, null);
 
-            var subscriptions = await GetMatchingSubscriptionsNotOwnedBy(transactionId, productId, userId);
-            var originUserId = subscriptions.Select(x => x.UserId)
-                                            .FirstOrDefault(x => x.HasValue());
+            var subscription = await Repository.GetWithTransactionId(transactionId);
+            if (subscription is null) return (false, null);
 
+            if (subscription.UserId == userId) return (false, null);
+            if (subscription.ProductId == productId) return (false, null);
+
+            var originUserId = subscription.UserId;
             if (originUserId.IsEmpty()) return (false, null);
 
             Logger.LogWarning($"Transaction #{transactionId} is associated to {originUserId} and can't be used for {userId}.");
@@ -146,51 +142,15 @@
             return (true, originUserId);
         }
 
-        protected virtual async Task CancelAllMatchingSubscriptions(string userId, string productId, string transactionId)
+        protected virtual async Task TransferOwnedSubscription(string userId, string transactionId)
         {
-            var subscriptions = await GetMatchingSubscriptionsNotOwnedBy(transactionId, productId, userId);
-            Logger.LogWarning($"Found {subscriptions.Length} subscriptions for cancellation.");
+            var subscription = await Repository.GetWithTransactionId(transactionId);
+            if (subscription is null) return;
 
-            subscriptions.Do(x =>
-            {
-                x.CancellationDate = LocalTime.UtcNow;
-                // We do not ignore the cancelled records, so we need to also update the expiration date.
-                x.ExpirationDate = LocalTime.UtcNow;
-            });
-            await Repository.UpdateSubscriptions(subscriptions);
+            Logger.LogWarning($"Found a subscription for transferring to {userId}.");
 
-            Logger.LogWarning($"{subscriptions.Length} subscriptions have been cancelled.");
-            Logger.LogWarning($"Affected user ids: {subscriptions.Select(x => x.UserId).Distinct().ToString(", ")}");
-        }
-
-        protected virtual async Task TryToUpdateSubscription(Subscription subscription)
-        {
-            var storeConnector = StoreConnectorResolver.Resolve(subscription.Platform);
-            var subscriptionInfo = await storeConnector.GetSubscriptionInfo(subscription.ToArgs());
-
-            if (subscriptionInfo.Status != SubscriptionQueryStatus.Succeeded)
-            {
-                Logger.LogWarning($"Subscription with id '{subscription.Id}' needed to be updated, but we were not able to pull fresh data from the store.");
-                Logger.LogWarning($"Additional params {{ userId: {subscription.UserId}, platform: {subscription.Platform}, productId: {subscription.ProductId} }}");
-                return;
-            }
-
-            subscription.SubscriptionDate = subscriptionInfo.SubscriptionDate;
-            subscription.ExpirationDate = subscriptionInfo.ExpirationDate;
-            subscription.CancellationDate = subscriptionInfo.CancellationDate;
-            subscription.AutoRenews = subscriptionInfo.AutoRenews;
-
+            subscription.UserId = userId;
             await Repository.UpdateSubscription(subscription);
-        }
-
-        async Task<Subscription[]> GetMatchingSubscriptionsNotOwnedBy(string transactionId, string productId, string userId)
-        {
-            var subscriptions = await Repository.GetAllWithTransactionId(transactionId);
-            return subscriptions.Where(x => x.ProductId == productId)
-                                .Except(x => x.UserId == userId)
-                                .Except(x => x.IsExpired())
-                                .Except(x => x.IsCanceled())
-                                .ToArray();
         }
     }
 }

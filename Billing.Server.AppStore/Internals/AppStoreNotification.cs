@@ -76,7 +76,6 @@
 
         public SubscriptionInfoArgs ToArgs() => new()
         {
-            ProductId = ProductId,
             PurchaseToken = PurchaseToken
         };
     }

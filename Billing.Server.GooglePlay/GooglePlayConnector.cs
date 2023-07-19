@@ -28,74 +28,57 @@
 
             if (product.Type == ProductType.Subscription)
             {
-                var (subscriptionResult, subscriptionStatus) = await Execute(x => x.Subscriptions.Get(Options.PackageName, args.ProductId, args.PurchaseToken));
+                var subscriptionResult = await Execute(x => x.Subscriptionsv2.Get(Options.PackageName, args.PurchaseToken));
+                if (subscriptionResult is null) return null;
 
-                return subscriptionStatus switch
-                {
-                    SubscriptionQueryStatus.NotFound => SubscriptionInfo.NotFound,
-                    SubscriptionQueryStatus.Expired => CreateExpiredSubscription(args.UserId),
-                    _ => CreateSubscription(args.UserId, subscriptionResult)
-                };
+                return CreateSubscription(subscriptionResult);
             }
 
-            var (productResult, productStatus) = await Execute(x => x.Products.Get(Options.PackageName, args.ProductId, args.PurchaseToken));
+            var productResult = await Execute(x => x.Products.Get(Options.PackageName, args.ProductId, args.PurchaseToken));
+            if (productResult is null) return null;
 
-            return productStatus switch
+            return CreateSubscription(productResult);
+        }
+
+        static SubscriptionInfo CreateSubscription(SubscriptionPurchaseV2 purchase)
+        {
+            var lineItem = purchase.LineItems.OrderBy(x => x.ExpiryTime).LastOrDefault();
+            if (lineItem is null) return null;
+
+            return new SubscriptionInfo
             {
-                SubscriptionQueryStatus.NotFound => SubscriptionInfo.NotFound,
-                SubscriptionQueryStatus.Expired => CreateExpiredSubscription(args.UserId),
-                _ => CreateSubscription(args.UserId, productResult)
+                ProductId = lineItem.ProductId,
+                TransactionId = purchase.LatestOrderId,
+                SubscriptionDate = DateTimeOffset.Parse(purchase.StartTime.ToString()).DateTime,
+                ExpirationDate = DateTimeOffset.Parse(lineItem.ExpiryTime.ToString()).DateTime,
+                CancellationDate = DateTimeOffset.Parse(purchase.CanceledStateContext.UserInitiatedCancellation.CancelTime.ToString()).DateTime,
+                AutoRenews = lineItem.AutoRenewingPlan.AutoRenewEnabled ?? false
             };
         }
 
-        SubscriptionInfo CreateExpiredSubscription(string userId)
+        static SubscriptionInfo CreateSubscription(ProductPurchase purchase)
         {
             return new SubscriptionInfo
             {
-                UserId = userId,
-                SubscriptionDate = LocalTime.UtcToday,
-                ExpirationDate = LocalTime.UtcNow
-            };
-        }
-
-        SubscriptionInfo CreateSubscription(string userId, SubscriptionPurchase purchase)
-        {
-            return new SubscriptionInfo
-            {
-                UserId = userId.Or(purchase.DeveloperPayload).Or(purchase.EmailAddress),
-                TransactionId = purchase.OrderId,
-                SubscriptionDate = purchase.StartTimeMillis.ToDateTime(),
-                ExpirationDate = purchase.ExpiryTimeMillis.ToDateTime(),
-                CancellationDate = purchase.UserCancellationTimeMillis.ToDateTime(),
-                AutoRenews = purchase.AutoRenewing ?? false
-            };
-        }
-
-        SubscriptionInfo CreateSubscription(string userId, ProductPurchase purchase)
-        {
-            return new SubscriptionInfo
-            {
-                UserId = userId.Or(purchase.DeveloperPayload),
+                ProductId = purchase.ProductId,
                 TransactionId = purchase.OrderId,
                 SubscriptionDate = purchase.PurchaseTimeMillis.ToDateTime(),
                 CancellationDate = purchase.PurchaseState == 1 ? LocalTime.UtcNow : null
             };
         }
 
-        async Task<(TResult, SubscriptionQueryStatus)> Execute<TResult>(Func<PurchasesResource, AndroidPublisherBaseServiceRequest<TResult>> callee)
+        async Task<TResult> Execute<TResult>(Func<PurchasesResource, AndroidPublisherBaseServiceRequest<TResult>> callee)
         {
             try
             {
                 var result = await callee(Publisher.Purchases).ExecuteAsync();
-
-                if (result is null) return (default, SubscriptionQueryStatus.NotFound);
-                return (result, SubscriptionQueryStatus.Succeeded);
+                return result;
             }
             catch (GoogleApiException ex)
             {
                 var reasons = ex.Error.Errors.Select(x => x.Reason).ToArray();
                 if (reasons.ContainsAny("subscriptionPurchaseNoLongerAvailable", "purchaseTokenNoLongerValid"))
-                    return (default, SubscriptionQueryStatus.Expired);
+                    return default;
 
                 throw;
             }

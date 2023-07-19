@@ -9,21 +9,18 @@
     {
         readonly IVoucherRepository VoucherRepository;
         readonly ISubscriptionRepository SubscriptionRepository;
-        readonly ISubscriptionComparer SubscriptionComparer;
         readonly VoucherConnector StoreConnector;
         readonly ISubscriptionChangeHandler SubscriptionChangeHandler;
 
         public VoucherManager(
             IVoucherRepository voucherRepository,
             ISubscriptionRepository subscriptionRepository,
-            ISubscriptionComparer subscriptionComparer,
             VoucherConnector storeConnector,
             ISubscriptionChangeHandler subscriptionChangeHandler
         )
         {
             VoucherRepository = voucherRepository ?? throw new ArgumentNullException(nameof(voucherRepository));
             SubscriptionRepository = subscriptionRepository ?? throw new ArgumentNullException(nameof(subscriptionRepository));
-            SubscriptionComparer = subscriptionComparer ?? throw new ArgumentNullException(nameof(subscriptionComparer));
             StoreConnector = storeConnector ?? throw new ArgumentNullException(nameof(storeConnector));
             SubscriptionChangeHandler = subscriptionChangeHandler ?? throw new ArgumentNullException(nameof(subscriptionChangeHandler));
         }
@@ -71,11 +68,10 @@
         async Task CreateSubscription(Voucher voucher)
         {
             var subscriptionInfo = await StoreConnector.GetSubscriptionInfo(voucher.ToArgs());
-            if (subscriptionInfo.Status != SubscriptionQueryStatus.Succeeded) throw new Exception("Couldn't find voucher info.");
+            if (subscriptionInfo is null) throw new Exception("Couldn't find voucher info.");
 
-            var subscriptions = await SubscriptionRepository.GetAllWithTransactionId(subscriptionInfo.TransactionId);
-            var subscription = subscriptions.Where(x => x.UserId == voucher.UserId).GetMostRecent(SubscriptionComparer);
-
+            var subscription = await SubscriptionRepository.GetWithTransactionId(subscriptionInfo.TransactionId);
+            
             var utcNow = LocalTime.UtcNow;
 
             if (subscription is null)
@@ -84,7 +80,7 @@
                 {
                     Id = Guid.NewGuid().ToString(),
                     ProductId = voucher.ProductId,
-                    UserId = subscriptionInfo.UserId,
+                    UserId = voucher.UserId,
                     Platform = "Voucher",
                     TransactionId = subscriptionInfo.TransactionId,
                     TransactionDate = voucher.ActivationDate,

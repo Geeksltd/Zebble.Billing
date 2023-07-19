@@ -19,16 +19,16 @@
                 PurchaseToken = args.PurchaseToken
             });
 
-            if (result is null) return SubscriptionInfo.NotFound;
+            if (result is null) return null;
 
-            return CreateSubscription(args.UserId, result);
+            return CreateSubscription(result);
         }
 
-        static SubscriptionInfo CreateSubscription(string userId, HuaweiValidateSubscriptionResult result)
+        static SubscriptionInfo CreateSubscription(HuaweiValidateSubscriptionResult result)
         {
             return new SubscriptionInfo
             {
-                UserId = userId,
+                ProductId = result.InappPurchaseData.ProductId,
                 SubscriptionId = result.InappPurchaseData.SubscriptionId,
                 TransactionId = result.InappPurchaseData.OrderId,
                 SubscriptionDate = result.InappPurchaseData.PurchaseTime?.DateTime,

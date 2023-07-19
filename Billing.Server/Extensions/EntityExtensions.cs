@@ -6,7 +6,6 @@
         {
             return new SubscriptionInfoArgs
             {
-                UserId = @this.UserId,
                 ProductId = @this.ProductId,
                 SubscriptionId = @this.SubscriptionId,
                 PurchaseToken = @this.PurchaseToken

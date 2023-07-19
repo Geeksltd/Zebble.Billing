@@ -31,11 +31,6 @@
             return Context.Subscriptions.UpdateAsync(x => x.Id, new SubscriptionProxy(subscription));
         }
 
-        public Task UpdateSubscriptions(Subscription[] subscriptions)
-        {
-            return Task.WhenAll(subscriptions.DoAsync(UpdateSubscription));
-        }
-
         public async Task<Transaction> AddTransaction(Transaction transaction)
         {
             await Context.Transactions.AddAsync(new TransactionProxy(transaction));
@@ -43,14 +38,9 @@
             return transaction;
         }
 
-        public async Task<Subscription[]> GetAllWithTransactionId(string transactionId)
+        public async Task<Subscription> GetWithTransactionId(string transactionId)
         {
-            return await Context.SubscriptionTransactions.All(transactionId);
-        }
-
-        public async Task<Subscription[]> GetAllWithPurchaseToken(string purchaseToken)
-        {
-            return await Context.SubscriptionPurchaseTokenHashes.All(purchaseToken?.ToSimplifiedSHA1Hash());
+            return await Context.SubscriptionTransactions.All(transactionId).FirstOrDefault();
         }
     }
 }

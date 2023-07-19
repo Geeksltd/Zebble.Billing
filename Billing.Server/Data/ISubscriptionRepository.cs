@@ -8,9 +8,7 @@
         Task<Subscription[]> GetAll(string userId);
         Task<Subscription> AddSubscription(Subscription subscription);
         Task UpdateSubscription(Subscription subscription);
-        Task UpdateSubscriptions(Subscription[] subscriptions);
         Task<Transaction> AddTransaction(Transaction transaction);
-        Task<Subscription[]> GetAllWithTransactionId(string transactionId);
-        Task<Subscription[]> GetAllWithPurchaseToken(string purchaseToken);
+        Task<Subscription> GetWithTransactionId(string transactionId);
     }
 }

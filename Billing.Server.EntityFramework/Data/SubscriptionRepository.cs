@@ -35,12 +35,6 @@
             await Context.SaveChangesAsync();
         }
 
-        public async Task UpdateSubscriptions(Subscription[] subscriptions)
-        {
-            Context.Subscriptions.UpdateRange(subscriptions);
-            await Context.SaveChangesAsync();
-        }
-
         public async Task<Transaction> AddTransaction(Transaction transaction)
         {
             await Context.Transactions.AddAsync(transaction);
@@ -49,14 +43,9 @@
             return transaction;
         }
 
-        public Task<Subscription[]> GetAllWithTransactionId(string transactionId)
+        public Task<Subscription> GetWithTransactionId(string transactionId)
         {
-            return Context.Subscriptions.Where(x => x.TransactionId == transactionId).ToArrayAsync();
-        }
-
-        public Task<Subscription[]> GetAllWithPurchaseToken(string purchaseToken)
-        {
-            return Context.Subscriptions.Where(x => x.PurchaseToken == purchaseToken).ToArrayAsync();
+            return Context.Subscriptions.FirstOrDefaultAsync(x => x.TransactionId == transactionId);
         }
     }
 }
