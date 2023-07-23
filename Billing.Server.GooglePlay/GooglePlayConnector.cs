@@ -45,14 +45,20 @@
             var lineItem = purchase.LineItems.OrderBy(x => x.ExpiryTime).LastOrDefault();
             if (lineItem is null) return null;
 
+            static DateTime? ToDataTime(object value)
+            {
+                try { return DateTimeOffset.Parse(value?.ToString()).DateTime; }
+                catch { return null; }
+            }
+
             return new SubscriptionInfo
             {
                 ProductId = lineItem.ProductId,
                 TransactionId = purchase.LatestOrderId,
-                SubscriptionDate = DateTimeOffset.Parse(purchase.StartTime.ToString()).DateTime,
-                ExpirationDate = DateTimeOffset.Parse(lineItem.ExpiryTime.ToString()).DateTime,
-                CancellationDate = DateTimeOffset.Parse(purchase.CanceledStateContext.UserInitiatedCancellation.CancelTime.ToString()).DateTime,
-                AutoRenews = lineItem.AutoRenewingPlan.AutoRenewEnabled ?? false
+                SubscriptionDate = ToDataTime(purchase.StartTime),
+                ExpirationDate = ToDataTime(lineItem.ExpiryTime),
+                CancellationDate = ToDataTime(purchase.CanceledStateContext?.UserInitiatedCancellation?.CancelTime),
+                AutoRenews = lineItem.AutoRenewingPlan?.AutoRenewEnabled ?? false
             };
         }
 
