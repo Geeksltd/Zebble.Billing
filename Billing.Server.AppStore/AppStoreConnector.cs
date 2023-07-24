@@ -54,7 +54,7 @@
                 ProductId = purchase.ProductId,
                 TransactionId = purchase.OriginalTransactionId,
                 SubscriptionDate = purchase.PurchaseDateDt ?? DateTimeConverter.Convert(purchase.PurchaseDate),
-                ExpirationDate = purchase.ExpirationDateDt ?? DateTimeConverter.Convert(purchase.ExpirationDate),
+                ExpirationDate = purchase.ExpirationDateDt ?? DateTimeConverter.Convert(purchase.ExpirationDate) ?? purchase.CancellationDateDt ?? DateTimeConverter.Convert(purchase.CancellationDate),
                 CancellationDate = purchase.CancellationDateDt ?? DateTimeConverter.Convert(purchase.CancellationDate),
                 AutoRenews = purchase.SubscriptionAutoRenewStatus == AppleSubscriptionAutoRenewStatus.Active
             };
