@@ -155,9 +155,6 @@
 
         AppleReceiptVerificationResult ValidateVerificationResult(AppleReceiptVerificationResult verificationResult)
         {
-            if (verificationResult?.Status == IAPVerificationResponseStatus.SubscriptionExpired)
-                return null;
-
             var response = verificationResult?.AppleVerificationResponse;
 
             if (response is null)
