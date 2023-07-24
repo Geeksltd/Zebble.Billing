@@ -53,9 +53,9 @@
             {
                 ProductId = purchase.ProductId,
                 TransactionId = purchase.OriginalTransactionId,
-                SubscriptionDate = purchase.PurchaseDateDt,
-                ExpirationDate = purchase.ExpirationDateDt,
-                CancellationDate = purchase.CancellationDateDt,
+                SubscriptionDate = purchase.PurchaseDateDt ?? DateTimeConverter.Convert(purchase.PurchaseDate),
+                ExpirationDate = purchase.ExpirationDateDt ?? DateTimeConverter.Convert(purchase.ExpirationDate),
+                CancellationDate = purchase.CancellationDateDt ?? DateTimeConverter.Convert(purchase.CancellationDate),
                 AutoRenews = purchase.SubscriptionAutoRenewStatus == AppleSubscriptionAutoRenewStatus.Active
             };
         }
@@ -91,13 +91,13 @@
             try
             {
                 var request = new IAPVerificationRequest(purchaseToken, Settings.Value.VerifyReceiptSharedSecret);
-                var rawResponse = await url.AsUri().PostJson(request);
+                response = await url.AsUri().PostJson(request);
 
                 var notification = new AppStoreNotification
                 {
-                    UnifiedReceipt = JsonSerializer.Deserialize<AppStoreUnifiedReceipt>(rawResponse)
+                    UnifiedReceipt = JsonSerializer.Deserialize<AppStoreUnifiedReceipt>(response)
                 };
-                var result = JsonSerializer.Deserialize<IAPLegacyVerificationResult>(rawResponse);
+                var result = JsonSerializer.Deserialize<IAPLegacyVerificationResult>(response);
 
                 var verificationResult = new AppleReceiptVerificationResult(null, result.Status);
 
@@ -138,9 +138,7 @@
                                 ProductId = result.Receipt.ProductId,
                                 OriginalTransactionId = result.Receipt.OriginalTransactionId,
                                 ExpirationDateMs = result.Receipt.ExpiresDateMs,
-                                SubscriptionAutoRenewStatus = notification.AutoRenewStatus == true ?
-                                    AppleSubscriptionAutoRenewStatus.Active :
-                                    AppleSubscriptionAutoRenewStatus.Disabled
+                                SubscriptionAutoRenewStatus = result.AutoRenewStatus
                             }
                         }
                     };
@@ -196,6 +194,9 @@
         {
             [JsonPropertyName("receipt")]
             public IAPLegacyReceipt Receipt { get; set; }
+
+            [JsonPropertyName("auto_renew_status")]
+            public AppleSubscriptionAutoRenewStatus AutoRenewStatus { get; set; }
 
             [JsonPropertyName("status")]
             public IAPVerificationResponseStatus Status { get; set; }

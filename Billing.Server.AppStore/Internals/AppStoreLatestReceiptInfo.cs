@@ -1,5 +1,6 @@
 ﻿namespace Zebble.Billing
 {
+    using Olive;
     using System;
     using System.Text.Json.Serialization;
 
@@ -37,10 +38,13 @@
         [JsonPropertyName("expires_date_ms")]
         public string ExpiresDateMs { get; set; }
 
+        [JsonPropertyName("expires_date")]
+        public string ExpiresDateStr { get; set; }
+
         /// <summary>
         /// The time when a subscription expires or when it will renew.
         /// </summary>
-        public DateTime? ExpiresDate => DateTimeConverter.Convert(ExpiresDateMs);
+        public DateTime? ExpiresDate => DateTimeConverter.Convert(ExpiresDateMs.Or(ExpiresDateStr));
 
         /// <summary>
         /// The time when Apple customer support canceled a transaction, or the time when the user upgraded an auto-renewable subscription plan.

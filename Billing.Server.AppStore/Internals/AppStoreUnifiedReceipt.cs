@@ -21,6 +21,7 @@
         /// An array that contains the latest 100 in-app purchase transactions of the decoded value in LatestReceipt. This array excludes transactions for consumable products your app has marked as finished.
         /// </summary>
         [JsonPropertyName("latest_receipt_info")]
+        [JsonConverter(typeof(AppStoreLatestReceiptInfoConverter))]
         public AppStoreLatestReceiptInfo[] LatestReceiptInfo { get; set; }
 
         /// <summary>
