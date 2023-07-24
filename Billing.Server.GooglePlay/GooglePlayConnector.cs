@@ -29,15 +29,15 @@
             if (product.Type == ProductType.Subscription)
             {
                 var subscriptionResult = await Execute(x => x.Subscriptionsv2.Get(Options.PackageName, args.PurchaseToken));
-                if (subscriptionResult is null) return null;
 
+                if (subscriptionResult is null) return null;
                 return CreateSubscription(subscriptionResult);
             }
 
             var productResult = await Execute(x => x.Products.Get(Options.PackageName, args.ProductId, args.PurchaseToken));
-            if (productResult is null) return null;
 
-            return CreateSubscription(productResult);
+            if (productResult is null) return null;
+            return CreateSubscription(productResult, args.ProductId);
         }
 
         static SubscriptionInfo CreateSubscription(SubscriptionPurchaseV2 purchase)
@@ -47,6 +47,7 @@
 
             static DateTime? ToDataTime(object value)
             {
+                if (value is null) return null;
                 try { return DateTimeOffset.Parse(value?.ToString()).DateTime; }
                 catch { return null; }
             }
@@ -62,11 +63,11 @@
             };
         }
 
-        static SubscriptionInfo CreateSubscription(ProductPurchase purchase)
+        static SubscriptionInfo CreateSubscription(ProductPurchase purchase, string productId)
         {
             return new SubscriptionInfo
             {
-                ProductId = purchase.ProductId,
+                ProductId = purchase.ProductId.Or(productId),
                 TransactionId = purchase.OrderId,
                 SubscriptionDate = purchase.PurchaseTimeMillis.ToDateTime(),
                 CancellationDate = purchase.PurchaseState == 1 ? LocalTime.UtcNow : null
@@ -83,7 +84,11 @@
             catch (GoogleApiException ex)
             {
                 var reasons = ex.Error.Errors.Select(x => x.Reason).ToArray();
-                if (reasons.ContainsAny("subscriptionPurchaseNoLongerAvailable", "purchaseTokenNoLongerValid"))
+                if (reasons.ContainsAny("subscriptionPurchaseNoLongerAvailable", "purchaseTokenNoLongerValid", "invalid"))
+                    return default;
+
+                var messages = ex.Error.Errors.Select(x => x.Message).ToArray();
+                if (messages.Contains("expired", caseSensitive: false))
                     return default;
 
                 throw;
