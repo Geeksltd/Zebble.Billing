@@ -70,7 +70,7 @@
             return this;
         }
 
-        AppStoreLatestReceiptInfo CandidateReceiptInfo => UnifiedReceipt?.LatestReceiptInfo.OrderByDescending(x => x.PurchaseDate)?.FirstOrDefault();
+        AppStoreLatestReceiptInfo CandidateReceiptInfo => UnifiedReceipt?.LatestReceiptInfo?.OrderByDescending(x => x.PurchaseDate).FirstOrDefault();
             
         AppStorePendingRenewaInfo CandidateRenewalInfo => UnifiedReceipt?.PendingRenewalInfo?.FirstOrDefault();
 
