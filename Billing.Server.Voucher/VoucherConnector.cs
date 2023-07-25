@@ -32,6 +32,7 @@
         {
             return new SubscriptionInfo
             {
+                ProductId = voucher.ProductId,
                 TransactionId = voucher.Id,
                 SubscriptionDate = voucher.ActivationDate,
                 ExpirationDate = voucher.ExpirationDate()
