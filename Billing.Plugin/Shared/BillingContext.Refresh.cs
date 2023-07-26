@@ -15,12 +15,6 @@
         {
             if (user is null) throw new ArgumentNullException(nameof(user));
 
-            if (Subscription is not null)
-            {
-                if (Subscription.ExpirationDate is null) return;
-                if (Subscription.ExpirationDate?.AddDays(-2) > LocalTime.Now) return;
-            }
-
             await UIContext.AwaitConnection();
             try { await DoRefresh(user); }
             catch { /*Ignore*/ }
@@ -37,7 +31,7 @@
             catch (Exception ex) { Log.For<Subscription>().Error(ex); }
         }
 
-        async Task DoRefresh(IBillingUser user)
+        async Task DoRefresh(IBillingUser user, bool retry = true)
         {
             var url = new Uri(Options.BaseUri, Options.SubscriptionStatusPath).ToString();
             var @params = new { user.Ticket, user.UserId };
@@ -57,6 +51,7 @@
             catch (Exception ex)
             {
                 Log.For(this).Error(ex, $"Failed to refresh the billing data. {ex.Message}");
+                if (retry) await DoRefresh(user, retry: false);
             }
         }
     }
