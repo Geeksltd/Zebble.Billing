@@ -88,7 +88,7 @@
                     return default;
 
                 var messages = ex.Error.Errors.Select(x => x.Message).ToArray();
-                if (messages.Contains("expired", caseSensitive: false))
+                if (messages.Any(msg => msg.Contains("expired", caseSensitive: false)))
                     return default;
 
                 throw;
