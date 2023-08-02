@@ -59,8 +59,8 @@
             catch (System.Exception ex) { Log.For(typeof(BillingContext)).Error(ex); }
 #endif
 
-            if (pricesUpdated) return;
-            await PriceUpdateFailed.Raise(new PriceUpdateFailedEventArgs
+            if (pricesUpdated) await PriceUpdated.Raise();
+            else await PriceUpdateFailed.Raise(new PriceUpdateFailedEventArgs
             {
                 ProductIds = (await ProductProvider.GetProducts()).Select(x => x.Id).ToArray(),
                 UpdatePrice = args => ProductProvider.UpdatePrice(args.ProductId, args.OriginalMicrosPrice, args.DiscountedMicrosPrice, args.CurrencyCode),
