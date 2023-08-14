@@ -15,8 +15,18 @@
                 var subscriptions = await GetPurchasesAsync(ProductType.Subscription);
                 var inAppPurchases = await GetPurchasesAsync(ProductType.InAppPurchase);
 
+                var ignoringStates = new[]
+                {
+                    PurchaseState.Canceled,
+                    PurchaseState.Failed,
+#if (CAFEBAZAAR && ANDROID)
+                    PurchaseState.Refunded,
+#endif
+                    PurchaseState.Unknown
+                };
+
                 var purchases = subscriptions.Concat(inAppPurchases)
-                                             .Where(x => x.State == PurchaseState.Purchased)
+                                             .Except(x => x.State.IsAnyOf(ignoringStates))
                                              .Where(x => x.PurchaseToken.HasValue())
                                              .Distinct(x => new { x.Id, x.ProductId }).ToArray();
 

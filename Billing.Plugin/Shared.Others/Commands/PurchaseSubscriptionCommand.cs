@@ -23,6 +23,7 @@
 
 #if CAFEBAZAAR && ANDROID
                 var purchase = await Billing.PurchaseAsync(Product.Id, Product.GetItemType(), user.UserId);
+                if (purchase is null) return (PurchaseResult.UserCancelled, null);
 #else
                 var purchase = await Billing.PurchaseAsync(Product.Id, Product.GetItemType());
 #endif
