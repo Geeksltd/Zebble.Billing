@@ -86,7 +86,7 @@
                     .GroupBy(x => x.ISOCurrencySymbol)
                     .ToDictionary(x => x.Key, x => x.First().CurrencySymbol);
                 if (!Cache.ContainsKey("IRT"))
-                    Cache["IRT"] = "تومان";
+                    Cache["IRT"] = "Tomans";
             }
 
             public static string GetCurrencySymbol(string code)
