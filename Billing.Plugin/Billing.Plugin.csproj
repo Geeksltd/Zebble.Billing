@@ -3,7 +3,7 @@
     <AssemblyName>Zebble.Billing</AssemblyName>
     <RootNamespace>Zebble</RootNamespace>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
-    <Version>1.0.129.0</Version>
+    <Version>1.0.130.0</Version>
     <PackOnBuild>true</PackOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
     <DefineConstants>$(DefineConstants)</DefineConstants>
@@ -79,7 +79,7 @@
   </ItemGroup>
   <ItemGroup Condition=" $(DefineConstants.Contains('ANDROID')) AND $(DefineConstants.Contains('CAFEBAZAAR')) ">
     <Compile Include="Android\CafeBazaar\**\*.cs" />
-    <PackageReference Include="Plugin.InAppBilling.CafeBazaar" Version="1.0.4.0" />
+    <PackageReference Include="Plugin.InAppBilling.CafeBazaar" Version="1.0.5" />
   </ItemGroup>
   <ItemGroup Condition=" $(DefineConstants.Contains('ANDROID')) AND $(DefineConstants.Contains('HUAWEI')) ">
     <PackageReference Include="Huawei.Hms.Iap" Version="6.10.0.300" />
