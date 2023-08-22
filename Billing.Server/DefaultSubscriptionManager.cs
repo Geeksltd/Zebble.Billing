@@ -52,6 +52,9 @@
             // GooglePlay doesn't return expired purchase details, so we've to ensure we have the transaction id.
             subscriptionInfo.TransactionId = subscriptionInfo.TransactionId.Or(transactionId);
 
+            if (subscriptionInfo.TransactionId.IsEmpty())
+                return PurchaseAttemptResult.Failed;
+
             var (isMismatched, originUserId) = await IsSubscriptionMismatched(userId, productId, subscriptionInfo.TransactionId);
             if (isMismatched)
             {
@@ -119,7 +122,7 @@
             Logger.LogInformation($"Found {subscriptions.Length} subscription records for user with id '{userId}'.");
 
             var subscription = subscriptions.GetMostRecent(Comparer);
-            
+
             return subscription;
         }
 
