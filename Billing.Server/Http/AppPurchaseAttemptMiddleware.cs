@@ -2,19 +2,21 @@
 {
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;
-    using Olive;
 
     class AppPurchaseAttemptMiddleware
     {
         public AppPurchaseAttemptMiddleware(RequestDelegate _) { }
 
-        public async Task InvokeAsync(HttpContext context, ISubscriptionManager manager)
+        public async Task InvokeAsync(
+            HttpContext context,
+            ISubscriptionManager manager,
+            ITicketValidator ticketValidator)
         {
             var model = await context.Request.Body.ConvertTo<AppPurchaseAttemptModel>();
-            
-            if (model?.UserId.HasValue() != true)
+
+            if (await ticketValidator.IsValid(model.UserId, model.Ticket) == false)
             {
-                await context.Response.WriteAsync("UserId is missing.");
+                await context.Response.WriteAsync("Request is invalid.");
                 return;
             }
 

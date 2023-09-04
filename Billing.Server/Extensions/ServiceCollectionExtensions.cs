@@ -38,6 +38,8 @@
 
             services.TryAddScoped<ISubscriptionChangeHandler, DefaultSubscriptionChangeHandler>();
 
+            services.TryAddScoped<ITicketValidator, DefaultTicketValidator>();
+
             return services;
         }
 
