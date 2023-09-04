@@ -5,7 +5,7 @@
 
     public class DefaultTicketValidator : ITicketValidator
     {
-        public Task<bool> IsValid(string userId, string ticket)
+        public virtual Task<bool> IsValid(string userId, string ticket)
         {
             if (userId.IsEmpty()) return Task.FromResult(false);
             if (ticket.IsEmpty()) return Task.FromResult(false);
