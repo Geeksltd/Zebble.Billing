@@ -2,6 +2,7 @@
 {
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;
+    using Olive;
 
     class AppSubscriptionStatusMiddleware
     {
@@ -10,6 +11,12 @@
         public async Task InvokeAsync(HttpContext context, ISubscriptionManager manager)
         {
             var model = await context.Request.Body.ConvertTo<AppSubscriptionStatusModel>();
+
+            if (model?.UserId.HasValue() != true)
+            {
+                await context.Response.WriteAsync("UserId is missing.");
+                return;
+            }
 
             var status = await manager.GetSubscriptionStatus(model.UserId);
 

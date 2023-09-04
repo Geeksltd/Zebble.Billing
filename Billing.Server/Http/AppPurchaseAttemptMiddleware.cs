@@ -2,6 +2,7 @@
 {
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;
+    using Olive;
 
     class AppPurchaseAttemptMiddleware
     {
@@ -10,6 +11,12 @@
         public async Task InvokeAsync(HttpContext context, ISubscriptionManager manager)
         {
             var model = await context.Request.Body.ConvertTo<AppPurchaseAttemptModel>();
+            
+            if (model?.UserId.HasValue() != true)
+            {
+                await context.Response.WriteAsync("UserId is missing.");
+                return;
+            }
 
             var result = await manager.PurchaseAttempt(
                 model.UserId,
