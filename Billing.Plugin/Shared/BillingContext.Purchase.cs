@@ -15,7 +15,7 @@
 #if MVVM || UWP
             return (PurchaseResult.AppStoreUnavailable, null);
 #else
-            var product = await GetProduct(productId) ?? throw new Exception($"Product with id '{productId}' not found.");
+            var product = GetProduct(productId) ?? throw new Exception($"Product with id '{productId}' not found.");
             return await new PurchaseSubscriptionCommand(product).Execute(user);
 #endif
         }

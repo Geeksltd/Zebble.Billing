@@ -24,7 +24,7 @@
 
         public async Task<SubscriptionInfo> GetSubscriptionInfo(SubscriptionInfoArgs args)
         {
-            var product = await Provider.GetById(args.ProductId);
+            var product = Provider.GetById(args.ProductId);
 
             if (product.Type == ProductType.Subscription)
             {

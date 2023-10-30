@@ -26,7 +26,7 @@
             {
                 await context.Refresh(user);
 
-                if (context.IsSubscribed && (await context.CurrentProduct)?.Id == Product.Id)
+                if (context.IsSubscribed && context.CurrentProduct?.Id == Product.Id)
                     return (PurchaseResult.AlreadySubscribed, null);
 
                 var request = new PurchaseIntentReq

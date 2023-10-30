@@ -14,7 +14,7 @@
             try
             {
                 var productProvider = BillingContext.Current.ProductProvider;
-                var products = await productProvider.GetProducts();
+                var products = productProvider.GetProducts();
 
                 return await ProcessProducts(products);
             }

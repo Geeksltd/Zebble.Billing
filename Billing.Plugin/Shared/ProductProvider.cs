@@ -28,20 +28,20 @@
             if (Options.Products is null) throw new Exception("Products is null in: " + File.Name);
         }
 
-        public async Task<Product> GetById(string productId)
+        public Product GetById(string productId)
         {
             if (productId.IsEmpty()) return null;
-            return await GetProducts().SingleOrDefault(x => x.Id == productId);
+            return GetProducts().SingleOrDefault(x => x.Id == productId);
         }
 
-        public Task<Product[]> GetProducts()
+        public Product[] GetProducts()
         {
-            return Task.FromResult(Options.Products.Where(x => x.Platform.IsEmpty() || x.Platform.Equals(BillingContext.PaymentAuthority, false)).ToArray());
+            return Options.Products.Where(x => x.Platform.IsEmpty() || x.Platform.Equals(BillingContext.PaymentAuthority, false)).ToArray();
         }
 
         public async Task UpdatePrice(string productId, decimal originalMicrosPrice, decimal discountedMicrosPrice, string currencyCode)
         {
-            var product = await GetById(productId);
+            var product = GetById(productId);
             if (product is null)
             {
                 Log.For(this).Error($"No product with id '{productId}' found.");

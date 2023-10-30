@@ -1,7 +1,6 @@
 ﻿namespace Zebble.Billing
 {
     using System.Linq;
-    using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Olive;
@@ -17,14 +16,14 @@
             Logger = logger;
         }
 
-        public Task<Product[]> GetProducts()
+        public Product[] GetProducts()
         {
-            return Task.FromResult(Options.Products.ToArray());
+            return Options.Products.ToArray();
         }
 
-        public async Task<Product> GetById(string productId)
+        public Product GetById(string productId)
         {
-            var product = await GetProducts().FirstOrDefault(x => x.Id == productId);
+            var product = GetProducts().FirstOrDefault(x => x.Id == productId);
             if (product is null) Logger.LogWarning($"No product with id '{productId}' found.");
             return product;
         }

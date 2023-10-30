@@ -7,7 +7,7 @@
     {
         public bool IsSubscribed => IsStarted && !IsExpired;
 
-        public Task<Product> CurrentProduct => GetProduct(Subscription?.ProductId);
+        public Product CurrentProduct => GetProduct(Subscription?.ProductId);
 
         public DateTime? SubscriptionDate => Subscription?.SubscriptionDate;
 

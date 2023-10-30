@@ -19,7 +19,7 @@
             {
                 await context.Refresh(user);
 
-                if (context.IsSubscribed && (await context.CurrentProduct)?.Id == Product.Id) return (PurchaseResult.AlreadySubscribed, null);
+                if (context.IsSubscribed && context.CurrentProduct?.Id == Product.Id) return (PurchaseResult.AlreadySubscribed, null);
 
 #if CAFEBAZAAR && ANDROID
                 var purchase = await Billing.PurchaseAsync(Product.Id, Product.GetItemType(), user.UserId);
