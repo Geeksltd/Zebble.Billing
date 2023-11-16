@@ -95,7 +95,7 @@
                     return (PurchaseResult.UserMismatched, null);
 
 #if !NETCOREAPP
-                var promptResult = await Alert.Show(
+                var promptResult = await Dialogs.Current.Decide(
                     "Warning",
                     $"This account subscription was previously linked to {result.OriginUserId}. Where do you want your subscription?", new[] {
                     new KeyValuePair<string, string>("Previous account", result.OriginUserId),
