@@ -39,20 +39,36 @@
             try
             {
                 var current = await BaseApi.Post<Subscription>(
-                    url, @params, errorAction: OnError.Throw);
+                    url, @params, errorAction: OnError.Throw, showWaiting: false);
 
-                Subscription = current;
+                if (HasChanged(Subscription, current))
+                {
+                    Subscription = current;
+
+                    await SubscriptionFileStore.Save(user);
+
+                    await SubscriptionRestored.Raise(current.ToEventArgs());
+                }
+
                 IsLoaded = true;
-
-                await SubscriptionFileStore.Save(user);
-
-                await SubscriptionRestored.Raise(current.ToEventArgs());
             }
             catch (Exception ex)
             {
                 Log.For(this).Error(ex, $"Failed to refresh the billing data. {ex.Message}");
                 if (retry) await DoRefresh(user, retry: false);
             }
+        }
+
+        bool HasChanged(Subscription @this, Subscription that)
+        {
+            if (@this is null) return that is not null;
+            if (that is null) return true;
+            if (@this.ProductId == that.ProductId) return false;
+            if (@this.SubscriptionDateOnly == that.SubscriptionDateOnly) return false;
+            if (@this.ExpirationDateOnly == that.ExpirationDateOnly) return false;
+            if (@this.CancellationDateOnly == that.CancellationDateOnly) return false;
+
+            return true;
         }
     }
 }
