@@ -3,7 +3,7 @@
     <AssemblyName>Zebble.Billing</AssemblyName>
     <RootNamespace>Zebble</RootNamespace>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
-    <Version>1.0.136.0</Version>
+    <Version>1.1.100.0</Version>
     <PackOnBuild>true</PackOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
     <DefineConstants>$(DefineConstants)</DefineConstants>
@@ -24,21 +24,21 @@
     <Configurations>Debug;Release;DebugCafeBazaar;ReleaseCafeBazaar;DebugHuawei;ReleaseHuawei</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" $(Configuration.EndsWith('CafeBazaar'))==false AND $(Configuration.EndsWith('Huawei'))==false ">
-    <TargetFrameworks>net6.0;Xamarin.iOS10;MonoAndroid13.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;Xamarin.iOS10;MonoAndroid13.0;net8.0-android;net8.0-ios</TargetFrameworks>
     <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">$(TargetFrameworks);uap10.0.18362</TargetFrameworks>
     <PackageId>Zebble.Billing</PackageId>
     <PackageProjectUrl>https://nuget.org/packages/Zebble.Billing/</PackageProjectUrl>
     <Title>Zebble.Billing</Title>
   </PropertyGroup>
   <PropertyGroup Condition=" $(Configuration.EndsWith('CafeBazaar')) ">
-    <TargetFrameworks>MonoAndroid13.0</TargetFrameworks>
+    <TargetFrameworks>MonoAndroid13.0;net8.0-android</TargetFrameworks>
     <DefineConstants>$(DefineConstants);CAFEBAZAAR</DefineConstants>
     <PackageId>Zebble.Billing.CafeBazaar</PackageId>
     <PackageProjectUrl>https://nuget.org/packages/Zebble.Billing.CafeBazaar/</PackageProjectUrl>
     <Title>Zebble.Billing.CafeBazaar</Title>
   </PropertyGroup>
   <PropertyGroup Condition=" $(Configuration.EndsWith('Huawei')) ">
-    <TargetFrameworks>MonoAndroid13.0</TargetFrameworks>
+    <TargetFrameworks>MonoAndroid13.0;net8.0-android</TargetFrameworks>
     <DefineConstants>$(DefineConstants);HUAWEI</DefineConstants>
     <PackageId>Zebble.Billing.Huawei</PackageId>
     <PackageProjectUrl>https://nuget.org/packages/Zebble.Billing.Huawei/</PackageProjectUrl>
@@ -55,14 +55,17 @@
   <PropertyGroup Condition=" $(TargetFramework.StartsWith('uap10.0')) ">
     <DefineConstants>$(DefineConstants);UWP</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
+  <PropertyGroup Condition=" $(TargetFramework.Contains('droid')) ">
     <DefineConstants>$(DefineConstants);ANDROID</DefineConstants>
     <AndroidUseIntermediateDesignerFile>false</AndroidUseIntermediateDesignerFile>
   </PropertyGroup>
   <PropertyGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
     <DefineConstants>$(DefineConstants);IOS</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition=" $(TargetFramework.StartsWith('net6.0')) ">
+	<PropertyGroup Condition=" $(TargetFramework.Contains('ios')) ">
+		<DefineConstants>$(DefineConstants);IOS</DefineConstants>
+	</PropertyGroup>
+  <PropertyGroup Condition=" $(TargetFramework.Equals('net8.0')) ">
     <DefineConstants>$(DefineConstants);MVVM</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
@@ -98,9 +101,9 @@
     <None Remove="Zebble-LicenseAgreement.txt" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Olive" Version="2.1.353" />
-    <PackageReference Include="Zebble" Version="4.5.733.0" />
-    <PackageReference Include="Zebble.WebApi" Version="4.5.401" />
+    <PackageReference Include="Olive" Version="2.1.355" />
+    <PackageReference Include="Zebble" Version="4.6.100" />
+    <PackageReference Include="Zebble.WebApi" Version="4.6.100" />
     <PackageReference Include="Plugin.InAppBilling" Version="7.1.0" Condition=" $(DefineConstants.Contains('ANDROID'))==false OR $(DefineConstants.Contains('CAFEBAZAAR'))==false AND $(DefineConstants.Contains('HUAWEI'))==false " />
   </ItemGroup>
   <Import Project="..\Billing.Shared\Billing.Shared.projitems" Label="Shared" />
