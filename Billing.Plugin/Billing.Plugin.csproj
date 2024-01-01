@@ -3,7 +3,7 @@
     <AssemblyName>Zebble.Billing</AssemblyName>
     <RootNamespace>Zebble</RootNamespace>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
-    <Version>1.1.100.0</Version>
+    <Version>1.1.101.0</Version>
     <PackOnBuild>true</PackOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
     <DefineConstants>$(DefineConstants)</DefineConstants>
@@ -62,9 +62,9 @@
   <PropertyGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
     <DefineConstants>$(DefineConstants);IOS</DefineConstants>
   </PropertyGroup>
-	<PropertyGroup Condition=" $(TargetFramework.Contains('ios')) ">
-		<DefineConstants>$(DefineConstants);IOS</DefineConstants>
-	</PropertyGroup>
+  <PropertyGroup Condition=" $(TargetFramework.Contains('ios')) ">
+    <DefineConstants>$(DefineConstants);IOS</DefineConstants>
+  </PropertyGroup>
   <PropertyGroup Condition=" $(TargetFramework.Equals('net8.0')) ">
     <DefineConstants>$(DefineConstants);MVVM</DefineConstants>
   </PropertyGroup>

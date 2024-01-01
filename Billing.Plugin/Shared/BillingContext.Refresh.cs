@@ -63,12 +63,12 @@
         {
             if (@this is null) return that is not null;
             if (that is null) return true;
-            if (@this.ProductId == that.ProductId) return false;
-            if (@this.SubscriptionDateOnly == that.SubscriptionDateOnly) return false;
-            if (@this.ExpirationDateOnly == that.ExpirationDateOnly) return false;
-            if (@this.CancellationDateOnly == that.CancellationDateOnly) return false;
+            if (@this.ProductId != that.ProductId) return true;
+            if (@this.SubscriptionDateOnly != that.SubscriptionDateOnly) return true;
+            if (@this.ExpirationDateOnly != that.ExpirationDateOnly) return true;
+            if (@this.CancellationDateOnly != that.CancellationDateOnly) return true;
 
-            return true;
+            return false;
         }
     }
 }

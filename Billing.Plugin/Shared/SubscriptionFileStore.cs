@@ -19,10 +19,9 @@
             if (user is null) throw new ArgumentNullException(nameof(user));
 
             var file = GetFile(user);
-            if (!file.Exists()) return;
+            if (file.Exists() == false) return;
 
             var fileContents = file.ReadAllText();
-            if (fileContents.IsEmpty()) return;
 
             Context.Subscription = JsonConvert.DeserializeObject<Subscription>(fileContents);
             Context.IsLoaded = true;
@@ -33,7 +32,7 @@
             if (user is null) throw new ArgumentNullException(nameof(user));
 
             var fileContents = Subscription is null ? null : JsonConvert.SerializeObject(Subscription);
-            await GetFile(user).WriteAllTextAsync(fileContents ?? "");
+            await GetFile(user).WriteAllTextAsync(fileContents.OrEmpty());
             Context.IsLoaded = true;
         }
     }
