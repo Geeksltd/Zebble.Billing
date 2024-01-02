@@ -13,6 +13,8 @@
 
         static FileInfo GetFile(IBillingUser user)
             => Device.IO.Cache.GetFile($"{user.UserId}-Billing-v1.json");
+        
+        public static bool Exists(IBillingUser user) => GetFile(user).Exists();
 
         public static void Load(IBillingUser user)
         {

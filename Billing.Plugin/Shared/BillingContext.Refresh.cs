@@ -41,7 +41,7 @@
                 var current = await BaseApi.Post<Subscription>(
                     url, @params, errorAction: OnError.Throw, showWaiting: false);
 
-                if (HasChanged(Subscription, current))
+                if (HasChanged(Subscription, current) || SubscriptionFileStore.Exists(user) == false)
                 {
                     Subscription = current;
 
