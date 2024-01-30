@@ -7,9 +7,13 @@
     class GooglePlayNotification
     {
         public DateTime? EventTime { get; set; }
-        public string ProductId { get; set; }
         public string PurchaseToken { get; set; }
-        public GooglePlaySubscriptionState State { get; set; }
+
+        public string ProductId { get; set; }
+        public GooglePlaySubscriptionState? State { get; set; }
+
+        public string OrderId { get; set; }
+        public GooglePlayProductType? ProductType { get; set; }
 
         public string OriginalData { get; set; }
 
@@ -24,6 +28,9 @@
             [JsonPropertyName("subscriptionNotification")]
             public Subs SubscriptionNotification { get; set; }
 
+            [JsonPropertyName("voidedPurchaseNotification")]
+            public Voided VoidedPurchaseNotification { get; set; }
+
             public class Subs
             {
                 [JsonPropertyName("notificationType")]
@@ -36,14 +43,31 @@
                 public string SubscriptionId { get; set; }
             }
 
+            public class Voided
+            {
+                [JsonPropertyName("purchaseToken")]
+                public string PurchaseToken { get; set; }
+
+                [JsonPropertyName("orderId")]
+                public string OrderId { get; set; }
+
+                [JsonPropertyName("productType")]
+                public int ProductType { get; set; }
+            }
+
             public GooglePlayNotification ToNotification(string originalData)
             {
                 return new GooglePlayNotification
                 {
                     EventTime = EventTimeMillis?.ToDateTime(),
+                    PurchaseToken = SubscriptionNotification?.PurchaseToken ?? VoidedPurchaseNotification?.PurchaseToken,
+
                     ProductId = SubscriptionNotification?.SubscriptionId,
-                    PurchaseToken = SubscriptionNotification?.PurchaseToken,
-                    State = (GooglePlaySubscriptionState)SubscriptionNotification.NotificationType,
+                    State = (GooglePlaySubscriptionState?)SubscriptionNotification?.NotificationType,
+
+                    OrderId = VoidedPurchaseNotification?.OrderId,
+                    ProductType = (GooglePlayProductType?)VoidedPurchaseNotification?.ProductType,
+
                     OriginalData = originalData
                 };
             }

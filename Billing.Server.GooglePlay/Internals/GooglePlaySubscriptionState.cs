@@ -55,5 +55,4 @@
         /// </summary>
         Expired = 13
     }
-
 }

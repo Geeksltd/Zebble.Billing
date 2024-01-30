@@ -70,11 +70,20 @@
                 using var scope = Services.CreateScope();
                 var repository = scope.ServiceProvider.GetRequiredService<ISubscriptionRepository>();
 
+                // It's a refund notification
+                if (notification.OrderId.HasValue())
+                {
+                    var matchedSubscription = await repository.GetWithTransactionId(notification.OrderId);
+                    if (matchedSubscription is null) return;
+
+                    notification.ProductId = matchedSubscription.ProductId;
+                }
+
                 var subscriptionInfo = await StoreConnector.GetSubscriptionInfo(notification.ToArgs());
                 if (subscriptionInfo is null) return;
 
                 var subscription = await repository.GetWithTransactionId(subscriptionInfo.TransactionId);
-                
+
                 if (subscription is not null)
                 {
                     subscription.ProductId = subscriptionInfo.ProductId;
