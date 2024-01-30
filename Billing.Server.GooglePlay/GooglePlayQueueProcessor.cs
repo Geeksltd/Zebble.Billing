@@ -32,13 +32,13 @@
         {
             var messageCount = 0;
 
-            await using var scope = Services.CreateAsyncScope();
-
-            var subscriber = scope.ServiceProvider.GetRequiredService<SubscriberClient>();
-
             while (true)
             {
                 var chunkCount = 0;
+
+                await using var scope = Services.CreateAsyncScope();
+
+                var subscriber = scope.ServiceProvider.GetRequiredService<SubscriberClient>();
 
                 var startTask = subscriber.StartAsync(async (message, _) =>
                 {
