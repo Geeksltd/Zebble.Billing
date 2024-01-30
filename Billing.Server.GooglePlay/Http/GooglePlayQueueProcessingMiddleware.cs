@@ -24,7 +24,7 @@
 			catch (Exception ex)
 			{
 				Logger.LogError(ex, "Failed to process Google Play queue.");
-				throw;
+				await context.Response.WriteAsync($"Failed to process Google Play queue.: {ex.Message}");
 			}
 		}
 	}
