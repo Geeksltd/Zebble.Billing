@@ -5,7 +5,7 @@
     <RootNamespace>Zebble</RootNamespace>
     <PackageId>Zebble.Billing.Server</PackageId>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
-    <Version>1.0.76.0</Version>
+    <Version>1.0.77.0</Version>
     <PackOnBuild>true</PackOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
     <DefineConstants>$(DefineConstants)</DefineConstants>
@@ -38,7 +38,7 @@
     <None Remove="icon.png" />
     <None Remove="README.md" />
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Olive" Version="2.1.348" />
+    <PackageReference Include="Olive" Version="2.1.360" />
   </ItemGroup>
   <Import Project="..\Billing.Shared\Billing.Shared.projitems" Label="Shared" />
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Running)'=='local'">

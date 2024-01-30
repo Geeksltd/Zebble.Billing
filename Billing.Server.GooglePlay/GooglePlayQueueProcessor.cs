@@ -67,7 +67,7 @@
         {
             try
             {
-                using var scope = Services.CreateScope();
+                await using var scope = Services.CreateAsyncScope();
                 var repository = scope.ServiceProvider.GetRequiredService<ISubscriptionRepository>();
 
                 // It's a refund notification
