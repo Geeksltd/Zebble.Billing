@@ -84,7 +84,8 @@
                 var subscriptionInfo = await StoreConnector.GetSubscriptionInfo(notification.ToArgs());
                 if (subscriptionInfo is null) return;
 
-                var subscription = await repository.GetWithTransactionId(subscriptionInfo.TransactionId);
+                var subscription = await repository.GetWithTransactionId(subscriptionInfo.TransactionId) ??
+                                   await repository.GetWithPurchaseToken(notification.PurchaseToken);
 
                 if (subscription is not null)
                 {

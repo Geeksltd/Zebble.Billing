@@ -47,5 +47,10 @@
         {
             return Context.Subscriptions.FirstOrDefaultAsync(x => x.TransactionId == transactionId);
         }
+
+        public Task<Subscription> GetWithPurchaseToken(string purchaseToken)
+        {
+            return Context.Subscriptions.FirstOrDefaultAsync(x => x.PurchaseToken == purchaseToken);
+        }
     }
 }
