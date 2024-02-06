@@ -24,11 +24,6 @@
 
             try
             {
-                await context.Refresh(user);
-
-                if (context.IsSubscribed && context.CurrentProduct?.Id == Product.Id)
-                    return (PurchaseResult.AlreadySubscribed, null);
-
                 var request = new PurchaseIntentReq
                 {
                     PriceType = Product.GetPriceType(),
