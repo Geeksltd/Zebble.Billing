@@ -7,7 +7,7 @@
         public Task LaunchManageSubscriptions()
         {
             return Zebble.Device.OS.OpenBrowser(
-                "https://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/manageSubscriptions",
+                "https://apps.apple.com/account/subscriptions",
                 OnError.Toast);
         }
     }
