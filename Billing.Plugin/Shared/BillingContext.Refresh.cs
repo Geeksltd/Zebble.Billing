@@ -14,8 +14,10 @@
         public async Task BackgroundRefresh(IBillingUser user)
         {
             if (user is null) throw new ArgumentNullException(nameof(user));
+            if ((user?.Ticket).IsEmpty()) return;
 
             await UIContext.AwaitConnection();
+
             try { await DoRefresh(user); }
             catch { /*Ignore*/ }
         }
