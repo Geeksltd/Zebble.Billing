@@ -12,8 +12,8 @@
         {
             try
             {
-                var subscriptions = await GetPurchasesAsync(ProductType.Subscription);
-                var inAppPurchases = await GetPurchasesAsync(ProductType.InAppPurchase);
+                var subscriptions = await GetPurchasesAsync(ProductType.Subscription).ConfigureAwait(false);
+                var inAppPurchases = await GetPurchasesAsync(ProductType.InAppPurchase).ConfigureAwait(false);
 
                 var ignoringStates = new[]
                 {
@@ -34,11 +34,11 @@
 
                 foreach (var purchase in purchases)
                 {
-                    var (result, _) = await BillingContext.Current.ProcessPurchase(user, purchase);
+                    var (result, _) = await BillingContext.Current.ProcessPurchase(user, purchase).ConfigureAwait(false);
 
 #if !(CAFEBAZAAR && ANDROID)
                     if (result != PurchaseResult.Succeeded) continue;
-                    await Billing.FinalizePurchaseAsync(purchase.PurchaseToken);
+                    await Billing.FinalizePurchaseAsync(purchase.PurchaseToken).ConfigureAwait(false);
 #endif
                 }
 
@@ -53,7 +53,7 @@
 
         async Task<InAppBillingPurchase[]> GetPurchasesAsync(ProductType productType)
         {
-            return await Billing.GetPurchasesAsync(productType.GetItemType()).ToArray();
+            return await Billing.GetPurchasesAsync(productType.GetItemType()).ToArray().ConfigureAwait(false);
         }
     }
 }

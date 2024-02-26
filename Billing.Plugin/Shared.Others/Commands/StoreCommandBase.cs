@@ -21,14 +21,14 @@
 
                 if (!CrossInAppBilling.IsSupported) return default;
 
-                var connected = await Billing.ConnectAsync();
-                if (!connected) return default;
+                var connected = await Billing.ConnectAsync().ConfigureAwait(false);
+                if (connected == false) return default;
 
-                return await DoExecute(user);
+                return await DoExecute(user).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                if (await UIContext.IsOnline())
+                if (await UIContext.IsOnline().ConfigureAwait(false))
                     Log.For(this).Error(ex);
                 throw;
             }
@@ -36,7 +36,7 @@
             {
                 try
                 {
-                    if (CrossInAppBilling.IsSupported) await Billing.DisconnectAsync();
+                    if (CrossInAppBilling.IsSupported) await Billing.DisconnectAsync().ConfigureAwait(false);
                 }
                 catch (Exception ex) { Log.For(this).Error(ex, "Failed to disconnect from billing!"); }
             }

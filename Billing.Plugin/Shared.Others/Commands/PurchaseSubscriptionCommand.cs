@@ -18,19 +18,19 @@
             try
             {
 #if CAFEBAZAAR && ANDROID
-                var purchase = await Billing.PurchaseAsync(Product.Id, Product.GetItemType(), user.UserId);
+                var purchase = await Billing.PurchaseAsync(Product.Id, Product.GetItemType(), user.UserId).ConfigureAwait(false);
                 if (purchase is null) return (PurchaseResult.UserCancelled, null);
 #else
-                var purchase = await Billing.PurchaseAsync(Product.Id, Product.GetItemType());
+                var purchase = await Billing.PurchaseAsync(Product.Id, Product.GetItemType()).ConfigureAwait(false);
 #endif
-                var (result, originUserId) = await context.ProcessPurchase(user, purchase);
+                var (result, originUserId) = await context.ProcessPurchase(user, purchase).ConfigureAwait(false);
                 if (result != PurchaseResult.Succeeded) return (result, null);
 
 #if !(CAFEBAZAAR && ANDROID)
                 if (purchase.State == PurchaseState.Purchased)
-                    await Billing.FinalizePurchaseAsync(purchase.PurchaseToken);
+                    await Billing.FinalizePurchaseAsync(purchase.PurchaseToken).ConfigureAwait(false);
 #endif
-                await context.Refresh(user);
+                await context.Refresh(user).ConfigureAwait(false);
 
                 if (context.IsSubscribed) return (PurchaseResult.Succeeded, originUserId);
 

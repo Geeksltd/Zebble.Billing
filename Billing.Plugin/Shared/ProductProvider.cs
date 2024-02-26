@@ -66,7 +66,7 @@
             product.DiscountedPrice = discountedPrice;
             product.CurrencySymbol = currencySymbol;
 
-            await File.WriteAllTextAsync(JsonConvert.SerializeObject(Options));
+            await File.WriteAllTextAsync(JsonConvert.SerializeObject(Options)).ConfigureAwait(false);
 
             Log.For(this).Info($"The price or currency symbol of the product with id '{productId}' is updated. ({product.OriginalPrice} - {product.DiscountedPrice} - {product.CurrencySymbol})");
         }

@@ -30,7 +30,9 @@
                     ProductId = Product.Id,
                 };
 
-                var purchase = await Billing.CreatePurchaseIntent(request).AsAsync<PurchaseIntentResult>();
+                var purchase = await Billing.CreatePurchaseIntent(request)
+                    .AsAsync<PurchaseIntentResult>()
+                    .ConfigureAwait(false);
                 var status = purchase.Status;
 
                 if (!status.IsSuccess)
@@ -83,7 +85,7 @@
 
                 if (purchaseResult.ReturnCode == OrderStatusCode.OrderProductOwned)
                 {
-                    await context.RestoreSubscription(user, userRequest: false);
+                    await context.RestoreSubscription(user, userRequest: false).ConfigureAwait(false);
 
                     if (context.IsSubscribed)
                     {
@@ -101,7 +103,7 @@
                 }
 
                 var purchase = new InAppPurchaseData(purchaseResult.InAppPurchaseData);
-                var (result, originUserId) = await context.ProcessPurchase(user, purchase);
+                var (result, originUserId) = await context.ProcessPurchase(user, purchase).ConfigureAwait(false);
 
                 if (result != PurchaseResult.Succeeded)
                 {
@@ -109,7 +111,7 @@
                     return;
                 }
 
-                await context.Refresh(user);
+                await context.Refresh(user).ConfigureAwait(false);
 
                 if (context.IsSubscribed)
                 {

@@ -16,7 +16,7 @@
                 var productProvider = BillingContext.Current.ProductProvider;
                 var products = productProvider.GetProducts();
 
-                return await ProcessProducts(products);
+                return await ProcessProducts(products).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -39,7 +39,9 @@
                     ProductIds = group.ProductIds
                 };
 
-                var result = await Billing.ObtainProductInfo(request).AsAsync<ProductInfoResult>();
+                var result = await Billing.ObtainProductInfo(request)
+                    .AsAsync<ProductInfoResult>()
+                    .ConfigureAwait(false);
 
                 var items = result.ProductInfoList;
                 if (items == null)
@@ -50,7 +52,10 @@
                     var discountedMicrosPrice = item.SubSpecialPriceMicros;
                     if (discountedMicrosPrice == default) discountedMicrosPrice = item.MicrosPrice;
 
-                    await productProvider.UpdatePrice(item.ProductId, item.MicrosPrice, discountedMicrosPrice, item.Currency);
+                    await productProvider.UpdatePrice(
+                        item.ProductId,
+                        item.MicrosPrice,
+                        discountedMicrosPrice, item.Currency).ConfigureAwait(false);
                 }
             }
 

@@ -16,7 +16,7 @@
             return (PurchaseResult.AppStoreUnavailable, null);
 #else
             var product = GetProduct(productId) ?? throw new Exception($"Product with id '{productId}' not found.");
-            return await new PurchaseSubscriptionCommand(product).Execute(user);
+            return await new PurchaseSubscriptionCommand(product).Execute(user).ConfigureAwait(false);
 #endif
         }
 
@@ -29,7 +29,7 @@
             var errorMessage = "";
 
 #if !MVVM && !UWP
-            try { await new RestoreSubscriptionCommand().Execute(user); }
+            try { await new RestoreSubscriptionCommand().Execute(user).ConfigureAwait(false); }
             catch (Exception ex)
             {
                 errorMessage = ex.Message;
@@ -40,7 +40,7 @@
             var successful = false;
             try
             {
-                await Refresh(user);
+                await Refresh(user).ConfigureAwait(false);
                 successful = IsSubscribed;
             }
             catch (Exception ex)
@@ -59,15 +59,15 @@
         {
             if (user is null) throw new Exception("User is not available.");
 
-            if (await UIContext.IsOffline()) throw new Exception("Network connection is not available.");
+            if (await UIContext.IsOffline().ConfigureAwait(false)) throw new Exception("Network connection is not available.");
 
             var url = new Uri(Options.BaseUri, Options.PurchaseAttemptPath).ToString();
             var @params = new { user.Ticket, user.UserId, Platform = PaymentAuthority, args.ProductId, args.SubscriptionId, args.TransactionId, args.PurchaseToken, args.ReplaceConfirmed };
 
-            var result = await BaseApi.Post<PurchaseAttemptResult>(url, @params, OnError.Ignore, showWaiting: false);
+            var result = await BaseApi.Post<PurchaseAttemptResult>(url, @params, OnError.Ignore, showWaiting: false).ConfigureAwait(false);
 
             if (result?.Status == PurchaseAttemptStatus.Succeeded)
-                await SubscriptionPurchased.Raise(args);
+                await SubscriptionPurchased.Raise(args).ConfigureAwait(false);
 
             return result;
         }
@@ -79,7 +79,7 @@
             while (true)
             {
                 args.ReplaceConfirmed = replaceConfirmed;
-                var result = await PurchaseAttempt(user, args);
+                var result = await PurchaseAttempt(user, args).ConfigureAwait(false);
                 if (result is null) return (PurchaseResult.Unknown, null);
 
                 if (result.Status == PurchaseAttemptStatus.Succeeded)
@@ -100,7 +100,7 @@
                     $"This account subscription was previously linked to {result.OriginUserId}. Where do you want your subscription?", new[] {
                     new KeyValuePair<string, string>("Previous account", result.OriginUserId),
                     new KeyValuePair<string, string>("This account", result.NewUserId),
-                });
+                }).ConfigureAwait(false);
 
                 if (promptResult == result.NewUserId)
                 {

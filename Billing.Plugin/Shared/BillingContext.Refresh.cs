@@ -16,9 +16,9 @@
             if (user is null) throw new ArgumentNullException(nameof(user));
             if ((user?.Ticket).IsEmpty()) return;
 
-            await UIContext.AwaitConnection();
+            await UIContext.AwaitConnection().ConfigureAwait(false);
 
-            try { await DoRefresh(user); }
+            try { await DoRefresh(user).ConfigureAwait(false); }
             catch { /*Ignore*/ }
         }
 
@@ -29,7 +29,7 @@
         {
             if (user is null) throw new ArgumentNullException(nameof(user));
 
-            try { await DoRefresh(user); }
+            try { await DoRefresh(user).ConfigureAwait(false); }
             catch (Exception ex) { Log.For<Subscription>().Error(ex); }
         }
 
@@ -41,15 +41,15 @@
             try
             {
                 var current = await BaseApi.Post<Subscription>(
-                    url, @params, errorAction: OnError.Throw, showWaiting: false);
+                    url, @params, errorAction: OnError.Throw, showWaiting: false).ConfigureAwait(false);
 
                 if (HasChanged(Subscription, current) || SubscriptionFileStore.Exists(user) == false)
                 {
                     Subscription = current;
 
-                    await SubscriptionFileStore.Save(user);
+                    await SubscriptionFileStore.Save(user).ConfigureAwait(false);
 
-                    await SubscriptionRestored.Raise(current.ToEventArgs());
+                    await SubscriptionRestored.Raise(current.ToEventArgs()).ConfigureAwait(false);
                 }
 
                 IsLoaded = true;
@@ -57,7 +57,7 @@
             catch (Exception ex)
             {
                 Log.For(this).Error(ex, $"Failed to refresh the billing data. {ex.Message}");
-                if (retry) await DoRefresh(user, retry: false);
+                if (retry) await DoRefresh(user, retry: false).ConfigureAwait(false);
             }
         }
 

@@ -52,19 +52,19 @@
             var pricesUpdated = false;
 
 #if !MVVM && !UWP
-            await UIContext.AwaitConnection(10);
-            await Task.Delay(3.Seconds());
+            await UIContext.AwaitConnection(10).ConfigureAwait(false);
+            await Task.Delay(3.Seconds()).ConfigureAwait(false);
 
-            try { pricesUpdated = await new ProductsPriceUpdaterCommand().Execute(user); }
+            try { pricesUpdated = await new ProductsPriceUpdaterCommand().Execute(user).ConfigureAwait(false); }
             catch (System.Exception ex) { Log.For(typeof(BillingContext)).Error(ex); }
 #endif
 
-            if (pricesUpdated) await PriceUpdated.Raise();
+            if (pricesUpdated) await PriceUpdated.Raise().ConfigureAwait(false);
             else await PriceUpdateFailed.Raise(new PriceUpdateFailedEventArgs
             {
                 ProductIds = ProductProvider.GetProducts().Select(x => x.Id).ToArray(),
                 UpdatePrice = args => ProductProvider.UpdatePrice(args.ProductId, args.OriginalMicrosPrice, args.DiscountedMicrosPrice, args.CurrencyCode),
-            });
+            }).ConfigureAwait(false);
         }
     }
 }

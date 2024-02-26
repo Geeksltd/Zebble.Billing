@@ -23,15 +23,17 @@
 
                 BillingContext.ConfigureServices(UIRuntime.CurrentActivity);
 
-                var result = await Billing.IsEnvReady().AsAsync<IsEnvReadyResult>();
+                var result = await Billing.IsEnvReady()
+                    .AsAsync<IsEnvReadyResult>()
+                    .ConfigureAwait(false);
 
                 if (!result.Status.IsSuccess) return default;
 
-                return await DoExecute(user);
+                return await DoExecute(user).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                if (await UIContext.IsOnline())
+                if (await UIContext.IsOnline().ConfigureAwait(false))
                     Log.For(this).Error(ex);
                 throw;
             }

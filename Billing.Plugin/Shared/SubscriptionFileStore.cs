@@ -34,7 +34,7 @@
             if (user is null) throw new ArgumentNullException(nameof(user));
 
             var fileContents = Subscription is null ? null : JsonConvert.SerializeObject(Subscription);
-            await GetFile(user).WriteAllTextAsync(fileContents.OrEmpty());
+            await GetFile(user).WriteAllTextAsync(fileContents.OrEmpty()).ConfigureAwait(false);
             Context.IsLoaded = true;
         }
     }

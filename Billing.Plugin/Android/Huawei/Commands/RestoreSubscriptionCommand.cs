@@ -13,8 +13,8 @@
         {
             try
             {
-                var subscriptions = await GetPurchasesAsync(ProductType.Subscription);
-                var inAppPurchases = await GetPurchasesAsync(ProductType.InAppPurchase);
+                var subscriptions = await GetPurchasesAsync(ProductType.Subscription).ConfigureAwait(false);
+                var inAppPurchases = await GetPurchasesAsync(ProductType.InAppPurchase).ConfigureAwait(false);
 
                 var purchases = subscriptions
                     .Concat(inAppPurchases)
@@ -25,9 +25,7 @@
                 if (purchases.None()) return false;
 
                 foreach (var purchase in purchases)
-                {
-                    var (result, _) = await BillingContext.Current.ProcessPurchase(user, purchase);
-                }
+                    await BillingContext.Current.ProcessPurchase(user, purchase).ConfigureAwait(false);
 
                 return true;
             }
@@ -46,7 +44,8 @@
             };
 
             var purchases = await Billing.ObtainOwnedPurchases(request)
-                .AsAsync<OwnedPurchasesResult>();
+                .AsAsync<OwnedPurchasesResult>()
+                .ConfigureAwait(false);
 
             return purchases.InAppPurchaseDataList
                 .OrEmpty()
