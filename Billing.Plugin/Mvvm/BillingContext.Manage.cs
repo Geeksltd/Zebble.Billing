@@ -4,7 +4,6 @@
 
     partial class BillingContext
     {
-        public Task LaunchManageSubscriptions()
-            => Task.CompletedTask;
+        public Task LaunchManageSubscriptions() => Task.CompletedTask;
     }
 }
