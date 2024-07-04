@@ -3,7 +3,7 @@
     <AssemblyName>Zebble.Billing</AssemblyName>
     <RootNamespace>Zebble</RootNamespace>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
-    <Version>2.0.1.0</Version>
+    <Version>2.0.2.0</Version>
     <PackOnBuild>true</PackOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
     <DefineConstants>$(DefineConstants)</DefineConstants>
@@ -103,7 +103,7 @@
   <ItemGroup>
     <PackageReference Include="Zebble" Version="5.0.35" />
     <PackageReference Include="Zebble.WebApi" Version="5.0.0" />
-    <PackageReference Include="Plugin.InAppBilling" Version="7.1.2-beta" Condition=" $(DefineConstants.Contains('ANDROID'))==false OR $(DefineConstants.Contains('CAFEBAZAAR'))==false AND $(DefineConstants.Contains('HUAWEI'))==false " />
+    <PackageReference Include="Plugin.InAppBilling" Version="7.1.1-beta" Condition=" $(DefineConstants.Contains('ANDROID'))==false OR $(DefineConstants.Contains('CAFEBAZAAR'))==false AND $(DefineConstants.Contains('HUAWEI'))==false " />
   </ItemGroup>
   <Import Project="..\Billing.Shared\Billing.Shared.projitems" Label="Shared" />
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
