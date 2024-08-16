@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <AssemblyName>Zebble.Billing.Sample</AssemblyName>
     <RootNamespace>Zebble</RootNamespace>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
@@ -13,6 +13,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Olive.Mvc" Version="3.1.150" />
+    <ProjectReference Include="..\Billing.Server.AppStoreV2\Billing.Server.AppStoreV2.csproj" />
     <ProjectReference Include="..\Billing.Server.DynamoDb\Billing.Server.DynamoDb.csproj" />
     <ProjectReference Include="..\Billing.Server.Huawei\Billing.Server.Huawei.csproj" />
     <ProjectReference Include="..\Billing.Server.Voucher.DynamoDb\Billing.Server.Voucher.DynamoDb.csproj" />

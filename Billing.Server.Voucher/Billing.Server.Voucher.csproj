@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <AssemblyName>Zebble.Billing.Server.Voucher</AssemblyName>
     <RootNamespace>Zebble</RootNamespace>
     <PackageId>Zebble.Billing.Server.Voucher</PackageId>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
-    <Version>1.0.43.0</Version>
+    <Version>1.0.44.0</Version>
     <PackOnBuild>true</PackOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
     <DefineConstants>$(DefineConstants)</DefineConstants>
@@ -41,7 +41,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Billing.Server\Billing.Server.csproj" />
   </ItemGroup>
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Running)'=='local'">
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="update-local-nuget-cache $(TargetDir)" />
   </Target>
 </Project>

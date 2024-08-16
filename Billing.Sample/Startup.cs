@@ -24,7 +24,7 @@ namespace Zebble.Billing.Sample
                 else
                     builder.AddDynamoDb();
 
-                builder.AddAppStore();
+                builder.AddAppStoreV2();
                 builder.AddGooglePlay();
                 builder.AddCafeBazaar();
                 builder.AddHuawei();
@@ -58,7 +58,7 @@ namespace Zebble.Billing.Sample
                 else
                     builder.UseDynamoDb();
 
-                builder.UseAppStore();
+                builder.UseAppStoreV2();
                 builder.UseGooglePlay();
                 builder.UseHuawei();
 

@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <AssemblyName>Zebble.Billing.Server.DynamoDb</AssemblyName>
     <RootNamespace>Zebble</RootNamespace>
     <PackageId>Zebble.Billing.Server.DynamoDb</PackageId>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
-    <Version>1.0.40.0</Version>
+    <Version>1.0.41.0</Version>
     <PackOnBuild>true</PackOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
     <DefineConstants>$(DefineConstants)</DefineConstants>
@@ -37,11 +37,11 @@
     <None Remove=".gitignore" />
     <None Remove="icon.png" />
     <None Remove="README.md" />
-    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.301.3" />
-    <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.300" />
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.400.4" />
+    <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.301" />
     <ProjectReference Include="..\Billing.Server\Billing.Server.csproj" />
   </ItemGroup>
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Running)'=='local'">
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="update-local-nuget-cache $(TargetDir)" />
   </Target>
 </Project>
