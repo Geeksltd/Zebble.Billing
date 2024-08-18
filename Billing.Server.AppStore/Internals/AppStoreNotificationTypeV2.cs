@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
 [JsonConverter(typeof(JsonStringEnumMemberConverter))]
-enum AppStoreNotificationType
+enum AppStoreNotificationTypeV2
 {
     /// <summary>
     /// A notification type that indicates that the customer initiated a refund request for a consumable in-app purchase or auto-renewable subscription, and the App Store is requesting that you provide consumption data. For more information, see Send Consumption Information.

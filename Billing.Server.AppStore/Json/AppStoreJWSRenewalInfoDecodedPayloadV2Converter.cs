@@ -5,7 +5,7 @@ using System;
 
 namespace Zebble.Billing;
 
-class AppStoreJWSRenewalInfoDecodedPayloadConverter : JsonConverter<AppStoreJWSRenewalInfoDecodedPayload>
+class AppStoreJWSRenewalInfoDecodedPayloadV2Converter : JsonConverter<AppStoreJWSRenewalInfoDecodedPayloadV2>
 {
     internal static readonly JsonSerializerOptions JsonSerializerOptions = new()
     {
@@ -16,15 +16,15 @@ class AppStoreJWSRenewalInfoDecodedPayloadConverter : JsonConverter<AppStoreJWSR
 
     static readonly JwtBuilder JwtReader = JwtBuilder.Create().DoNotVerifySignature();
 
-    public override AppStoreJWSRenewalInfoDecodedPayload? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override AppStoreJWSRenewalInfoDecodedPayloadV2? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         var rawJws = reader.GetString();
         var payloadJson = JwtReader.Decode(rawJws);
-        var payload = JsonSerializer.Deserialize<AppStoreJWSRenewalInfoDecodedPayload>(payloadJson, JsonSerializerOptions);
+        var payload = JsonSerializer.Deserialize<AppStoreJWSRenewalInfoDecodedPayloadV2>(payloadJson, JsonSerializerOptions);
         return payload;
     }
 
-    public override void Write(Utf8JsonWriter writer, AppStoreJWSRenewalInfoDecodedPayload value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, AppStoreJWSRenewalInfoDecodedPayloadV2 value, JsonSerializerOptions options)
     {
         throw new NotImplementedException();
     }

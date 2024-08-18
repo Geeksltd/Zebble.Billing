@@ -39,7 +39,8 @@
             {
                 ProductId = productId,
                 SubscriptionId = subscriptionId,
-                PurchaseToken = purchaseToken
+                PurchaseToken = purchaseToken,
+                OriginalTransactionId = transactionId,
             });
 
             if (subscriptionInfo is null)

@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
 [JsonConverter(typeof(JsonStringEnumMemberConverter))]
-enum AppStoreNotificationSubtype
+enum AppStoreNotificationSubtypeV2
 {
     /// <summary>
     /// Applies to the PRICE_INCREASE notificationType. A notification with this subtype indicates that the customer consented to the subscription price increase if the price increase requires customer consent, or that the system notified them of a price increase if the price increase doesn't require customer consent.

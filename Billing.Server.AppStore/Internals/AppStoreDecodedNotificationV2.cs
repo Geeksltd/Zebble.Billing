@@ -2,19 +2,19 @@
 
 namespace Zebble.Billing;
 
-record AppStoreDecodedNotification(
-    AppStoreNotificationType NotificationType,
-    AppStoreNotificationSubtype Subtype,
+record AppStoreDecodedNotificationV2(
+    AppStoreNotificationTypeV2 NotificationType,
+    AppStoreNotificationSubtypeV2 Subtype,
     Guid NotificationUuid,
     Version Version,
-    AppStoreDecodedNotificationData Data)
+    AppStoreDecodedNotificationDataV2 Data)
 {
     /// <summary>
     /// Original notification json
     /// </summary>
     public string OriginalData { get; private set; }
 
-    public AppStoreDecodedNotification WithOriginalData(string originalData)
+    public AppStoreDecodedNotificationV2 WithOriginalData(string originalData)
     {
         OriginalData = originalData;
         return this;

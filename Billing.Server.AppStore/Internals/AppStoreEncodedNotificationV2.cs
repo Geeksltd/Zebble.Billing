@@ -4,7 +4,7 @@ using JWT.Builder;
 
 namespace Zebble.Billing;
 
-record AppStoreEncodedNotification([property: JsonPropertyName("signedPayload")] string SignedPayload)
+record AppStoreEncodedNotificationV2([property: JsonPropertyName("signedPayload")] string SignedPayload)
 {
     static readonly JsonSerializerOptions SerializerOptions = new()
     {
@@ -14,10 +14,10 @@ record AppStoreEncodedNotification([property: JsonPropertyName("signedPayload")]
 
     static readonly JwtBuilder JwtReader = JwtBuilder.Create().DoNotVerifySignature();
 
-    public AppStoreDecodedNotification Decode()
+    public AppStoreDecodedNotificationV2 Decode()
     {
         var rawPayload = JwtReader.Decode(SignedPayload);
-        var payload = JsonSerializer.Deserialize<AppStoreDecodedNotification>(rawPayload, SerializerOptions);
+        var payload = JsonSerializer.Deserialize<AppStoreDecodedNotificationV2>(rawPayload, SerializerOptions);
         return payload!;
     }
 }

@@ -1,6 +1,7 @@
 ﻿namespace Zebble.Billing
 {
     using System;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Text.Json;
@@ -11,6 +12,8 @@
     using Apple.Receipt.Verificator.Models;
     using Apple.Receipt.Verificator.Models.IAPVerification;
     using Apple.Receipt.Verificator.Services;
+    using AppStoreServerApi;
+    using AppStoreServerApi.Models;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Olive;
@@ -20,24 +23,39 @@
         readonly ILogger<AppStoreConnector> Logger;
         readonly IAppleReceiptVerificatorService Verificator;
         readonly IOptionsSnapshot<AppleReceiptVerificationSettings> Settings;
+        readonly AppStoreClient Client;
 
         public AppStoreConnector(
             ILogger<AppStoreConnector> logger,
             IAppleReceiptVerificatorService verificator,
-            IOptionsSnapshot<AppleReceiptVerificationSettings> settings
+            IOptionsSnapshot<AppleReceiptVerificationSettings> settings,
+            AppStoreClient client
         )
         {
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             Verificator = verificator ?? throw new ArgumentNullException(nameof(verificator));
             Settings = settings ?? throw new ArgumentNullException(nameof(settings));
+            Client = client ?? throw new ArgumentNullException(nameof(client));
         }
 
         public async Task<SubscriptionInfo> GetSubscriptionInfo(SubscriptionInfoArgs args)
         {
-            var result = await GetVerifiedResult(args.PurchaseToken);
-            if (result is null) return null;
+            try
+            {
+                var result = await GetVerifiedResultV2(args.OriginalTransactionId);
+                if (result.None()) return null;
 
-            return CreateSubscription(result.AppleVerificationResponse);
+                return CreateSubscriptionV2(result);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "Failed to fetch a transaction history. TransationId: {TransationId}", args.OriginalTransactionId);
+
+                var result = await GetVerifiedResult(args.PurchaseToken);
+                if (result is null) return null;
+
+                return CreateSubscription(result.AppleVerificationResponse);
+            }
         }
 
         SubscriptionInfo CreateSubscription(IAPVerificationResponse response)
@@ -215,6 +233,45 @@
 
             [JsonPropertyName("product_id")]
             public string ProductId { get; set; }
+        }
+
+        SubscriptionInfo CreateSubscriptionV2(JWSTransactionDecodedPayload[] transactions)
+        {
+            var transaction = transactions.OrderBy(x => x.PurchaseDate).LastOrDefault();
+            if (transaction is null)
+            {
+                Logger.LogWarning("The receipt contains no transaction info.");
+                return null;
+            }
+
+            return new SubscriptionInfo
+            {
+                ProductId = transaction.ProductId,
+                TransactionId = transaction.OriginalTransactionId,
+                SubscriptionDate = transaction.PurchaseDate,
+                ExpirationDate = transaction.ExpiresDate,
+                CancellationDate = transaction.RevocationDate,
+                AutoRenews = transaction.Type == InAppPurchaseProductType.AutoRenewableSubscription
+            };
+        }
+
+        async Task<JWSTransactionDecodedPayload[]> GetVerifiedResultV2(string originalTransactionId)
+        {
+            var result = new List<JWSTransactionDecodedPayload>();
+
+            string revision = null;
+
+            while (true)
+            {
+                var history = await Client.GetTransactionHistoryAsync(originalTransactionId, revision);
+
+                result.AddRange(history.SignedTransactions.Select(x => x.DecodedPayload));
+
+                if (history.HasMore == false) break;
+                revision = history.Revision;
+            }
+
+            return [.. result];
         }
     }
 }

@@ -6,16 +6,16 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Olive;
 
-class AppStoreHookInterceptor
+class AppStoreHookInterceptorV2
 {
-    readonly ILogger<AppStoreHookInterceptor> Logger;
+    readonly ILogger<AppStoreHookInterceptorV2> Logger;
     readonly AppStoreOptions Options;
     readonly ISubscriptionRepository Repository;
     readonly AppStoreConnector StoreConnector;
     readonly ISubscriptionChangeHandler SubscriptionChangeHandler;
 
-    public AppStoreHookInterceptor(
-        ILogger<AppStoreHookInterceptor> logger,
+    public AppStoreHookInterceptorV2(
+        ILogger<AppStoreHookInterceptorV2> logger,
         IOptionsSnapshot<AppStoreOptions> options,
         ISubscriptionRepository repository,
         AppStoreConnector storeConnector,
@@ -29,7 +29,7 @@ class AppStoreHookInterceptor
         SubscriptionChangeHandler = subscriptionChangeHandler ?? throw new ArgumentNullException(nameof(subscriptionChangeHandler));
     }
 
-    public async Task Intercept(AppStoreDecodedNotification notification)
+    public async Task Intercept(AppStoreDecodedNotificationV2 notification)
     {
         try
         {
@@ -71,7 +71,7 @@ class AppStoreHookInterceptor
         }
     }
 
-    void ValidateNotification(AppStoreDecodedNotification notification)
+    void ValidateNotification(AppStoreDecodedNotificationV2 notification)
     {
         if (Options.AllowEnvironmentMixing) return;
         if (notification.Data.Environment != Options.Environment) throw new Exception("Environment doesn't match.");

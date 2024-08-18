@@ -1,7 +1,6 @@
 ﻿namespace Zebble.Billing
 {
     using System;
-    using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
