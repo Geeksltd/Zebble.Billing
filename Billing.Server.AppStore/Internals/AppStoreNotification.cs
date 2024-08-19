@@ -76,6 +76,7 @@
 
         public SubscriptionInfoArgs ToArgs() => new()
         {
+            OriginalTransactionId = OriginalTransactionId,
             PurchaseToken = PurchaseToken
         };
     }
