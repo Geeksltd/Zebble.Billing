@@ -25,10 +25,13 @@
   </PropertyGroup>
   <PropertyGroup Condition=" $(Configuration.EndsWith('CafeBazaar'))==false AND $(Configuration.EndsWith('Huawei'))==false ">
     <TargetFrameworks>net8.0;net8.0-android;net8.0-ios</TargetFrameworks>
-    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">$(TargetFrameworks);uap10.0.18362</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
     <PackageId>Zebble.Billing</PackageId>
     <PackageProjectUrl>https://nuget.org/packages/Zebble.Billing/</PackageProjectUrl>
     <Title>Zebble.Billing</Title>
+  </PropertyGroup>
+  <PropertyGroup Condition=" $(TargetFramework.Contains('windows')) ">
+	<RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
   </PropertyGroup>
   <PropertyGroup Condition=" $(Configuration.EndsWith('CafeBazaar')) ">
     <TargetFrameworks>net8.0-android</TargetFrameworks>
@@ -52,15 +55,12 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition=" $(TargetFramework.StartsWith('uap10.0')) ">
-    <DefineConstants>$(DefineConstants);UWP</DefineConstants>
+  <PropertyGroup Condition=" $(TargetFramework.Contains('windows')) ">
+    <DefineConstants>$(DefineConstants);WINUI</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" $(TargetFramework.Contains('droid')) ">
     <DefineConstants>$(DefineConstants);ANDROID</DefineConstants>
     <AndroidUseIntermediateDesignerFile>false</AndroidUseIntermediateDesignerFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" $(TargetFramework.Contains('ios')) ">
-    <DefineConstants>$(DefineConstants);IOS</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" $(TargetFramework.Contains('ios')) ">
     <DefineConstants>$(DefineConstants);IOS</DefineConstants>
@@ -74,8 +74,8 @@
   <ItemGroup Condition=" $(DefineConstants.Contains('HUAWEI'))==false ">
     <Compile Include="Shared.Others\**\*.cs" />
   </ItemGroup>
-  <ItemGroup Condition=" $(DefineConstants.Contains('UWP')) ">
-    <Compile Include="UWP\**\*.cs" />
+  <ItemGroup Condition=" $(DefineConstants.Contains('WINUI')) ">
+    <Compile Include="WinUI\**\*.cs" />
   </ItemGroup>
   <ItemGroup Condition=" $(DefineConstants.Contains('ANDROID')) AND $(DefineConstants.Contains('CAFEBAZAAR'))==false AND $(DefineConstants.Contains('HUAWEI'))==false ">
     <Compile Include="Android\GooglePlay\**\*.cs" />
