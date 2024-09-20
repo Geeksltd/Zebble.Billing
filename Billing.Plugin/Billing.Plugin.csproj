@@ -101,8 +101,8 @@
     <None Remove="Zebble-LicenseAgreement.txt" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Zebble" Version="5.0.63" />
-    <PackageReference Include="Zebble.WebApi" Version="5.0.1" />
+    <PackageReference Include="Zebble" Version="5.1.0" />
+    <PackageReference Include="Zebble.WebApi" Version="5.1.0" />
     <PackageReference Include="Plugin.InAppBilling" Version="7.1.3" Condition=" $(DefineConstants.Contains('ANDROID'))==false OR $(DefineConstants.Contains('CAFEBAZAAR'))==false AND $(DefineConstants.Contains('HUAWEI'))==false " />
   </ItemGroup>
   <Import Project="..\Billing.Shared\Billing.Shared.projitems" Label="Shared" />
