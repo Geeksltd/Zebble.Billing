@@ -3,7 +3,7 @@
     <AssemblyName>Zebble.Billing</AssemblyName>
     <RootNamespace>Zebble</RootNamespace>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
-    <Version>2.1.0.0</Version>
+    <Version>2.1.1.0</Version>
     <PackOnBuild>true</PackOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
     <DefineConstants>$(DefineConstants)</DefineConstants>
@@ -25,7 +25,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" $(Configuration.EndsWith('CafeBazaar'))==false AND $(Configuration.EndsWith('Huawei'))==false ">
     <TargetFrameworks>net8.0;net8.0-android;net8.0-ios</TargetFrameworks>
-    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">$(TargetFrameworks);net8.0-windows10.0.19041</TargetFrameworks>
     <PackageId>Zebble.Billing</PackageId>
     <PackageProjectUrl>https://nuget.org/packages/Zebble.Billing/</PackageProjectUrl>
     <Title>Zebble.Billing</Title>
@@ -101,12 +101,12 @@
     <None Remove="Zebble-LicenseAgreement.txt" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Zebble" Version="5.1.0" />
-    <PackageReference Include="Zebble.WebApi" Version="5.1.0" />
+    <PackageReference Include="Zebble" Version="5.1.2" />
+    <PackageReference Include="Zebble.WebApi" Version="5.1.1" />
     <PackageReference Include="Plugin.InAppBilling" Version="7.1.3" Condition=" $(DefineConstants.Contains('ANDROID'))==false OR $(DefineConstants.Contains('CAFEBAZAAR'))==false AND $(DefineConstants.Contains('HUAWEI'))==false " />
   </ItemGroup>
   <Import Project="..\Billing.Shared\Billing.Shared.projitems" Label="Shared" />
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Running)'=='local'">
     <Exec Command="update-local-nuget-cache" />
   </Target>
 </Project>
