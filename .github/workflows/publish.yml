@@ -1,9 +1,9 @@
-name: Publishes a new package of Zebble.Billing.Plugin to the nuget.org
+name: Publishes a new package of Zebble.Billing to the nuget.org
 on:
   push:
     branches: [ master ]
 jobs:
- build:
+  build_client:
     strategy:
       matrix:
         configuration: [ Release ]
@@ -20,7 +20,7 @@ jobs:
 
     - name: Install Zebble's CLI tools
       run: dotnet tool install --global zebble-build
-      
+
     - name: Publish a new Zebble.Billing.Plugin package
       run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
       working-directory: Billing.Plugin
@@ -33,42 +33,57 @@ jobs:
       run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish --configuration ReleaseHuawei
       working-directory: Billing.Plugin
 
+  build_server:
+    strategy:
+      matrix:
+        configuration: [ Release ]
+    runs-on: windows-2022
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.x'
+
+    - name: Install Zebble's CLI tools
+      run: dotnet tool install --global zebble-build
+
     - name: Publish a new Zebble.Billing.Server package
       run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
-      working-directory: Zebble.Billing.Server
+      working-directory: Billing.Server
 
     - name: Publish a new Zebble.Billing.Server.AppStore package
       run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
-      working-directory: Zebble.Billing.Server.AppStore
+      working-directory: Billing.Server.AppStore
 
     - name: Publish a new Zebble.Billing.Server.GooglePlay package
       run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
-      working-directory: Zebble.Billing.Server.GooglePlay
+      working-directory: Billing.Server.GooglePlay
 
     - name: Publish a new Zebble.Billing.Server.CafeBazaar package
       run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
-      working-directory: Zebble.Billing.Server.CafeBazaar
+      working-directory: Billing.Server.CafeBazaar
 
     - name: Publish a new Zebble.Billing.Server.Huawei package
       run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
-      working-directory: Zebble.Billing.Server.Huawei
+      working-directory: Billing.Server.Huawei
 
     - name: Publish a new Zebble.Billing.Server.DynamoDb package
       run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
-      working-directory: Zebble.Billing.Server.DynamoDb
+      working-directory: Billing.Server.DynamoDb
 
     - name: Publish a new Zebble.Billing.Server.EntityFramework package
       run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
-      working-directory: Zebble.Billing.Server.EntityFramework
+      working-directory: Billing.Server.EntityFramework
 
     - name: Publish a new Zebble.Billing.Server.Voucher package
       run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
-      working-directory: Zebble.Billing.Server.Voucher
+      working-directory: Billing.Server.Voucher
 
     - name: Publish a new Zebble.Billing.Server.Voucher.DynamoDb package
       run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
-      working-directory: Zebble.Billing.Server.Voucher.DynamoDb
+      working-directory: Billing.Server.Voucher.DynamoDb
 
     - name: Publish a new Zebble.Billing.Server.Voucher.EntityFramework package
       run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
-      working-directory: Zebble.Billing.Server.Voucher.EntityFramework
+      working-directory: Billing.Server.Voucher.EntityFramework

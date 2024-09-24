@@ -41,7 +41,7 @@
     <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.301" />
     <ProjectReference Include="..\Billing.Server\Billing.Server.csproj" />
   </ItemGroup>
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Running)'=='local'">
     <Exec Command="update-local-nuget-cache $(TargetDir)" />
   </Target>
 </Project>

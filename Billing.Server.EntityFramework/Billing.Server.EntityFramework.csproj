@@ -40,7 +40,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.7" />
     <ProjectReference Include="..\Billing.Server\Billing.Server.csproj" />
   </ItemGroup>
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Running)'=='local'">
     <Exec Command="update-local-nuget-cache $(TargetDir)" />
   </Target>
 </Project>
