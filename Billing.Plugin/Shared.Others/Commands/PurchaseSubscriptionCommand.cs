@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using Plugin.InAppBilling;
     using Olive;
+    using System.Text;
 
     class PurchaseSubscriptionCommand : StoreCommandBase<(PurchaseResult, string)>
     {
@@ -21,7 +22,8 @@
                 var purchase = await Billing.PurchaseAsync(Product.Id, Product.GetItemType(), user.UserId).ConfigureAwait(false);
                 if (purchase is null) return (PurchaseResult.UserCancelled, null);
 #else
-                var purchase = await Billing.PurchaseAsync(Product.Id, Product.GetItemType()).ConfigureAwait(false);
+                var obfuscatedId = user.UserId.ToBytes(Encoding.UTF8).ToBase64String();
+                var purchase = await Billing.PurchaseAsync(Product.Id, Product.GetItemType(), obfuscatedId, obfuscatedId).ConfigureAwait(false);
 #endif
                 var (result, originUserId) = await context.ProcessPurchase(user, purchase).ConfigureAwait(false);
                 if (result != PurchaseResult.Succeeded) return (result, null);

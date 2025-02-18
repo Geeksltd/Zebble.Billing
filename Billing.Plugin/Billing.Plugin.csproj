@@ -3,7 +3,7 @@
     <AssemblyName>Zebble.Billing</AssemblyName>
     <RootNamespace>Zebble</RootNamespace>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
-    <Version>2.1.3.0</Version>
+    <Version>2.1.4.0</Version>
     <PackOnBuild>true</PackOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
     <DefineConstants>$(DefineConstants)</DefineConstants>
