@@ -24,8 +24,8 @@
     <Configurations>Debug;Release;DebugCafeBazaar;ReleaseCafeBazaar;DebugHuawei;ReleaseHuawei</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" $(Configuration.EndsWith('CafeBazaar'))==false AND $(Configuration.EndsWith('Huawei'))==false ">
-    <TargetFrameworks>net8.0;net8.0-android;net8.0-ios</TargetFrameworks>
-    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">$(TargetFrameworks);net8.0-windows10.0.19041</TargetFrameworks>
+    <TargetFrameworks>net9.0;net9.0-android;net9.0-ios</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">$(TargetFrameworks);net9.0-windows10.0.26100</TargetFrameworks>
     <PackageId>Zebble.Billing</PackageId>
     <PackageProjectUrl>https://nuget.org/packages/Zebble.Billing/</PackageProjectUrl>
     <Title>Zebble.Billing</Title>
@@ -34,14 +34,14 @@
 	<RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
   </PropertyGroup>
   <PropertyGroup Condition=" $(Configuration.EndsWith('CafeBazaar')) ">
-    <TargetFrameworks>net8.0-android</TargetFrameworks>
+    <TargetFrameworks>net9.0-android</TargetFrameworks>
     <DefineConstants>$(DefineConstants);CAFEBAZAAR</DefineConstants>
     <PackageId>Zebble.Billing.CafeBazaar</PackageId>
     <PackageProjectUrl>https://nuget.org/packages/Zebble.Billing.CafeBazaar/</PackageProjectUrl>
     <Title>Zebble.Billing.CafeBazaar</Title>
   </PropertyGroup>
   <PropertyGroup Condition=" $(Configuration.EndsWith('Huawei')) ">
-    <TargetFrameworks>net8.0-android</TargetFrameworks>
+    <TargetFrameworks>net9.0-android</TargetFrameworks>
     <DefineConstants>$(DefineConstants);HUAWEI</DefineConstants>
     <PackageId>Zebble.Billing.Huawei</PackageId>
     <PackageProjectUrl>https://nuget.org/packages/Zebble.Billing.Huawei/</PackageProjectUrl>
@@ -55,8 +55,8 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition=" $(TargetFramework.Contains('windows')) ">
-    <DefineConstants>$(DefineConstants);WINUI</DefineConstants>
+  <PropertyGroup Condition=" $(TargetFramework.StartsWith('net9.0-windows')) ">
+    <DefineConstants>$(DefineConstants);UWP</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" $(TargetFramework.Contains('droid')) ">
     <DefineConstants>$(DefineConstants);ANDROID</DefineConstants>
@@ -65,7 +65,10 @@
   <PropertyGroup Condition=" $(TargetFramework.Contains('ios')) ">
     <DefineConstants>$(DefineConstants);IOS</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition=" $(TargetFramework.Equals('net8.0')) ">
+  <PropertyGroup Condition=" $(TargetFramework.Contains('ios')) ">
+    <DefineConstants>$(DefineConstants);IOS</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" $(TargetFramework.Equals('net9.0')) ">
     <DefineConstants>$(DefineConstants);MVVM</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
@@ -74,8 +77,8 @@
   <ItemGroup Condition=" $(DefineConstants.Contains('HUAWEI'))==false ">
     <Compile Include="Shared.Others\**\*.cs" />
   </ItemGroup>
-  <ItemGroup Condition=" $(DefineConstants.Contains('WINUI')) ">
-    <Compile Include="WinUI\**\*.cs" />
+  <ItemGroup Condition=" $(DefineConstants.Contains('UWP')) ">
+    <Compile Include="UWP\**\*.cs" />
   </ItemGroup>
   <ItemGroup Condition=" $(DefineConstants.Contains('ANDROID')) AND $(DefineConstants.Contains('CAFEBAZAAR'))==false AND $(DefineConstants.Contains('HUAWEI'))==false ">
     <Compile Include="Android\GooglePlay\**\*.cs" />
@@ -101,8 +104,8 @@
     <None Remove="Zebble-LicenseAgreement.txt" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Zebble" Version="5.1.2" />
-    <PackageReference Include="Zebble.WebApi" Version="5.1.2" />
+    <PackageReference Include="Zebble" Version="5.1.7" />
+    <PackageReference Include="Zebble.WebApi" Version="5.1.3" />
     <PackageReference Include="Plugin.InAppBilling" Version="7.1.3" Condition=" $(DefineConstants.Contains('ANDROID'))==false OR $(DefineConstants.Contains('CAFEBAZAAR'))==false AND $(DefineConstants.Contains('HUAWEI'))==false " />
   </ItemGroup>
   <Import Project="..\Billing.Shared\Billing.Shared.projitems" Label="Shared" />
