@@ -5,11 +5,10 @@ namespace Zebble.Billing.Sample
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
-    using Microsoft.Extensions.Logging;
 
     public class Startup : Olive.Mvc.Startup
     {
-        public Startup(IWebHostEnvironment env, IConfiguration config, ILoggerFactory loggerFactory) : base(env, config, loggerFactory) { }
+        public Startup(IWebHostEnvironment env, IConfiguration config) : base(env, config) { }
 
         public override void ConfigureServices(IServiceCollection services)
         {

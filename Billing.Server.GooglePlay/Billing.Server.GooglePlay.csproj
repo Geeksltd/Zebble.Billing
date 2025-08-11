@@ -5,7 +5,7 @@
     <RootNamespace>Zebble</RootNamespace>
     <PackageId>Zebble.Billing.Server.GooglePlay</PackageId>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
-    <Version>1.0.63.0</Version>
+    <Version>1.0.65.0</Version>
     <PackOnBuild>true</PackOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
     <DefineConstants>$(DefineConstants)</DefineConstants>
@@ -37,8 +37,8 @@
     <None Remove=".gitignore" />
     <None Remove="icon.png" />
     <None Remove="README.md" />
-    <PackageReference Include="Google.Apis.AndroidPublisher.v3" Version="1.68.0.3504" />
-    <PackageReference Include="Google.Cloud.PubSub.V1" Version="3.16.0" />
+    <PackageReference Include="Google.Apis.AndroidPublisher.v3" Version="1.70.0.3857" />
+    <PackageReference Include="Google.Cloud.PubSub.V1" Version="3.27.0" />
     <ProjectReference Include="..\Billing.Server\Billing.Server.csproj" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Running)'=='local'">
