@@ -12,7 +12,7 @@
     <DisableExtraReferences>true</DisableExtraReferences>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Olive.Mvc" Version="8.0.0" />
+    <PackageReference Include="Olive.Mvc" Version="8.1.1" />
     <ProjectReference Include="..\Billing.Server.DynamoDb\Billing.Server.DynamoDb.csproj" />
     <ProjectReference Include="..\Billing.Server.Huawei\Billing.Server.Huawei.csproj" />
     <ProjectReference Include="..\Billing.Server.Voucher.DynamoDb\Billing.Server.Voucher.DynamoDb.csproj" />

@@ -1,7 +1,6 @@
 ﻿namespace Zebble.Billing
 {
     using System;
-    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Text.Json;
@@ -23,19 +22,19 @@
         readonly ILogger<AppStoreConnector> Logger;
         readonly IAppleReceiptVerificatorService Verificator;
         readonly IOptionsSnapshot<AppleReceiptVerificationSettings> Settings;
-        readonly AppStoreClient Client;
+        readonly AppStoreOptions Options;
 
         public AppStoreConnector(
             ILogger<AppStoreConnector> logger,
             IAppleReceiptVerificatorService verificator,
             IOptionsSnapshot<AppleReceiptVerificationSettings> settings,
-            AppStoreClient client
+            IOptions<AppStoreOptions> options
         )
         {
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             Verificator = verificator ?? throw new ArgumentNullException(nameof(verificator));
             Settings = settings ?? throw new ArgumentNullException(nameof(settings));
-            Client = client ?? throw new ArgumentNullException(nameof(client));
+            Options = options?.Value ?? throw new ArgumentNullException(nameof(options));
         }
 
         public async Task<SubscriptionInfo> GetSubscriptionInfo(SubscriptionInfoArgs args)
@@ -43,7 +42,7 @@
             try
             {
                 var result = await GetVerifiedResultV2(args.OriginalTransactionId);
-                if (result.None()) return null;
+                if (result is null) return null;
 
                 return CreateSubscriptionV2(result);
             }
@@ -235,43 +234,27 @@
             public string ProductId { get; set; }
         }
 
-        SubscriptionInfo CreateSubscriptionV2(JWSTransactionDecodedPayload[] transactions)
+        static SubscriptionInfo CreateSubscriptionV2(JWSTransactionDecodedPayload transaction) => new()
         {
-            var transaction = transactions.OrderBy(x => x.PurchaseDate).LastOrDefault();
-            if (transaction is null)
-            {
-                Logger.LogWarning("The receipt contains no transaction info.");
-                return null;
-            }
+            ProductId = transaction.ProductId,
+            TransactionId = transaction.OriginalTransactionId,
+            SubscriptionDate = transaction.PurchaseDate,
+            ExpirationDate = transaction.ExpiresDate,
+            CancellationDate = transaction.RevocationDate,
+            AutoRenews = transaction.Type == InAppPurchaseProductType.AutoRenewableSubscription
+        };
 
-            return new SubscriptionInfo
-            {
-                ProductId = transaction.ProductId,
-                TransactionId = transaction.OriginalTransactionId,
-                SubscriptionDate = transaction.PurchaseDate,
-                ExpirationDate = transaction.ExpiresDate,
-                CancellationDate = transaction.RevocationDate,
-                AutoRenews = transaction.Type == InAppPurchaseProductType.AutoRenewableSubscription
-            };
-        }
-
-        async Task<JWSTransactionDecodedPayload[]> GetVerifiedResultV2(string originalTransactionId)
+        async Task<JWSTransactionDecodedPayload?> GetVerifiedResultV2(string originalTransactionId)
         {
-            var result = new List<JWSTransactionDecodedPayload>();
+            try { return await Fetch(AppleEnvironment.Production, originalTransactionId); }
+            catch { return await Fetch(AppleEnvironment.Sandbox, originalTransactionId); }
 
-            string revision = null;
-
-            while (true)
+            async Task<JWSTransactionDecodedPayload?> Fetch(AppleEnvironment environment, string originalTransactionId)
             {
-                var history = await Client.GetTransactionHistoryAsync(originalTransactionId, revision);
+                var client = new AppStoreClient(environment, Options.PrivateKey, Options.KeyId, Options.IssuerId, Options.PackageName);
 
-                result.AddRange(history.SignedTransactions.Select(x => x.DecodedPayload));
-
-                if (history.HasMore == false) break;
-                revision = history.Revision;
+                return await client.GetTransactionInfoAsync(originalTransactionId).Get(x => x.SignedTransactionInfo.DecodedPayload);
             }
-
-            return [.. result];
         }
     }
 }

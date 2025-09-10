@@ -26,20 +26,6 @@
                             .Configure<IOptions<AppStoreOptions>>((settings, options) => options.Value.Apply(settings));
             builder.Services.RegisterAppleReceiptVerificator();
 
-            // V2
-            builder.Services.AddScoped(sp =>
-            {
-                var options = sp.GetRequiredService<IOptions<AppStoreOptions>>().Value;
-
-                return new AppStoreClient(
-                    options.Environment == AppStoreEnvironment.Production ? AppleEnvironment.Production : AppleEnvironment.Sandbox,
-                    options.PrivateKey,
-                    options.KeyId,
-                    options.IssuerId,
-                    options.PackageName
-                );
-            });
-
             builder.Services.AddStoreConnector<AppStoreConnector>("AppStore");
             builder.Services.AddScoped<AppStoreHookInterceptor>();
             builder.Services.AddScoped<AppStoreHookInterceptorV2>();

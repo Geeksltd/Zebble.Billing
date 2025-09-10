@@ -24,14 +24,17 @@ jobs:
     - name: Publish a new Zebble.Billing.Plugin package
       run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
       working-directory: Billing.Plugin
+      continue-on-error: true
 
     - name: Publish a new Zebble.Billing.Plugin.CafeBazaar package
       run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish --configuration ReleaseCafeBazaar
       working-directory: Billing.Plugin
+      continue-on-error: true
 
     - name: Publish a new Zebble.Billing.Plugin.Huawei package
       run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish --configuration ReleaseHuawei
       working-directory: Billing.Plugin
+      continue-on-error: true
 
   build_server:
     strategy:
@@ -51,39 +54,49 @@ jobs:
     - name: Publish a new Zebble.Billing.Server package
       run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
       working-directory: Billing.Server
+      continue-on-error: true
 
     - name: Publish a new Zebble.Billing.Server.AppStore package
       run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
       working-directory: Billing.Server.AppStore
+      continue-on-error: true
 
     - name: Publish a new Zebble.Billing.Server.GooglePlay package
       run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
       working-directory: Billing.Server.GooglePlay
+      continue-on-error: true
 
     - name: Publish a new Zebble.Billing.Server.CafeBazaar package
       run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
       working-directory: Billing.Server.CafeBazaar
+      continue-on-error: true
 
     - name: Publish a new Zebble.Billing.Server.Huawei package
       run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
       working-directory: Billing.Server.Huawei
+      continue-on-error: true
 
     - name: Publish a new Zebble.Billing.Server.DynamoDb package
       run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
       working-directory: Billing.Server.DynamoDb
+      continue-on-error: true
 
     - name: Publish a new Zebble.Billing.Server.EntityFramework package
       run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
       working-directory: Billing.Server.EntityFramework
+      continue-on-error: true
 
     - name: Publish a new Zebble.Billing.Server.Voucher package
       run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
       working-directory: Billing.Server.Voucher
+      continue-on-error: true
 
     - name: Publish a new Zebble.Billing.Server.Voucher.DynamoDb package
       run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
       working-directory: Billing.Server.Voucher.DynamoDb
+      continue-on-error: true
 
     - name: Publish a new Zebble.Billing.Server.Voucher.EntityFramework package
       run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
       working-directory: Billing.Server.Voucher.EntityFramework
+      continue-on-error: true
