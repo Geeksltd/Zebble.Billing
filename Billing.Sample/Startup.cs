@@ -2,13 +2,12 @@ namespace Zebble.Billing.Sample
 {
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
-    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
 
     public class Startup : Olive.Mvc.Startup
     {
-        public Startup(IWebHostEnvironment env, IConfiguration config) : base(env, config) { }
+        public Startup(IWebHostEnvironment env) : base(env) { }
 
         public override void ConfigureServices(IServiceCollection services)
         {
