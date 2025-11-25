@@ -47,16 +47,16 @@
             {
                 Logger.LogWarning($"No subscription info found for token '{purchaseToken}'.");
                 Logger.LogWarning($"Additional params {{ userId: {userId}, platform: {platform}, productId: {productId} }}");
-                return PurchaseAttemptResult.Failed;
+                return PurchaseAttemptResult.Failed(new SubscriptionInfo { ProductId = productId });
             }
 
             // GooglePlay doesn't return expired purchase details, so we've to ensure we have the transaction id.
             subscriptionInfo.TransactionId = subscriptionInfo.TransactionId.Or(transactionId);
 
             if (subscriptionInfo.TransactionId.IsEmpty())
-                return PurchaseAttemptResult.Failed;
+                return PurchaseAttemptResult.Failed(subscriptionInfo);
 
-            var (isMismatched, originUserId) = await IsSubscriptionMismatched(userId, productId, subscriptionInfo.TransactionId);
+            var (isMismatched, originUserId) = await IsSubscriptionMismatched(userId, subscriptionInfo.TransactionId);
             if (isMismatched)
             {
                 Logger.LogWarning($"A mismatched subscription info found for token '{purchaseToken}'.");
@@ -65,9 +65,9 @@
                 switch (Options.UserMismatchResolvingStrategy)
                 {
                     case UserMismatchResolvingStrategy.Block:
-                        return PurchaseAttemptResult.UserMismatched(originUserId);
+                        return PurchaseAttemptResult.UserMismatched(subscriptionInfo, originUserId);
                     case UserMismatchResolvingStrategy.Replace:
-                        if (!replaceConfirmed) return PurchaseAttemptResult.UserMismatched(originUserId, userId);
+                        if (!replaceConfirmed) return PurchaseAttemptResult.UserMismatched(subscriptionInfo, originUserId, userId);
                         await TransferOwnedSubscription(userId, subscriptionInfo.TransactionId);
                         break;
                     default:
@@ -108,7 +108,7 @@
 
             await SubscriptionChangeHandler.Handle(subscription);
 
-            return PurchaseAttemptResult.Succeeded(originUserId);
+            return PurchaseAttemptResult.Succeeded(subscriptionInfo, originUserId);
         }
 
         public virtual async Task<Subscription> GetSubscriptionStatus(string userId)
@@ -127,7 +127,7 @@
             return subscription;
         }
 
-        protected virtual async Task<(bool, string)> IsSubscriptionMismatched(string userId, string productId, string transactionId)
+        protected virtual async Task<(bool, string)> IsSubscriptionMismatched(string userId, string transactionId)
         {
             if (userId.IsEmpty()) return (false, null);
             if (transactionId.IsEmpty()) return (false, null);
@@ -135,15 +135,16 @@
             var subscription = await Repository.GetWithTransactionId(transactionId);
             if (subscription is null) return (false, null);
 
-            if (subscription.UserId == userId) return (false, null);
-            if (subscription.ProductId == productId) return (false, null);
-
             var originUserId = subscription.UserId;
             if (originUserId.IsEmpty()) return (false, null);
 
-            Logger.LogWarning($"Transaction #{transactionId} is associated to {originUserId} and can't be used for {userId}.");
+            if (subscription.UserId != userId)
+            {
+                Logger.LogWarning($"Transaction #{transactionId} is associated to {originUserId} and can't be used for {userId}.");
+                return (true, originUserId);
+            }
 
-            return (true, originUserId);
+            return (false, null);
         }
 
         protected virtual async Task TransferOwnedSubscription(string userId, string transactionId)

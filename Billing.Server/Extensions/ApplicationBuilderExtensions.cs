@@ -17,6 +17,7 @@
             var routes = new RouteBuilder(app);
 
             routes.MapMiddlewarePost(options.Value.PurchaseAttemptPath, builder => builder.UseMiddleware<AppPurchaseAttemptMiddleware>());
+            routes.MapMiddlewarePost(options.Value.PurchaseAttemptsPath, builder => builder.UseMiddleware<AppPurchaseAttemptsMiddleware>());
             routes.MapMiddlewarePost(options.Value.SubscriptionStatusPath, builder => builder.UseMiddleware<AppSubscriptionStatusMiddleware>());
 
             app.UseRouter(routes.Build());

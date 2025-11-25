@@ -1,26 +1,37 @@
-﻿namespace Zebble.Billing
+﻿namespace Zebble.Billing;
+
+public partial record PurchaseAttemptResult
 {
-    public partial class PurchaseAttemptResult
+    internal static PurchaseAttemptResult Failed(SubscriptionInfo subscription)
     {
-        PurchaseAttemptResult(PurchaseAttemptStatus status) => Status = status;
+        return new(
+            Status: PurchaseAttemptStatus.Failed,
+            ProductId: subscription.ProductId,
+            SubscriptionDate: subscription.SubscriptionDate?.ToString("o"),
+            ExpirationDate: subscription.ExpirationDate?.ToString("o")
+        );
+    }
 
-        internal static PurchaseAttemptResult Failed = new(PurchaseAttemptStatus.Failed);
+    internal static PurchaseAttemptResult UserMismatched(SubscriptionInfo subscription, string originUserId, string newUserId = null)
+    {
+        return new(
+            Status: PurchaseAttemptStatus.UserMismatched,
+            ProductId: subscription.ProductId,
+            SubscriptionDate: subscription.SubscriptionDate?.ToString("o"),
+            ExpirationDate: subscription.ExpirationDate?.ToString("o"),
+            OriginUserId: originUserId,
+            NewUserId: newUserId
+        );
+    }
 
-        internal static PurchaseAttemptResult UserMismatched(string originUserId, string newUserId = null)
-        {
-            return new(PurchaseAttemptStatus.UserMismatched)
-            {
-                OriginUserId = originUserId,
-                NewUserId = newUserId,
-            };
-        }
-
-        internal static PurchaseAttemptResult Succeeded(string originUserId = null)
-        {
-            return new(PurchaseAttemptStatus.Succeeded)
-            {
-                OriginUserId = originUserId,
-            };
-        }
+    internal static PurchaseAttemptResult Succeeded(SubscriptionInfo subscription, string originUserId = null)
+    {
+        return new(
+            Status: PurchaseAttemptStatus.Succeeded,
+            ProductId: subscription.ProductId,
+            SubscriptionDate: subscription.SubscriptionDate?.ToString("o"),
+            ExpirationDate: subscription.ExpirationDate?.ToString("o"),
+            OriginUserId: originUserId
+        );
     }
 }

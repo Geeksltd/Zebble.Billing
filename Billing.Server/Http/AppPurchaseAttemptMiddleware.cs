@@ -16,6 +16,7 @@
 
             if (await ticketValidator.IsValid(model.UserId, model.Ticket) == false)
             {
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 await context.Response.WriteAsync("Request is invalid.");
                 return;
             }
@@ -30,14 +31,14 @@
                 model.ReplaceConfirmed
             );
 
-            await context.Response.WriteAsync(result.ToJson());
+            await context.Response.WriteAsJsonAsync(result);
         }
     }
 
     class AppPurchaseAttemptModel
     {
-        public string Ticket { get; set; }
         public string UserId { get; set; }
+        public string Ticket { get; set; }
 
         public string Platform { get; set; }
 

@@ -1,9 +1,7 @@
-﻿namespace Zebble.Billing
-{
-    public partial class PurchaseAttemptResult
-    {
-        public PurchaseAttemptStatus Status { get; set; }
-        public string OriginUserId { get; set; }
-        public string NewUserId { get; set; }
-    }
-}
+﻿namespace Zebble.Billing;
+
+public partial record PurchaseAttemptResult(
+    PurchaseAttemptStatus Status,
+    string ProductId = null, string SubscriptionDate = null, string ExpirationDate = null,
+    string OriginUserId = null, string NewUserId = null
+);
