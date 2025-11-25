@@ -237,7 +237,7 @@
         static SubscriptionInfo CreateSubscriptionV2(JWSTransactionDecodedPayload transaction) => new()
         {
             ProductId = transaction.ProductId,
-            TransactionId = transaction.OriginalTransactionId,
+            TransactionId = transaction.TransactionId,
             SubscriptionDate = transaction.PurchaseDate,
             ExpirationDate = transaction.ExpiresDate,
             CancellationDate = transaction.RevocationDate,
