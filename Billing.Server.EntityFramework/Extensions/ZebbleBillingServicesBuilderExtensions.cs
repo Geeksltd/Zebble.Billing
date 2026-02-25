@@ -9,11 +9,7 @@
         public static ZebbleBillingServicesBuilder AddEntityFramework(this ZebbleBillingServicesBuilder builder, string configKey = "ZebbleBilling:EntityFramework")
         {
             builder.Services.AddOptions<EntityFrameworkOptions>()
-                            .Configure<IConfiguration>((opts, config) =>
-                            {
-                                config.GetSection(configKey)?.Bind(opts);
-                                config.GetSection(ConfigurationPath.KeyDelimiter + configKey)?.Bind(opts);
-                            })
+                            .Configure<IConfiguration>((opts, config) => config.GetSection(configKey)?.Bind(opts))
                             .Validate(opts => opts.ConnectionString.HasValue(), $"{nameof(EntityFrameworkOptions.ConnectionString)} is empty.");
 
             builder.Services.AddDbContext<SubscriptionDbContext>();

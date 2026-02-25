@@ -14,11 +14,7 @@
         )
         {
             builder.Services.AddOptions<VoucherOptions>()
-                            .Configure<IConfiguration>((opts, config) =>
-                            {
-                                config.GetSection(configKey)?.Bind(opts);
-                                config.GetSection(ConfigurationPath.KeyDelimiter + configKey)?.Bind(opts);
-                            })
+                            .Configure<IConfiguration>((opts, config) => config.GetSection(configKey)?.Bind(opts))
                             .Validate(opts => opts.VoucherApplyPath.HasValue(), $"{nameof(VoucherOptions.VoucherApplyPath)} is empty.");
 
             builder.Services.AddStoreConnector<VoucherConnector>("Voucher");
