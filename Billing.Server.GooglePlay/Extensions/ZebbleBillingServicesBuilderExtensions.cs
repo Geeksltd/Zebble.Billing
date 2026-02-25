@@ -16,7 +16,11 @@
         public static ZebbleBillingServicesBuilder AddGooglePlay(this ZebbleBillingServicesBuilder builder, string configKey = "ZebbleBilling:GooglePlay")
         {
             builder.Services.AddOptions<GooglePlayOptions>()
-                            .Configure<IConfiguration>((opts, config) => config.GetSection(configKey)?.Bind(opts))
+                            .Configure<IConfiguration>((opts, config) =>
+                            {
+                                config.GetSection(configKey)?.Bind(opts);
+                                config.GetSection(ConfigurationPath.KeyDelimiter + configKey)?.Bind(opts);
+                            })
                             .Validate(opts => opts.PackageName.HasValue(), $"{nameof(GooglePlayOptions.PackageName)} is empty.")
                             .Validate(opts => opts.Store.ProjectId.HasValue(), $"{nameof(GooglePlayStoreOptions.ProjectId)} is empty.")
                             .Validate(opts => opts.Store.PrivateKeyId.HasValue(), $"{nameof(GooglePlayStoreOptions.PrivateKeyId)} is empty.")

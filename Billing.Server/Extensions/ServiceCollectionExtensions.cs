@@ -11,18 +11,28 @@
     {
         public static IServiceCollection AddZebbleBilling(
             this IServiceCollection services,
-            Action<ZebbleBillingServicesBuilder> builder = null
+            Action<ZebbleBillingServicesBuilder> builder = null,
+            string configKey = "ZebbleBilling"
         )
         {
             if (services is null) throw new ArgumentNullException(nameof(services));
 
             services.AddOptions<BillingOptions>()
-                    .Configure<IConfiguration>((opts, config) => config.GetSection("ZebbleBilling")?.Bind(opts))
+                    .Configure<IConfiguration>((opts, config) =>
+                    {
+                        config.GetSection(configKey)?.Bind(opts);
+                        config.GetSection(ConfigurationPath.KeyDelimiter + configKey)?.Bind(opts);
+                    })
                     .Validate(opts => opts.PurchaseAttemptPath is not null, $"{nameof(BillingOptions.PurchaseAttemptPath)} is null.")
                     .Validate(opts => opts.SubscriptionStatusPath is not null, $"{nameof(BillingOptions.SubscriptionStatusPath)} is null.");
 
             services.AddOptions<CatalogOptions>()
-                    .Configure<IConfiguration>((opts, config) => config.GetSection("ZebbleBilling:Catalog")?.Bind(opts))
+                    .Configure<IConfiguration>((opts, config) =>
+                    {
+                        var key = ConfigurationPath.Combine(configKey, "Catalog");
+                        config.GetSection(key)?.Bind(opts);
+                        config.GetSection(ConfigurationPath.KeyDelimiter + key)?.Bind(opts);
+                    })
                     .Validate(opts => opts.Products is not null, $"{nameof(CatalogOptions.Products)} is null.")
                     .Validate(opts => opts.Products.Any(), $"{nameof(CatalogOptions.Products)} is empty.");
 
