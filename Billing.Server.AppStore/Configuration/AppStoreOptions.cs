@@ -2,7 +2,7 @@
 {
     using Apple.Receipt.Verificator.Models;
 
-    public class AppStoreOptions : StoreOptionsBase
+    public class AppStoreOptions
     {
         public string SharedSecret { get; set; }
         public string PrivateKey { get; set; }

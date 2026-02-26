@@ -6,6 +6,8 @@
 
     class GooglePlayNotification
     {
+        public string PackageName { get; set; }
+
         public DateTime? EventTime { get; set; }
         public string PurchaseToken { get; set; }
 
@@ -21,6 +23,9 @@
 
         public class UnderlayingType
         {
+            [JsonPropertyName("packageName")]
+            public string PackageName { get; set; }
+
             [JsonPropertyName("eventTimeMillis")]
             [JsonConverter(typeof(StringToLongConverter))]
             public long? EventTimeMillis { get; set; }
@@ -59,6 +64,8 @@
             {
                 return new GooglePlayNotification
                 {
+                    PackageName = PackageName,
+
                     EventTime = EventTimeMillis?.ToDateTime(),
                     PurchaseToken = SubscriptionNotification?.PurchaseToken ?? VoidedPurchaseNotification?.PurchaseToken,
 
@@ -77,6 +84,7 @@
         {
             return new SubscriptionInfoArgs
             {
+                PackageName = PackageName,
                 ProductId = ProductId,
                 PurchaseToken = PurchaseToken
             };

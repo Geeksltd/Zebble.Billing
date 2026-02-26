@@ -10,5 +10,12 @@
 
             return builder;
         }
+
+        public static ZebbleBillingServicesBuilder AddPackageNameProvider<T>(this ZebbleBillingServicesBuilder builder) where T : class, IPackageNameProvider
+        {
+            builder.Services.AddTransient<IPackageNameProvider, T>();
+
+            return builder;
+        }
     }
 }

@@ -7,6 +7,12 @@
     class AppStoreNotification
     {
         /// <summary>
+        /// A string that contains the app bundle ID.
+        /// </summary>
+        [JsonPropertyName("bid")]
+        public string BundleId { get; set; }
+
+        /// <summary>
         /// The same value as the shared secret you submit in the password field of the requestBody when validating receipts.
         /// </summary>
         [JsonPropertyName("password")]
@@ -76,6 +82,7 @@
 
         public SubscriptionInfoArgs ToArgs() => new()
         {
+            PackageName = BundleId,
             OriginalTransactionId = OriginalTransactionId,
             PurchaseToken = PurchaseToken
         };

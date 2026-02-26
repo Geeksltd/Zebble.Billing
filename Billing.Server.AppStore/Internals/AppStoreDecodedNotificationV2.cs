@@ -22,6 +22,7 @@ record AppStoreDecodedNotificationV2(
 
     public SubscriptionInfoArgs ToArgs() => new()
     {
+        PackageName = Data.BundleId,
         OriginalTransactionId = Data.SignedTransactionInfo.OriginalTransactionId
     };
 }

@@ -13,6 +13,7 @@
         readonly ISubscriptionComparer Comparer;
         readonly IStoreConnectorResolver StoreConnectorResolver;
         readonly ISubscriptionChangeHandler SubscriptionChangeHandler;
+        readonly IPackageNameProvider PackageNameProvider;
         readonly BillingOptions Options;
 
         public DefaultSubscriptionManager(
@@ -21,6 +22,7 @@
             ISubscriptionComparer comparer,
             IStoreConnectorResolver storeConnectorResolver,
             ISubscriptionChangeHandler subscriptionChangeHandler,
+            IPackageNameProvider packageNameProvider,
             IOptionsSnapshot<BillingOptions> options
         )
         {
@@ -29,14 +31,17 @@
             Comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
             StoreConnectorResolver = storeConnectorResolver ?? throw new ArgumentNullException(nameof(storeConnectorResolver));
             SubscriptionChangeHandler = subscriptionChangeHandler ?? throw new ArgumentNullException(nameof(subscriptionChangeHandler));
+            PackageNameProvider = packageNameProvider ?? throw new ArgumentNullException(nameof(packageNameProvider));
             Options = options.Value ?? throw new ArgumentNullException(nameof(options));
         }
 
         public virtual async Task<PurchaseAttemptResult> PurchaseAttempt(string userId, string platform, string productId, string subscriptionId, string transactionId, string purchaseToken, bool replaceConfirmed)
         {
             var storeConnector = StoreConnectorResolver.Resolve(platform);
+            var packageName = PackageNameProvider.GetPackageName();
             var subscriptionInfo = await storeConnector.GetSubscriptionInfo(new SubscriptionInfoArgs
             {
+                PackageName = packageName,
                 ProductId = productId,
                 SubscriptionId = subscriptionId,
                 PurchaseToken = purchaseToken,

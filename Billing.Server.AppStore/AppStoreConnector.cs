@@ -41,7 +41,7 @@
         {
             try
             {
-                var result = await GetVerifiedResultV2(args.OriginalTransactionId);
+                var result = await GetVerifiedResultV2(args.PackageName, args.OriginalTransactionId);
                 if (result is null) return null;
 
                 return CreateSubscriptionV2(result);
@@ -244,14 +244,14 @@
             AutoRenews = transaction.Type == InAppPurchaseProductType.AutoRenewableSubscription
         };
 
-        async Task<JWSTransactionDecodedPayload?> GetVerifiedResultV2(string originalTransactionId)
+        async Task<JWSTransactionDecodedPayload?> GetVerifiedResultV2(string bundleId, string originalTransactionId)
         {
             try { return await Fetch(AppleEnvironment.Production, originalTransactionId); }
             catch { return await Fetch(AppleEnvironment.Sandbox, originalTransactionId); }
 
             async Task<JWSTransactionDecodedPayload?> Fetch(AppleEnvironment environment, string originalTransactionId)
             {
-                var client = new AppStoreClient(environment, Options.PrivateKey, Options.KeyId, Options.IssuerId, Options.PackageName);
+                var client = new AppStoreClient(environment, Options.PrivateKey, Options.KeyId, Options.IssuerId, bundleId);
 
                 return await client.GetTransactionInfoAsync(originalTransactionId).Get(x => x.SignedTransactionInfo.DecodedPayload);
             }

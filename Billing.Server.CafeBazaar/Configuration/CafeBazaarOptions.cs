@@ -1,4 +1,4 @@
 ﻿namespace Zebble.Billing
 {
-    public class CafeBazaarOptions : StoreOptionsBase { }
+    public class CafeBazaarOptions { }
 }

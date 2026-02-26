@@ -28,13 +28,13 @@
 
             if (product.Type == ProductType.Subscription)
             {
-                var subscriptionResult = await Execute(x => x.Subscriptionsv2.Get(Options.PackageName, args.PurchaseToken));
+                var subscriptionResult = await Execute(x => x.Subscriptionsv2.Get(args.PackageName, args.PurchaseToken));
 
                 if (subscriptionResult is null) return null;
                 return CreateSubscription(subscriptionResult);
             }
 
-            var productResult = await Execute(x => x.Products.Get(Options.PackageName, args.ProductId, args.PurchaseToken));
+            var productResult = await Execute(x => x.Products.Get(args.PackageName, args.ProductId, args.PurchaseToken));
 
             if (productResult is null) return null;
             return CreateSubscription(productResult, args.ProductId);

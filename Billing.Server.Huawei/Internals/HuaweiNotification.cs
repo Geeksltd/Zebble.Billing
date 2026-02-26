@@ -42,6 +42,7 @@
 
         public SubscriptionInfoArgs ToArgs() => new()
         {
+            PackageName = SubNotification.StatusUpdateNotification.PackageName,
             SubscriptionId = SubNotification.StatusUpdateNotification.SubscriptionId,
             PurchaseToken = SubNotification.StatusUpdateNotification.PurchaseToken
         };
@@ -58,6 +59,9 @@
 
     class HuaweiStatusUpdateNotification
     {
+        [JsonPropertyName("packageName")]
+        public string PackageName { get; set; }
+
         [JsonPropertyName("environment")]
         [JsonConverter(typeof(EnumConverter<HuaweiEnvironment>))]
         public HuaweiEnvironment? Environment { get; set; }

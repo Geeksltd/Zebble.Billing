@@ -12,8 +12,7 @@
             builder.Services.AddCafeBazaarDeveloperApi($"{configKey}:DeveloperApi");
 
             builder.Services.AddOptions<CafeBazaarOptions>()
-                            .Configure<IConfiguration>((opts, config) => config.GetSection(configKey)?.Bind(opts))
-                            .Validate(opts => opts.PackageName.HasValue(), $"{nameof(CafeBazaarOptions.PackageName)} is empty.");
+                            .Configure<IConfiguration>((opts, config) => config.GetSection(configKey)?.Bind(opts));
 
             builder.Services.AddStoreConnector<CafeBazaarConnector>("CafeBazaar");
 

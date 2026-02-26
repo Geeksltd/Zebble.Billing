@@ -21,7 +21,7 @@
         {
             var purchaseResult = await DeveloperService.ValidatePurchase(new CafeBazaarValidatePurchaseRequest
             {
-                PackageName = Options.PackageName,
+                PackageName = args.PackageName,
                 ProductId = args.ProductId,
                 PurchaseToken = args.PurchaseToken
             });
@@ -30,7 +30,7 @@
 
             var subscriptionResult = await DeveloperService.ValidateSubscription(new CafeBazaarValidateSubscriptionRequest
             {
-                PackageName = Options.PackageName,
+                PackageName = args.PackageName,
                 SubscriptionId = args.ProductId,
                 PurchaseToken = args.PurchaseToken
             });

@@ -9,11 +9,10 @@
     {
         public static ZebbleBillingServicesBuilder AddHuawei(this ZebbleBillingServicesBuilder builder, string configKey = "ZebbleBilling:Huawei")
         {
-            builder.Services.AddHuaweiDeveloperApi($"{configKey}:DeveloperApi");
+            builder.Services.AddHuaweiDeveloperApi(ConfigurationPath.Combine(configKey, "DeveloperApi"));
 
             builder.Services.AddOptions<HuaweiOptions>()
                             .Configure<IConfiguration>((opts, config) => config.GetSection(configKey)?.Bind(opts))
-                            .Validate(opts => opts.PackageName.HasValue(), $"{nameof(HuaweiOptions.PackageName)} is empty.")
                             .Validate(opts => opts.PublicKey.HasValue(), $"{nameof(HuaweiOptions.PublicKey)} is empty.");
 
             builder.Services.AddStoreConnector<HuaweiConnector>("Huawei");

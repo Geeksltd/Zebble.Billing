@@ -1,6 +1,6 @@
 ﻿namespace Zebble.Billing
 {
-    public class HuaweiOptions : StoreOptionsBase
+    public class HuaweiOptions
     {
         public string PublicKey { get; set; }
         public HuaweiEnvironment Environment { get; set; }
