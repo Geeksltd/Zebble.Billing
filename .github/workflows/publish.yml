@@ -3,38 +3,38 @@ on:
   push:
     branches: [ master ]
 jobs:
-  build_client:
-    strategy:
-      matrix:
-        configuration: [ Release ]
-    runs-on: windows-2022
-    steps:
-    - uses: actions/checkout@v4
+  # build_client:
+  #   strategy:
+  #     matrix:
+  #       configuration: [ Release ]
+  #   runs-on: windows-2022
+  #   steps:
+  #   - uses: actions/checkout@v4
 
-    - uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '8.x'
+  #   - uses: actions/setup-dotnet@v4
+  #     with:
+  #       dotnet-version: '8.x'
 
-    - name: Install MAUI
-      run: dotnet workload install ios android maui --source https://aka.ms/dotnet8/nuget/index.json --source https://api.nuget.org/v3/index.json
+  #   - name: Install MAUI
+  #     run: dotnet workload install ios android maui --source https://aka.ms/dotnet8/nuget/index.json --source https://api.nuget.org/v3/index.json
 
-    - name: Install Zebble's CLI tools
-      run: dotnet tool install --global zebble-build
+  #   - name: Install Zebble's CLI tools
+  #     run: dotnet tool install --global zebble-build
 
-    - name: Publish a new Zebble.Billing.Plugin package
-      run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
-      working-directory: Billing.Plugin
-      continue-on-error: true
+  #   - name: Publish a new Zebble.Billing.Plugin package
+  #     run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
+  #     working-directory: Billing.Plugin
+  #     continue-on-error: true
 
-    - name: Publish a new Zebble.Billing.Plugin.CafeBazaar package
-      run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish --configuration ReleaseCafeBazaar
-      working-directory: Billing.Plugin
-      continue-on-error: true
+  #   - name: Publish a new Zebble.Billing.Plugin.CafeBazaar package
+  #     run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish --configuration ReleaseCafeBazaar
+  #     working-directory: Billing.Plugin
+  #     continue-on-error: true
 
-    - name: Publish a new Zebble.Billing.Plugin.Huawei package
-      run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish --configuration ReleaseHuawei
-      working-directory: Billing.Plugin
-      continue-on-error: true
+  #   - name: Publish a new Zebble.Billing.Plugin.Huawei package
+  #     run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish --configuration ReleaseHuawei
+  #     working-directory: Billing.Plugin
+  #     continue-on-error: true
 
   build_server:
     strategy:
