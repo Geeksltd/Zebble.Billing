@@ -22,13 +22,6 @@
                     .Validate(opts => opts.PurchaseAttemptPath is not null, $"{nameof(BillingOptions.PurchaseAttemptPath)} is null.")
                     .Validate(opts => opts.SubscriptionStatusPath is not null, $"{nameof(BillingOptions.SubscriptionStatusPath)} is null.");
 
-            services.AddOptions<CatalogOptions>()
-                    .Configure<IConfiguration>((opts, config) => config.GetSection(ConfigurationPath.Combine(configKey, "Catalog"))?.Bind(opts))
-                    .Validate(opts => opts.Products is not null, $"{nameof(CatalogOptions.Products)} is null.")
-                    .Validate(opts => opts.Products.Any(), $"{nameof(CatalogOptions.Products)} is empty.");
-
-            services.AddScoped<IProductProvider, ProductProvider>();
-
             services.AddScoped<IStoreConnectorResolver, StoreConnectorResolver>();
 
             services.TryAddScoped<ISubscriptionManager, DefaultSubscriptionManager>();

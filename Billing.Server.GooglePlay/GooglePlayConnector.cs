@@ -12,32 +12,30 @@
     class GooglePlayConnector : IStoreConnector
     {
         readonly GooglePlayOptions Options;
-        readonly IProductProvider Provider;
         readonly AndroidPublisherService Publisher;
 
-        public GooglePlayConnector(IOptionsSnapshot<GooglePlayOptions> options, IProductProvider provider, AndroidPublisherService publisher)
+        public GooglePlayConnector(IOptionsSnapshot<GooglePlayOptions> options, AndroidPublisherService publisher)
         {
             Options = options.Value ?? throw new ArgumentNullException(nameof(options));
-            Provider = provider ?? throw new ArgumentNullException(nameof(provider));
             Publisher = publisher ?? throw new ArgumentNullException(nameof(publisher));
         }
 
         public async Task<SubscriptionInfo> GetSubscriptionInfo(SubscriptionInfoArgs args)
         {
-            var product = Provider.GetById(args.ProductId);
-
-            if (product.Type == ProductType.Subscription)
+            try
             {
                 var subscriptionResult = await Execute(x => x.Subscriptionsv2.Get(args.PackageName, args.PurchaseToken));
 
                 if (subscriptionResult is null) return null;
                 return CreateSubscription(subscriptionResult);
             }
+            catch (GoogleApiException)
+            {
+                var productResult = await Execute(x => x.Products.Get(args.PackageName, args.ProductId, args.PurchaseToken));
 
-            var productResult = await Execute(x => x.Products.Get(args.PackageName, args.ProductId, args.PurchaseToken));
-
-            if (productResult is null) return null;
-            return CreateSubscription(productResult, args.ProductId);
+                if (productResult is null) return null;
+                return CreateSubscription(productResult, args.ProductId);
+            }
         }
 
         static SubscriptionInfo CreateSubscription(SubscriptionPurchaseV2 purchase)
