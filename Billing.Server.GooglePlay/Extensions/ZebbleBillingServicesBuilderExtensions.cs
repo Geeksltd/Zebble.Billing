@@ -63,7 +63,7 @@
 
                 return new SubscriberClientBuilder
                 {
-                    ChannelCredentials = GoogleCredential.FromJson(json).ToChannelCredentials(),
+                    ChannelCredentials = CredentialFactory.FromJson<ServiceAccountCredential>(json).ToChannelCredentials(),
                     SubscriptionName = new SubscriptionName(options.ProjectId, options.SubscriptionId)
                 }.Build(sp);
             });
