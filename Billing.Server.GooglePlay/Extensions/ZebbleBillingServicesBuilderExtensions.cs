@@ -28,7 +28,8 @@
                             .Validate(opts => opts.PubSub.ClientEmail.HasValue(), $"{nameof(GooglePlayPubSubOptions.ClientEmail)} is empty.")
                             .Validate(opts => opts.PubSub.ClientId.HasValue(), $"{nameof(GooglePlayPubSubOptions.ClientId)} is empty.")
                             .Validate(opts => opts.PubSub.SubscriptionId.HasValue(), $"{nameof(GooglePlayPubSubOptions.SubscriptionId)} is empty.")
-                            .Validate(opts => opts.QueueProcessorPath.HasValue(), $"{nameof(GooglePlayOptions.QueueProcessorPath)} is empty.");
+                            .Validate(opts => opts.QueueProcessorPath.HasValue(), $"{nameof(GooglePlayOptions.QueueProcessorPath)} is empty.")
+                            .Validate(opts => opts.NotificationProcessorPath.HasValue(), $"{nameof(GooglePlayOptions.NotificationProcessorPath)} is empty.");
 
             builder.Services.AddSingleton(sp =>
             {
@@ -37,7 +38,7 @@
                 {
                     ProjectId = options.ProjectId,
                     KeyId = options.PrivateKeyId,
-                    Scopes = new[] { AndroidPublisherService.ScopeConstants.Androidpublisher }
+                    Scopes = [AndroidPublisherService.ScopeConstants.Androidpublisher]
                 }.FromPrivateKey(options.PrivateKey));
 
                 return new AndroidPublisherService(new BaseClientService.Initializer
@@ -69,6 +70,7 @@
 
             builder.Services.AddStoreConnector<GooglePlayConnector>("GooglePlay");
             builder.Services.AddScoped<GooglePlayQueueProcessor>();
+            builder.Services.AddScoped<GooglePlayNotificationProcessor>();
 
             return builder;
         }

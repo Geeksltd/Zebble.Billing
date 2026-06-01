@@ -14,6 +14,7 @@
             var options = builder.App.ApplicationServices.GetService<IOptions<GooglePlayOptions>>();
 
             routes.MapMiddlewareGet(options.Value.QueueProcessorPath, builder => builder.UseMiddleware<GooglePlayQueueProcessingMiddleware>());
+            routes.MapMiddlewarePost(options.Value.NotificationProcessorPath, builder => builder.UseMiddleware<GooglePlayNotificationProcessingMiddleware>());
 
             builder.App.UseRouter(routes.Build());
 
