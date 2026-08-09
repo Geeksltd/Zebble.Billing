@@ -20,22 +20,41 @@
             Publisher = publisher ?? throw new ArgumentNullException(nameof(publisher));
         }
 
-        public async Task<SubscriptionInfo> GetSubscriptionInfo(SubscriptionInfoArgs args)
+        public Task<SubscriptionInfo> GetSubscriptionInfo(SubscriptionInfoArgs args)
+            => GetSubscriptionInfo(args, productType: null);
+
+        public async Task<SubscriptionInfo> GetSubscriptionInfo(SubscriptionInfoArgs args, GooglePlayProductType? productType)
         {
+            if (productType == GooglePlayProductType.OneTime)
+                return await GetProductInfo(args);
+
+            if (productType == GooglePlayProductType.Subscription)
+                return await GetSubscriptionV2Info(args);
+
             try
             {
-                var subscriptionResult = await Execute(x => x.Subscriptionsv2.Get(args.PackageName, args.PurchaseToken));
-
-                if (subscriptionResult is null) return null;
-                return CreateSubscription(subscriptionResult);
+                return await GetSubscriptionV2Info(args);
             }
             catch (GoogleApiException)
             {
-                var productResult = await Execute(x => x.Products.Get(args.PackageName, args.ProductId, args.PurchaseToken));
-
-                if (productResult is null) return null;
-                return CreateSubscription(productResult, args.ProductId);
+                return await GetProductInfo(args);
             }
+        }
+
+        async Task<SubscriptionInfo> GetSubscriptionV2Info(SubscriptionInfoArgs args)
+        {
+            var subscriptionResult = await Execute(x => x.Subscriptionsv2.Get(args.PackageName, args.PurchaseToken));
+
+            if (subscriptionResult is null) return null;
+            return CreateSubscription(subscriptionResult);
+        }
+
+        async Task<SubscriptionInfo> GetProductInfo(SubscriptionInfoArgs args)
+        {
+            var productResult = await Execute(x => x.Products.Get(args.PackageName, args.ProductId, args.PurchaseToken));
+
+            if (productResult is null) return null;
+            return CreateSubscription(productResult, args.ProductId);
         }
 
         static SubscriptionInfo CreateSubscription(SubscriptionPurchaseV2 purchase)

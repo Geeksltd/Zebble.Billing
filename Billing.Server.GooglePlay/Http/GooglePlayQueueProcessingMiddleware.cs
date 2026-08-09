@@ -11,7 +11,7 @@
         {
             try
             {
-                var count = await processor.Process();
+                var count = await processor.Process(context.RequestAborted);
                 await context.Response.WriteAsync($"Processed: {count}");
             }
             catch (Exception ex)

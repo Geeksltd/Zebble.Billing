@@ -28,11 +28,15 @@
                     notification.ProductId = matchedSubscription.ProductId;
                 }
 
-                var subscriptionInfo = await storeConnector.GetSubscriptionInfo(notification.ToArgs());
+                var productType = notification.ProductType
+                    ?? (notification.State.HasValue ? GooglePlayProductType.Subscription : null);
+
+                var subscriptionInfo = await storeConnector.GetSubscriptionInfo(notification.ToArgs(), productType);
                 if (subscriptionInfo is null) return;
 
-                var subscription = await repository.GetWithTransactionId(subscriptionInfo.TransactionId) ??
-                                   await repository.GetWithPurchaseToken(notification.PurchaseToken);
+                var subscription = await repository.GetWithTransactionId(subscriptionInfo.TransactionId);
+                if (subscription is null && notification.PurchaseToken.HasValue())
+                    subscription = await repository.GetWithPurchaseToken(notification.PurchaseToken);
 
                 if (subscription is not null)
                 {
@@ -61,6 +65,7 @@
             catch (Exception ex)
             {
                 logger.LogError(ex, "Failed to process following notification. {NotificationOriginalData}", notification.OriginalData);
+                throw;
             }
         }
     }

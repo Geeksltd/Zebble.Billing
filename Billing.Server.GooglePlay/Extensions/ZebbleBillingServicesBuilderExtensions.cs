@@ -47,7 +47,7 @@
                 });
             });
 
-            builder.Services.AddTransient(sp =>
+            builder.Services.AddSingleton(sp =>
             {
                 var options = sp.GetService<IOptions<GooglePlayOptions>>().Value.PubSub;
 
@@ -61,11 +61,10 @@
                     ClientId = options.ClientId
                 }.ToJson(new JsonSerializerOptions { PropertyNamingPolicy = new SnakeCasePropertyNamingPolicy() });
 
-                return new SubscriberClientBuilder
+                return new SubscriberServiceApiClientBuilder
                 {
-                    ChannelCredentials = CredentialFactory.FromJson<ServiceAccountCredential>(json).ToChannelCredentials(),
-                    SubscriptionName = new SubscriptionName(options.ProjectId, options.SubscriptionId)
-                }.Build(sp);
+                    ChannelCredentials = CredentialFactory.FromJson<ServiceAccountCredential>(json).ToChannelCredentials()
+                }.Build();
             });
 
             builder.Services.AddStoreConnector<GooglePlayConnector>("GooglePlay");
