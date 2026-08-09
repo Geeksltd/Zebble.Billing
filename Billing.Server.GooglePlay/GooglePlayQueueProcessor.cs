@@ -1,54 +1,100 @@
 ﻿namespace Zebble.Billing
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Threading;
     using System.Threading.Tasks;
+    using Google.Api.Gax;
+    using Google.Api.Gax.Grpc;
     using Google.Cloud.PubSub.V1;
-    using Olive;
+    using Grpc.Core;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
 
     class GooglePlayQueueProcessor(
         ILogger<GooglePlayQueueProcessor> logger,
-        GooglePlayNotificationProcessor notificationProcessor,
-        IServiceProvider services
-    )
+        IOptions<GooglePlayOptions> options,
+        SubscriberServiceApiClient subscriber,
+        IServiceScopeFactory scopeFactory)
     {
-        public async Task<int> Process()
+        public async Task<int> Process(CancellationToken cancellationToken = default)
         {
-            var messageCount = 0;
+            var opts = options.Value;
+            var subscriptionName = new SubscriptionName(opts.PubSub.ProjectId, opts.PubSub.SubscriptionId);
+            var batchSize = opts.QueuePullBatchSize > 0 ? opts.QueuePullBatchSize : 100;
+            var maxMessages = opts.QueueMaxMessagesPerRun > 0 ? opts.QueueMaxMessagesPerRun : 500;
+            var parallelism = opts.QueueMaxDegreeOfParallelism > 0 ? opts.QueueMaxDegreeOfParallelism : 8;
+            var pullTimeout = TimeSpan.FromSeconds(opts.QueuePullTimeoutSeconds > 0 ? opts.QueuePullTimeoutSeconds : 5);
 
-            while (true)
+            var processedCount = 0;
+            var pulledCount = 0;
+
+            while (pulledCount < maxMessages && !cancellationToken.IsCancellationRequested)
             {
-                var chunkCount = 0;
+                var pullCount = Math.Min(batchSize, maxMessages - pulledCount);
+                var callSettings = CallSettings
+                    .FromCancellationToken(cancellationToken)
+                    .WithExpiration(Expiration.FromTimeout(pullTimeout));
 
-                await using var scope = services.CreateAsyncScope();
-
-                var subscriber = scope.ServiceProvider.GetRequiredService<SubscriberClient>();
-
-                var startTask = subscriber.StartAsync(async (message, _) =>
+                PullResponse response;
+                try
                 {
-                    var notification = message.ToNotification();
+                    response = await subscriber.PullAsync(subscriptionName, pullCount, callSettings);
+                }
+                catch (RpcException ex) when (ex.StatusCode is StatusCode.DeadlineExceeded or StatusCode.Cancelled)
+                {
+                    break;
+                }
 
-                    Interlocked.Increment(ref chunkCount);
+                if (response.ReceivedMessages.Count == 0)
+                    break;
 
-                    if (!notification.IsTest) await notificationProcessor.Process(notification);
+                pulledCount += response.ReceivedMessages.Count;
+                var ackIds = new ConcurrentBag<string>();
 
-                    return SubscriberClient.Reply.Ack;
-                });
+                await Parallel.ForEachAsync(
+                    response.ReceivedMessages,
+                    new ParallelOptions
+                    {
+                        MaxDegreeOfParallelism = parallelism,
+                        CancellationToken = cancellationToken
+                    },
+                    async (received, ct) =>
+                    {
+                        try
+                        {
+                            var notification = received.Message.ToNotification();
 
-                await Task.Delay(2.Seconds());
-                await subscriber.StopAsync(CancellationToken.None);
+                            if (!notification.IsTest)
+                            {
+                                await using var scope = scopeFactory.CreateAsyncScope();
+                                var processor = scope.ServiceProvider.GetRequiredService<GooglePlayNotificationProcessor>();
+                                await processor.Process(notification);
+                            }
 
-                await startTask;
+                            ackIds.Add(received.AckId);
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.LogError(ex, "Failed to process Pub/Sub message {MessageId}. Message will be redelivered.", received.Message.MessageId);
+                        }
+                    });
 
-                if (chunkCount == 0) break;
-                else messageCount += chunkCount;
+                if (!ackIds.IsEmpty)
+                {
+                    await subscriber.AcknowledgeAsync(subscriptionName, ackIds, cancellationToken);
+                    processedCount += ackIds.Count;
+                }
+
+                var failed = response.ReceivedMessages.Count - ackIds.Count;
+                if (failed > 0)
+                    logger.LogWarning("{FailedCount} of {BatchCount} Google Play queue messages failed and were left unacked.", failed, response.ReceivedMessages.Count);
             }
 
-            logger.Debug($"{messageCount} queue messages are processed.");
+            logger.LogDebug("{ProcessedCount} queue messages are processed ({PulledCount} pulled).", processedCount, pulledCount);
 
-            return messageCount;
+            return processedCount;
         }
     }
 }
