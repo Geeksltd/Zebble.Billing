@@ -16,7 +16,7 @@ class AppStoreJWSRenewalInfoDecodedPayloadV2Converter : JsonConverter<AppStoreJW
 
     static readonly JwtBuilder JwtReader = JwtBuilder.Create().DoNotVerifySignature();
 
-    public override AppStoreJWSRenewalInfoDecodedPayloadV2? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override AppStoreJWSRenewalInfoDecodedPayloadV2 Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         var rawJws = reader.GetString();
         var payloadJson = JwtReader.Decode(rawJws);

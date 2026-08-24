@@ -244,12 +244,12 @@
             AutoRenews = transaction.Type == InAppPurchaseProductType.AutoRenewableSubscription
         };
 
-        async Task<JWSTransactionDecodedPayload?> GetVerifiedResultV2(string bundleId, string originalTransactionId)
+        async Task<JWSTransactionDecodedPayload> GetVerifiedResultV2(string bundleId, string originalTransactionId)
         {
             try { return await Fetch(AppleEnvironment.Production, originalTransactionId); }
             catch { return await Fetch(AppleEnvironment.Sandbox, originalTransactionId); }
 
-            async Task<JWSTransactionDecodedPayload?> Fetch(AppleEnvironment environment, string originalTransactionId)
+            async Task<JWSTransactionDecodedPayload> Fetch(AppleEnvironment environment, string originalTransactionId)
             {
                 var client = new AppStoreClient(environment, Options.PrivateKey, Options.KeyId, Options.IssuerId, bundleId);
 

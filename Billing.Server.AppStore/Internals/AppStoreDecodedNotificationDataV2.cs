@@ -7,4 +7,4 @@ record AppStoreDecodedNotificationDataV2(
     string BundleVersion,
     AppStoreEnvironment Environment,
     [property: JsonConverter(typeof(AppStoreJWSTransactionDecodedPayloadV2Converter))] AppStoreJWSTransactionDecodedPayloadV2 SignedTransactionInfo,
-    [property: JsonConverter(typeof(AppStoreJWSRenewalInfoDecodedPayloadV2Converter))] AppStoreJWSRenewalInfoDecodedPayloadV2? SignedRenewalInfo);
+    [property: JsonConverter(typeof(AppStoreJWSRenewalInfoDecodedPayloadV2Converter))] AppStoreJWSRenewalInfoDecodedPayloadV2 SignedRenewalInfo);

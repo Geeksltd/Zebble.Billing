@@ -16,7 +16,7 @@ class AppStoreJWSTransactionDecodedPayloadV2Converter : JsonConverter<AppStoreJW
 
     static readonly JwtBuilder JwtReader = JwtBuilder.Create().DoNotVerifySignature();
 
-    public override AppStoreJWSTransactionDecodedPayloadV2? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override AppStoreJWSTransactionDecodedPayloadV2 Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         var rawJws = reader.GetString();
         var payloadJson = JwtReader.Decode(rawJws);

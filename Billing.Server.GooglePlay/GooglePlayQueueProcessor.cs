@@ -38,7 +38,10 @@
                 });
 
                 await Task.Delay(2.Seconds());
-                await subscriber.StopAsync(CancellationToken.None);
+                await subscriber.StopAsync(new SubscriberClient.ShutdownOptions
+                {
+                    Mode = SubscriberClient.ShutdownMode.WaitForProcessing
+                }, CancellationToken.None);
 
                 await startTask;
 

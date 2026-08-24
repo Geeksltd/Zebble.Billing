@@ -40,23 +40,18 @@
 
         static SubscriptionInfo CreateSubscription(SubscriptionPurchaseV2 purchase)
         {
-            var lineItem = purchase.LineItems.OrderBy(x => x.ExpiryTime).LastOrDefault();
+            var lineItem = purchase.LineItems.OrderBy(x => x.ExpiryTimeDateTimeOffset).LastOrDefault();
             if (lineItem is null) return null;
 
-            static DateTime? ToDataTime(object value)
-            {
-                if (value is null) return null;
-                try { return DateTimeOffset.Parse(value?.ToString()).DateTime; }
-                catch { return null; }
-            }
+            static DateTime? ToDataTime(DateTimeOffset? value) => value?.UtcDateTime;
 
             return new SubscriptionInfo
             {
                 ProductId = lineItem.ProductId,
-                TransactionId = purchase.LatestOrderId,
-                SubscriptionDate = ToDataTime(purchase.StartTime),
-                ExpirationDate = ToDataTime(lineItem.ExpiryTime),
-                CancellationDate = ToDataTime(purchase.CanceledStateContext?.UserInitiatedCancellation?.CancelTime),
+                TransactionId = lineItem.LatestSuccessfulOrderId,
+                SubscriptionDate = ToDataTime(purchase.StartTimeDateTimeOffset),
+                ExpirationDate = ToDataTime(lineItem.ExpiryTimeDateTimeOffset),
+                CancellationDate = ToDataTime(purchase.CanceledStateContext?.UserInitiatedCancellation?.CancelTimeDateTimeOffset),
                 AutoRenews = lineItem.AutoRenewingPlan?.AutoRenewEnabled ?? false
             };
         }
