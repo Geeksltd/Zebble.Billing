@@ -4,6 +4,9 @@ on:
     branches: [ master ]
 jobs:
   build_server:
+    permissions:
+      contents: write
+      id-token: write
     strategy:
       matrix:
         configuration: [ Release ]
@@ -18,52 +21,112 @@ jobs:
     - name: Install Zebble's CLI tools
       run: dotnet tool install --global zebble-build
 
+    - name: Authenticate to NuGet using trusted publishing
+      uses: NuGet/login@v1
+      id: nuget-login-1
+      with:
+        user: ${{ vars.NUGET_USER }}
+
     - name: Publish a new Zebble.Billing.Server package
-      run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
+      run: zebble-build update-plugin --api-key ${{ steps.nuget-login-1.outputs.NUGET_API_KEY }} --publish
       working-directory: Billing.Server
       continue-on-error: true
 
+    - name: Authenticate to NuGet using trusted publishing
+      uses: NuGet/login@v1
+      id: nuget-login-2
+      with:
+        user: ${{ vars.NUGET_USER }}
+
     - name: Publish a new Zebble.Billing.Server.AppStore package
-      run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
+      run: zebble-build update-plugin --api-key ${{ steps.nuget-login-2.outputs.NUGET_API_KEY }} --publish
       working-directory: Billing.Server.AppStore
       continue-on-error: true
 
+    - name: Authenticate to NuGet using trusted publishing
+      uses: NuGet/login@v1
+      id: nuget-login-3
+      with:
+        user: ${{ vars.NUGET_USER }}
+
     - name: Publish a new Zebble.Billing.Server.GooglePlay package
-      run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
+      run: zebble-build update-plugin --api-key ${{ steps.nuget-login-3.outputs.NUGET_API_KEY }} --publish
       working-directory: Billing.Server.GooglePlay
       continue-on-error: true
 
+    - name: Authenticate to NuGet using trusted publishing
+      uses: NuGet/login@v1
+      id: nuget-login-4
+      with:
+        user: ${{ vars.NUGET_USER }}
+
     - name: Publish a new Zebble.Billing.Server.CafeBazaar package
-      run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
+      run: zebble-build update-plugin --api-key ${{ steps.nuget-login-4.outputs.NUGET_API_KEY }} --publish
       working-directory: Billing.Server.CafeBazaar
       continue-on-error: true
 
+    - name: Authenticate to NuGet using trusted publishing
+      uses: NuGet/login@v1
+      id: nuget-login-5
+      with:
+        user: ${{ vars.NUGET_USER }}
+
     - name: Publish a new Zebble.Billing.Server.Huawei package
-      run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
+      run: zebble-build update-plugin --api-key ${{ steps.nuget-login-5.outputs.NUGET_API_KEY }} --publish
       working-directory: Billing.Server.Huawei
       continue-on-error: true
 
+    - name: Authenticate to NuGet using trusted publishing
+      uses: NuGet/login@v1
+      id: nuget-login-6
+      with:
+        user: ${{ vars.NUGET_USER }}
+
     - name: Publish a new Zebble.Billing.Server.DynamoDb package
-      run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
+      run: zebble-build update-plugin --api-key ${{ steps.nuget-login-6.outputs.NUGET_API_KEY }} --publish
       working-directory: Billing.Server.DynamoDb
       continue-on-error: true
 
+    - name: Authenticate to NuGet using trusted publishing
+      uses: NuGet/login@v1
+      id: nuget-login-7
+      with:
+        user: ${{ vars.NUGET_USER }}
+
     - name: Publish a new Zebble.Billing.Server.EntityFramework package
-      run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
+      run: zebble-build update-plugin --api-key ${{ steps.nuget-login-7.outputs.NUGET_API_KEY }} --publish
       working-directory: Billing.Server.EntityFramework
       continue-on-error: true
 
+    - name: Authenticate to NuGet using trusted publishing
+      uses: NuGet/login@v1
+      id: nuget-login-8
+      with:
+        user: ${{ vars.NUGET_USER }}
+
     - name: Publish a new Zebble.Billing.Server.Voucher package
-      run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
+      run: zebble-build update-plugin --api-key ${{ steps.nuget-login-8.outputs.NUGET_API_KEY }} --publish
       working-directory: Billing.Server.Voucher
       continue-on-error: true
 
+    - name: Authenticate to NuGet using trusted publishing
+      uses: NuGet/login@v1
+      id: nuget-login-9
+      with:
+        user: ${{ vars.NUGET_USER }}
+
     - name: Publish a new Zebble.Billing.Server.Voucher.DynamoDb package
-      run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
+      run: zebble-build update-plugin --api-key ${{ steps.nuget-login-9.outputs.NUGET_API_KEY }} --publish
       working-directory: Billing.Server.Voucher.DynamoDb
       continue-on-error: true
 
+    - name: Authenticate to NuGet using trusted publishing
+      uses: NuGet/login@v1
+      id: nuget-login-10
+      with:
+        user: ${{ vars.NUGET_USER }}
+
     - name: Publish a new Zebble.Billing.Server.Voucher.EntityFramework package
-      run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
+      run: zebble-build update-plugin --api-key ${{ steps.nuget-login-10.outputs.NUGET_API_KEY }} --publish
       working-directory: Billing.Server.Voucher.EntityFramework
       continue-on-error: true
